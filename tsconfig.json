@@ -10,6 +10,12 @@
     "noImplicitThis": true,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
-    "removeComments": true
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      // Example
+      // "@src/*": ["src/*"]
+    }
   }
 }
