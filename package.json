@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:staged": "jest"
   },
   "keywords": [],
   "author": "",
@@ -30,8 +31,9 @@
   },
   "lint-staged": {
     "*.{ts}": [
-      "eslint --max-warnings 0"
-    ],
-    "*.js": "eslint --cache --fix"
+      "eslint 'src/**' --max-warnings 0 --fix",
+      "npm run test:staged",
+      "git add"
+    ]
   }
 }
