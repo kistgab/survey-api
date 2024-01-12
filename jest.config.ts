@@ -8,7 +8,6 @@ import { pathsToModuleNameMapper } from "ts-jest";
 import { compilerOptions } from "./tsconfig.json";
 
 const config: Config = {
-  collectCoverage: true,
   collectCoverageFrom: ["src/**/*.ts"],
   coverageDirectory: "coverage",
   transform: {

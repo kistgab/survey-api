@@ -14,8 +14,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      // Example
-      // "@src/*": ["src/*"]
+      "@src/*": ["src/*"]
     }
   }
 }

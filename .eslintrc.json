@@ -33,5 +33,9 @@
         "project": "./tsconfig.json"
       }
     }
+  },
+  "env": {
+    "node": true,
+    "jest": true
   }
 }
