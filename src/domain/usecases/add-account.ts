@@ -12,5 +12,5 @@ export interface OutputAddAccountDto {
 }
 
 export interface AddAccount {
-  add(account: InputAddAccountDto): OutputAddAccountDto;
+  add(account: InputAddAccountDto): Promise<OutputAddAccountDto>;
 }

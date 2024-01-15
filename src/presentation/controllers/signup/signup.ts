@@ -24,7 +24,9 @@ export default class SignUpController
     private readonly addAccount: AddAccount,
   ) {}
 
-  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error | OutputAddAccountDto> {
+  async handle(
+    httpRequest: HttpRequest<RequestBody>,
+  ): Promise<HttpResponse<Error | OutputAddAccountDto>> {
     try {
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
@@ -47,7 +49,7 @@ export default class SignUpController
       if (!this.emailValidator.isValid(email)) {
         return unprocessableContent(new InvalidParamError("email"));
       }
-      const account = this.addAccount.add({ email, name, password });
+      const account = await this.addAccount.add({ email, name, password });
       return ok(account);
     } catch (error) {
       return internalServerError(new ServerError());
