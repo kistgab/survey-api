@@ -14,3 +14,10 @@ export function internalServerError(error: ServerError): HttpResponse<ServerErro
     body: error,
   };
 }
+
+export function ok<T>(body: T): HttpResponse<T> {
+  return {
+    statusCode: 200,
+    body,
+  };
+}

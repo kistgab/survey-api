@@ -2,7 +2,7 @@ import { AddAccount, OutputAddAccountDto } from "../../../domain/usecases/add-ac
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import ServerError from "../../errors/server-error";
-import { internalServerError, unprocessableContent } from "../../helpers/http-helper";
+import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
 import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
@@ -48,10 +48,7 @@ export default class SignUpController
         return unprocessableContent(new InvalidParamError("email"));
       }
       const account = this.addAccount.add({ email, name, password });
-      return {
-        statusCode: 200,
-        body: account,
-      };
+      return ok(account);
     } catch (error) {
       return internalServerError(new ServerError());
     }
