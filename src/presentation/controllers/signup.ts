@@ -31,6 +31,9 @@ export default class SignUpController implements Controller<RequestBody, Error> 
           return unprocessableContent(new MissingParamError(field));
         }
       }
+      if (httpRequest.body?.password !== httpRequest.body?.passwordConfirmation) {
+        return unprocessableContent(new InvalidParamError("passwordConfirmation"));
+      }
       if (!this.emailValidator.isValid(httpRequest.body?.email ?? "")) {
         return unprocessableContent(new InvalidParamError("email"));
       }
