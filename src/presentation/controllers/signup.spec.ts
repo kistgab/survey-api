@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import MissingParamError from "../errors/missing-param-error";
 import SignUpController from "./signup";
 
 describe("SignUp Controller", () => {
@@ -16,7 +17,7 @@ describe("SignUp Controller", () => {
     const httpResponse = sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(422);
-    expect(httpResponse.body).toEqual(new Error("Missing param: name"));
+    expect(httpResponse.body).toEqual(new MissingParamError("name"));
   });
 
   it("Should return 422 when email is not provided", () => {
@@ -33,6 +34,6 @@ describe("SignUp Controller", () => {
     const httpResponse = sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(422);
-    expect(httpResponse.body).toEqual(new Error("Missing param: email"));
+    expect(httpResponse.body).toEqual(new MissingParamError("email"));
   });
 });

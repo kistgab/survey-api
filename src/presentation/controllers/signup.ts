@@ -1,3 +1,4 @@
+import MissingParamError from "../errors/missing-param-error";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 
 type RequestBody = {
@@ -8,22 +9,22 @@ type RequestBody = {
 };
 
 export default class SignUpController {
-  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
+  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<MissingParamError> {
     if (!httpRequest.body?.name) {
       return {
         statusCode: 422,
-        body: new Error("Missing param: name"),
+        body: new MissingParamError("name"),
       };
     }
     if (!httpRequest.body?.email) {
       return {
         statusCode: 422,
-        body: new Error("Missing param: email"),
+        body: new MissingParamError("email"),
       };
     }
     return {
       statusCode: 500,
-      body: new Error("Unexpected error"),
+      body: new MissingParamError("Unexpected error"),
     };
   }
 }
