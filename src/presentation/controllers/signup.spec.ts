@@ -163,4 +163,14 @@ describe("SignUp Controller", () => {
     expect(httpResponse.statusCode).toBe(422);
     expect(httpResponse.body).toEqual(new InvalidParamError("passwordConfirmation"));
   });
+
+  it("Should return 422 if body wasn't provided", () => {
+    const { sut } = createSut();
+    const httpRequest = {};
+
+    const httpResponse = sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(422);
+    expect(httpResponse.body).toEqual(new MissingParamError("body"));
+  });
 });
