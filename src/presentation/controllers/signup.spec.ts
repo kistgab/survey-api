@@ -1,11 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import MissingParamError from "../errors/missing-param-error";
 import SignUpController from "./signup";
 
+function createSut(): SignUpController {
+  return new SignUpController();
+}
+
 describe("SignUp Controller", () => {
   it("Should return 422 when name is not provided", () => {
-    const sut = new SignUpController();
+    const sut = createSut();
     const httpRequest = {
       body: {
         name: "",
@@ -21,7 +23,7 @@ describe("SignUp Controller", () => {
   });
 
   it("Should return 422 when email is not provided", () => {
-    const sut = new SignUpController();
+    const sut = createSut();
     const httpRequest = {
       body: {
         name: "any_name",
@@ -38,7 +40,7 @@ describe("SignUp Controller", () => {
   });
 
   it("Should return 422 when password is not provided", () => {
-    const sut = new SignUpController();
+    const sut = createSut();
     const httpRequest = {
       body: {
         name: "any_name",
@@ -55,7 +57,7 @@ describe("SignUp Controller", () => {
   });
 
   it("Should return 422 when password confirmation is not provided", () => {
-    const sut = new SignUpController();
+    const sut = createSut();
     const httpRequest = {
       body: {
         name: "any_name",
