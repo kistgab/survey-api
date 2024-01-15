@@ -1,8 +1,8 @@
-import { AddAccount, OutputAddAccountDto } from "../../domain/usecases/add-account";
-import InvalidParamError from "../errors/invalid-param-error";
-import MissingParamError from "../errors/missing-param-error";
-import ServerError from "../errors/server-error";
-import EmailValidator from "../protocols/email-validator";
+import { AddAccount, OutputAddAccountDto } from "../../../domain/usecases/add-account";
+import InvalidParamError from "../../errors/invalid-param-error";
+import MissingParamError from "../../errors/missing-param-error";
+import ServerError from "../../errors/server-error";
+import EmailValidator from "../../protocols/email-validator";
 import SignUpController from "./signup";
 
 function createEmailValidator(): EmailValidator {
