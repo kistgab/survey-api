@@ -1,4 +1,5 @@
 import MissingParamError from "../errors/missing-param-error";
+import { internalServerError, unprocessableContent } from "../helpers/http-helper";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 
 type RequestBody = {
@@ -9,22 +10,13 @@ type RequestBody = {
 };
 
 export default class SignUpController {
-  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<MissingParamError> {
+  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
     if (!httpRequest.body?.name) {
-      return {
-        statusCode: 422,
-        body: new MissingParamError("name"),
-      };
+      return unprocessableContent(new MissingParamError("name"));
     }
     if (!httpRequest.body?.email) {
-      return {
-        statusCode: 422,
-        body: new MissingParamError("email"),
-      };
+      return unprocessableContent(new MissingParamError("email"));
     }
-    return {
-      statusCode: 500,
-      body: new MissingParamError("Unexpected error"),
-    };
+    return internalServerError(new Error("Unexpected error"));
   }
 }
