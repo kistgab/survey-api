@@ -20,6 +20,9 @@ export default class SignUpController implements Controller<RequestBody, Error> 
 
   handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
     try {
+      if (!httpRequest.body) {
+        return unprocessableContent(new MissingParamError("body"));
+      }
       const requiredFields: RequestBodyField[] = [
         "name",
         "email",
@@ -31,10 +34,11 @@ export default class SignUpController implements Controller<RequestBody, Error> 
           return unprocessableContent(new MissingParamError(field));
         }
       }
-      if (httpRequest.body?.password !== httpRequest.body?.passwordConfirmation) {
+      const { email, password, passwordConfirmation } = httpRequest.body;
+      if (password !== passwordConfirmation) {
         return unprocessableContent(new InvalidParamError("passwordConfirmation"));
       }
-      if (!this.emailValidator.isValid(httpRequest.body?.email ?? "")) {
+      if (!this.emailValidator.isValid(email)) {
         return unprocessableContent(new InvalidParamError("email"));
       }
       return internalServerError(new ServerError());
