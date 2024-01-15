@@ -1,5 +1,6 @@
 import MissingParamError from "../errors/missing-param-error";
 import { internalServerError, unprocessableContent } from "../helpers/http-helper";
+import Controller from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 
 type RequestBody = {
@@ -11,7 +12,7 @@ type RequestBody = {
 
 type RequestBodyField = keyof RequestBody;
 
-export default class SignUpController {
+export default class SignUpController implements Controller<RequestBody, Error> {
   handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
     const requiredFields: RequestBodyField[] = [
       "name",
