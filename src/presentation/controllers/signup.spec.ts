@@ -6,13 +6,17 @@ import SignUpController from "./signup";
 
 type createSutReturn = { sut: SignUpController; emailValidatorStub: EmailValidator };
 
-function createSut(): createSutReturn {
+function createEmailValidator(): EmailValidator {
   class EmailValidatorStub implements EmailValidator {
     isValid(): boolean {
       return true;
     }
   }
-  const emailValidatorStub = new EmailValidatorStub();
+  return new EmailValidatorStub();
+}
+
+function createSut(): createSutReturn {
+  const emailValidatorStub = createEmailValidator();
   const sut = new SignUpController(emailValidatorStub);
   return {
     sut,
