@@ -9,13 +9,15 @@ type RequestBody = {
   passwordConfirmation: string;
 };
 
+type RequestBodyField = keyof RequestBody;
+
 export default class SignUpController {
   handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
-    if (!httpRequest.body?.name) {
-      return unprocessableContent(new MissingParamError("name"));
-    }
-    if (!httpRequest.body?.email) {
-      return unprocessableContent(new MissingParamError("email"));
+    const requiredFields: RequestBodyField[] = ["name", "email"];
+    for (const field of requiredFields) {
+      if (!httpRequest.body?.[field]) {
+        return unprocessableContent(new MissingParamError("email"));
+      }
     }
     return internalServerError(new Error("Unexpected error"));
   }
