@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test:staged": "jest"
+    "test": "jest --passWithNoTests",
+    "test:staged": "jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -31,7 +31,7 @@
   },
   "lint-staged": {
     "*.{ts}": [
-      "eslint 'src/**' --max-warnings 0 --fix",
+      "eslint 'src/**' --max-warnings 0",
       "npm run test:staged",
       "git add"
     ]
