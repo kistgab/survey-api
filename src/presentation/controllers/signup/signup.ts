@@ -1,4 +1,4 @@
-import { AddAccount } from "../../../domain/usecases/add-account";
+import { AddAccount, OutputAddAccountDto } from "../../../domain/usecases/add-account";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import ServerError from "../../errors/server-error";
@@ -16,13 +16,15 @@ type RequestBody = {
 
 type RequestBodyField = keyof RequestBody;
 
-export default class SignUpController implements Controller<RequestBody, Error> {
+export default class SignUpController
+  implements Controller<RequestBody, Error | OutputAddAccountDto>
+{
   constructor(
     private readonly emailValidator: EmailValidator,
     private readonly addAccount: AddAccount,
   ) {}
 
-  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
+  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error | OutputAddAccountDto> {
     try {
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
@@ -45,8 +47,11 @@ export default class SignUpController implements Controller<RequestBody, Error> 
       if (!this.emailValidator.isValid(email)) {
         return unprocessableContent(new InvalidParamError("email"));
       }
-      this.addAccount.add({ email, name, password });
-      return internalServerError(new ServerError());
+      const account = this.addAccount.add({ email, name, password });
+      return {
+        statusCode: 200,
+        body: account,
+      };
     } catch (error) {
       return internalServerError(new ServerError());
     }
