@@ -1,6 +1,8 @@
+import InvalidParamError from "../errors/invalid-param-error";
 import MissingParamError from "../errors/missing-param-error";
 import { internalServerError, unprocessableContent } from "../helpers/http-helper";
 import Controller from "../protocols/controller";
+import EmailValidator from "../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 
 type RequestBody = {
@@ -13,6 +15,8 @@ type RequestBody = {
 type RequestBodyField = keyof RequestBody;
 
 export default class SignUpController implements Controller<RequestBody, Error> {
+  constructor(private readonly emailValidator: EmailValidator) {}
+
   handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
     const requiredFields: RequestBodyField[] = [
       "name",
@@ -24,6 +28,9 @@ export default class SignUpController implements Controller<RequestBody, Error> 
       if (!httpRequest.body?.[field]) {
         return unprocessableContent(new MissingParamError(field));
       }
+    }
+    if (!this.emailValidator.isValid(httpRequest.body?.email ?? "")) {
+      return unprocessableContent(new InvalidParamError("email"));
     }
     return internalServerError(new Error("Unexpected error"));
   }
