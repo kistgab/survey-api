@@ -5,6 +5,7 @@ export default class SignUpController {
     httpRequest;
     return {
       statusCode: 422,
+      body: new Error("Missing param: name"),
     };
   }
 }
