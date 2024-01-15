@@ -13,7 +13,12 @@ type RequestBodyField = keyof RequestBody;
 
 export default class SignUpController {
   handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
-    const requiredFields: RequestBodyField[] = ["name", "email", "password"];
+    const requiredFields: RequestBodyField[] = [
+      "name",
+      "email",
+      "password",
+      "passwordConfirmation",
+    ];
     for (const field of requiredFields) {
       if (!httpRequest.body?.[field]) {
         return unprocessableContent(new MissingParamError(field));
