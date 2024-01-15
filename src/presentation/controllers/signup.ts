@@ -1,19 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { HttpRequest, HttpResponse } from "../protocols/http";
+
+type RequestBody = {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+};
+
 export default class SignUpController {
-  handle(httpRequest: any): any {
-    if (!httpRequest.body.name) {
+  handle(httpRequest: HttpRequest<RequestBody>): HttpResponse<Error> {
+    if (!httpRequest.body?.name) {
       return {
         statusCode: 422,
         body: new Error("Missing param: name"),
       };
     }
-    if (!httpRequest.body.email) {
+    if (!httpRequest.body?.email) {
       return {
         statusCode: 422,
         body: new Error("Missing param: email"),
       };
     }
+    return {
+      statusCode: 500,
+      body: new Error("Unexpected error"),
+    };
   }
 }
