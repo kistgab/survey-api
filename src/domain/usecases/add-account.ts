@@ -1,15 +1,4 @@
-export interface InputAddAccountDto {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface OutputAddAccountDto {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
+import { InputAddAccountDto, OutputAddAccountDto } from "../dtos/add-account-dto";
 
 export interface AddAccount {
   add(account: InputAddAccountDto): Promise<OutputAddAccountDto>;

@@ -1,4 +1,5 @@
-import { AddAccount, OutputAddAccountDto } from "../../../domain/usecases/add-account";
+import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
+import { AddAccount } from "../../../domain/usecases/add-account";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import ServerError from "../../errors/server-error";
