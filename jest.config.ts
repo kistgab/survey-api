@@ -16,6 +16,7 @@ const config: Config = {
   testEnvironment: "node",
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+  preset: "@shelf/jest-mongodb",
 };
 
 export default config;
