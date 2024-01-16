@@ -1,4 +1,4 @@
-import { InputAddAccountDto } from "../../../domain/dtos/add-account-dto";
+import { InputAddAccountDto, OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import AccountModel from "../../models/account-model";
 import AddAccountModel from "../../models/add-account-model";
 import AddAccountRepository from "../../protocols/add-account-repository";
@@ -104,5 +104,24 @@ describe("DbAddAccount Usecase", () => {
       .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
 
     await expect(sut.add(input)).rejects.toThrow("Repository error");
+  });
+
+  it("should call the AddAccountRepository with the correct values", async () => {
+    const input: InputAddAccountDto = {
+      email: "any_email@mail.com",
+      name: "any_name",
+      password: "any_password",
+    };
+    const expectedOutput: OutputAddAccountDto = {
+      id: "any_id",
+      email: input.email,
+      password: "hashed_password",
+      name: input.name,
+    };
+    const { sut } = createSut();
+
+    const result = await sut.add(input);
+
+    expect(result).toEqual(expectedOutput);
   });
 });
