@@ -17,7 +17,11 @@ export default class DbAddAccount implements AddAccount {
       name: account.name,
       password: encryptedPassword,
     });
-    createdAccount;
-    return Promise.resolve({} as OutputAddAccountDto);
+    return Promise.resolve({
+      id: createdAccount.id,
+      email: createdAccount.email,
+      name: createdAccount.name,
+      password: createdAccount.password,
+    });
   }
 }
