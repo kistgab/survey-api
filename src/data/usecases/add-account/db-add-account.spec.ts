@@ -2,21 +2,34 @@ import { InputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import Encrypter from "../../protocols/encrypter";
 import DbAddAccount from "./db-add-account";
 
+type SutTypes = {
+  sut: DbAddAccount;
+  encrypterStub: Encrypter;
+};
+
+function createEncrypterStub(): Encrypter {
+  class EncrypterStub implements Encrypter {
+    async encrypt(): Promise<string> {
+      return Promise.resolve("hashed_password");
+    }
+  }
+  return new EncrypterStub();
+}
+
+function createSut(): SutTypes {
+  const encrypterStub = createEncrypterStub();
+  return { sut: new DbAddAccount(encrypterStub), encrypterStub };
+}
+
 describe("DbAddAccount Usecase", () => {
   it("should call the encrypter with the specified plain text password", async () => {
-    class EncrypterStub implements Encrypter {
-      async encrypt(): Promise<string> {
-        return Promise.resolve("hashed_password");
-      }
-    }
-    const encrypterStub = new EncrypterStub();
     const input: InputAddAccountDto = {
       email: "any_email@mail.com",
       name: "any_name",
       password: "any_password",
     };
+    const { sut, encrypterStub } = createSut();
     const encryptSpy = jest.spyOn(encrypterStub, "encrypt");
-    const sut = new DbAddAccount(encrypterStub);
 
     await sut.add(input);
 
