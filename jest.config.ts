@@ -17,6 +17,8 @@ const config: Config = {
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
   preset: "@shelf/jest-mongodb",
+  testMatch: ["**/*.spec.ts", "**/*.integration-spec.ts"],
+  watchPathIgnorePatterns: ["<rootDir>/globalConfig.json"],
 };
 
 export default config;
