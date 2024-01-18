@@ -10,18 +10,17 @@ export default class DbAddAccount implements AddAccount {
   ) {}
 
   async add(account: InputAddAccountDto): Promise<OutputAddAccountDto> {
-    await Promise.resolve(account);
     const encryptedPassword = await this.encrypter.encrypt(account.password);
     const createdAccount = await this.addAccountRepository.add({
       email: account.email,
       name: account.name,
       password: encryptedPassword,
     });
-    return Promise.resolve({
+    return {
       id: createdAccount.id,
       email: createdAccount.email,
       name: createdAccount.name,
       password: createdAccount.password,
-    });
+    };
   }
 }
