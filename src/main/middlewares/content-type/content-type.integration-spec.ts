@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../config/app";
+import app from "../../config/app";
 
 describe("Cors Middleware", () => {
   it("should return content-type json as default", async () => {
