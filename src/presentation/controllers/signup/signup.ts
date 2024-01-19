@@ -8,17 +8,17 @@ import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
 
-type RequestBody = {
+export type RequestSignUpBody = {
   name: string;
   email: string;
   password: string;
   passwordConfirmation: string;
 };
 
-type RequestBodyField = keyof RequestBody;
+type RequestBodyField = keyof RequestSignUpBody;
 
 export default class SignUpController
-  implements Controller<RequestBody, Error | OutputAddAccountDto>
+  implements Controller<RequestSignUpBody, Error | OutputAddAccountDto>
 {
   constructor(
     private readonly emailValidator: EmailValidator,
@@ -26,7 +26,7 @@ export default class SignUpController
   ) {}
 
   async handle(
-    httpRequest: HttpRequest<RequestBody>,
+    httpRequest: HttpRequest<RequestSignUpBody>,
   ): Promise<HttpResponse<Error | OutputAddAccountDto>> {
     try {
       if (!httpRequest.body) {
