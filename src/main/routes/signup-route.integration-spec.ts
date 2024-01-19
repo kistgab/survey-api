@@ -1,7 +1,20 @@
 import request from "supertest";
+import { MongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
 import app from "../config/app";
 
 describe("SignUp route", () => {
+  beforeAll(async () => {
+    await MongoHelper.connect(process.env.MONGO_URL);
+  });
+
+  afterAll(async () => {
+    await MongoHelper.disconnect();
+  });
+
+  beforeEach(async () => {
+    await MongoHelper.getCollection("accounts").deleteMany({});
+  });
+
   it("should return an account on success", async () => {
     const input = {
       email: "any_email@mail.com",
