@@ -35,4 +35,16 @@ describe("LogControllerDecorator", () => {
 
     expect(handleSpy).toHaveBeenCalledWith(input);
   });
+
+  it("should return the same thing as the provided controller does", async () => {
+    const { sut, controllerStub } = createSut();
+    const input: HttpRequest<string> = {
+      body: "any_body",
+    };
+
+    const controllerStubResponse = await controllerStub.handle(input);
+    const sutResponse = await sut.handle(input);
+
+    expect(sutResponse).toEqual(controllerStubResponse);
+  });
 });
