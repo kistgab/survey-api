@@ -11,7 +11,7 @@ export function unprocessableContent<T>(error: T): HttpResponse<T> {
 export function internalServerError(error: Error): HttpResponse<ServerError> {
   return {
     statusCode: 500,
-    body: new ServerError(error.stack),
+    body: new ServerError(error.stack ?? ""),
   };
 }
 
