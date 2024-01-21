@@ -8,10 +8,10 @@ export function unprocessableContent<T>(error: T): HttpResponse<T> {
   };
 }
 
-export function internalServerError(error: ServerError): HttpResponse<ServerError> {
+export function internalServerError(error: Error): HttpResponse<ServerError> {
   return {
     statusCode: 500,
-    body: error,
+    body: new ServerError(error.stack),
   };
 }
 

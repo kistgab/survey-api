@@ -2,7 +2,6 @@ import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
-import ServerError from "../../errors/server-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
 import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
@@ -53,8 +52,7 @@ export default class SignUpController
       const account = await this.addAccount.add({ email, name, password });
       return ok(account);
     } catch (error) {
-      console.error(error);
-      return internalServerError(new ServerError());
+      return internalServerError(error as Error);
     }
   }
 }
