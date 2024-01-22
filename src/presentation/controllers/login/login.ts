@@ -1,3 +1,4 @@
+import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import { unprocessableContent } from "../../helpers/http-helper";
 import Controller from "../../protocols/controller";
@@ -19,7 +20,11 @@ export default class LoginController implements Controller<RequestLoginBody, voi
     if (!httpRequest.body?.password) {
       return unprocessableContent(new MissingParamError("password"));
     }
-    this.emailValidator.isValid(httpRequest.body.email);
+    const isValidEmail = this.emailValidator.isValid(httpRequest.body.email);
+    if (!isValidEmail) {
+      return unprocessableContent(new InvalidParamError("email"));
+    }
+
     await Promise.resolve();
     return unprocessableContent(new Error("error"));
   }
