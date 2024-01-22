@@ -10,8 +10,13 @@ export type RequestLoginBody = {
 
 export default class LoginController implements Controller<RequestLoginBody, void | Error> {
   async handle(httpRequest: HttpRequest<RequestLoginBody>): Promise<HttpResponse<void | Error>> {
-    httpRequest;
+    if (!httpRequest.body?.email) {
+      return unprocessableContent(new MissingParamError("email"));
+    }
+    if (!httpRequest.body?.password) {
+      return unprocessableContent(new MissingParamError("password"));
+    }
     await Promise.resolve();
-    return unprocessableContent(new MissingParamError("email"));
+    return unprocessableContent(new Error("error"));
   }
 }
