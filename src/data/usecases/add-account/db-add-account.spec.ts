@@ -1,15 +1,25 @@
-import { InputAddAccountDto, OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
+import { InputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import AccountModel from "../../models/account-model";
-import AddAccountModel from "../../models/add-account-model";
 import AddAccountRepository from "../../protocols/add-account-repository";
 import Encrypter from "../../protocols/encrypter";
 import DbAddAccount from "./db-add-account";
 
-type SutTypes = {
-  sut: DbAddAccount;
-  encrypterStub: Encrypter;
-  addAccountRepositoryStub: AddAccountRepository;
-};
+function createFakeAccount(): AccountModel {
+  return {
+    id: "any_id",
+    email: "any_email@mail.com",
+    password: "hashed_password",
+    name: "any_name",
+  };
+}
+
+function createFakeInputAddAccountDto(): InputAddAccountDto {
+  return {
+    email: "any_email@mail.com",
+    password: "any_password",
+    name: "any_name",
+  };
+}
 
 function createEncrypterStub(): Encrypter {
   class EncrypterStub implements Encrypter {
@@ -22,18 +32,18 @@ function createEncrypterStub(): Encrypter {
 
 function createAddAccountRepositoryStub(): AddAccountRepository {
   class AddAccountRepositoryStub implements AddAccountRepository {
-    async add(accountData: AddAccountModel): Promise<AccountModel> {
-      const fakeAccount: AccountModel = {
-        id: "any_id",
-        email: accountData.email,
-        name: accountData.name,
-        password: accountData.password,
-      };
-      return Promise.resolve(fakeAccount);
+    async add(): Promise<AccountModel> {
+      return Promise.resolve(createFakeAccount());
     }
   }
   return new AddAccountRepositoryStub();
 }
+
+type SutTypes = {
+  sut: DbAddAccount;
+  encrypterStub: Encrypter;
+  addAccountRepositoryStub: AddAccountRepository;
+};
 
 function createSut(): SutTypes {
   const encrypterStub = createEncrypterStub();
@@ -47,81 +57,50 @@ function createSut(): SutTypes {
 
 describe("DbAddAccount Usecase", () => {
   it("should call the encrypter with the specified plain text password", async () => {
-    const input: InputAddAccountDto = {
-      email: "any_email@mail.com",
-      name: "any_name",
-      password: "any_password",
-    };
     const { sut, encrypterStub } = createSut();
     const encryptSpy = jest.spyOn(encrypterStub, "encrypt");
 
-    await sut.add(input);
+    await sut.add(createFakeInputAddAccountDto());
 
-    expect(encryptSpy).toHaveBeenCalledWith(input.password);
+    expect(encryptSpy).toHaveBeenCalledWith("any_password");
   });
 
   it("should throw if encrypter throws", async () => {
-    const input: InputAddAccountDto = {
-      email: "any_email@mail.com",
-      name: "any_name",
-      password: "any_password",
-    };
     const { sut, encrypterStub } = createSut();
     jest
       .spyOn(encrypterStub, "encrypt")
       .mockReturnValueOnce(Promise.reject(new Error("Encrypter error")));
 
-    await expect(sut.add(input)).rejects.toThrow("Encrypter error");
+    await expect(sut.add(createFakeInputAddAccountDto())).rejects.toThrow("Encrypter error");
   });
 
   it("should call the AddAccountRepository with the correct values", async () => {
-    const input: InputAddAccountDto = {
-      email: "any_email@mail.com",
-      name: "any_name",
-      password: "any_password",
-    };
     const { sut, addAccountRepositoryStub } = createSut();
     const addSpy = jest.spyOn(addAccountRepositoryStub, "add");
 
-    await sut.add(input);
+    await sut.add(createFakeInputAddAccountDto());
 
     expect(addSpy).toHaveBeenCalledWith({
-      email: input.email,
-      name: input.name,
+      email: "any_email@mail.com",
+      name: "any_name",
       password: "hashed_password",
     });
   });
 
   it("should throw if AddAccountRepository throws", async () => {
-    const input: InputAddAccountDto = {
-      email: "any_email@mail.com",
-      name: "any_name",
-      password: "any_password",
-    };
     const { sut, addAccountRepositoryStub } = createSut();
     jest
       .spyOn(addAccountRepositoryStub, "add")
       .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
 
-    await expect(sut.add(input)).rejects.toThrow("Repository error");
+    await expect(sut.add(createFakeInputAddAccountDto())).rejects.toThrow("Repository error");
   });
 
   it("should call the AddAccountRepository with the correct values", async () => {
-    const input: InputAddAccountDto = {
-      email: "any_email@mail.com",
-      name: "any_name",
-      password: "any_password",
-    };
-    const expectedOutput: OutputAddAccountDto = {
-      id: "any_id",
-      email: input.email,
-      password: "hashed_password",
-      name: input.name,
-    };
     const { sut } = createSut();
 
-    const result = await sut.add(input);
+    const result = await sut.add(createFakeInputAddAccountDto());
 
-    expect(result).toEqual(expectedOutput);
+    expect(result).toEqual(createFakeAccount());
   });
 });
