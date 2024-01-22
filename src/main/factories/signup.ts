@@ -2,6 +2,7 @@ import DbAddAccount from "../../data/usecases/add-account/db-add-account";
 import { OutputAddAccountDto } from "../../domain/dtos/add-account-dto";
 import BCryptAdapter from "../../infra/cryptography/bcrypt-adapter";
 import { AccountMongoRepository } from "../../infra/db/mongodb/account-repository/account";
+import LogMongoRepository from "../../infra/db/mongodb/log-repository/log";
 import SignUpController, { RequestSignUpBody } from "../../presentation/controllers/signup/signup";
 import Controller from "../../presentation/protocols/controller";
 import EmailValidatorAdapter from "../../utils/email-validator-adapter";
@@ -15,6 +16,7 @@ export default abstract class SignUpControllerFactory {
     const accountRepository = new AccountMongoRepository();
     const addAccount = new DbAddAccount(encrypter, accountRepository);
     const signUpController = new SignUpController(emailValidator, addAccount);
-    return new LogControllerDecorator(signUpController);
+    const logErrorRepository = new LogMongoRepository();
+    return new LogControllerDecorator(signUpController, logErrorRepository);
   }
 }
