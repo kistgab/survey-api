@@ -14,13 +14,17 @@ export default class LoginController implements Controller<RequestLoginBody, voi
   constructor(private readonly emailValidator: EmailValidator) {}
 
   async handle(httpRequest: HttpRequest<RequestLoginBody>): Promise<HttpResponse<void | Error>> {
-    if (!httpRequest.body?.email) {
+    if (!httpRequest.body) {
+      return unprocessableContent(new MissingParamError("body"));
+    }
+    const { email, password } = httpRequest.body;
+    if (!email) {
       return unprocessableContent(new MissingParamError("email"));
     }
-    if (!httpRequest.body?.password) {
+    if (!password) {
       return unprocessableContent(new MissingParamError("password"));
     }
-    const isValidEmail = this.emailValidator.isValid(httpRequest.body.email);
+    const isValidEmail = this.emailValidator.isValid(email);
     if (!isValidEmail) {
       return unprocessableContent(new InvalidParamError("email"));
     }
