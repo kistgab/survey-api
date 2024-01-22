@@ -1,14 +1,21 @@
 import LogErrorRepository from "../../../data/protocols/log-error-repository";
+import ServerError from "../../../presentation/errors/server-error";
 import { internalServerError } from "../../../presentation/helpers/http-helper";
 import Controller from "../../../presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../presentation/protocols/http";
 import LogControllerDecorator from "./log";
 
-type SutTypes = {
-  sut: LogControllerDecorator<string, string>;
-  controllerStub: Controller<string, string | Error>;
-  logErrorRepositoryStub: LogErrorRepository;
-};
+function createFakeRequest(): HttpRequest<string> {
+  return {
+    body: "any_body",
+  };
+}
+
+function createFakeServerError(): HttpResponse<ServerError> {
+  const fakeError = new Error();
+  fakeError.stack = "any_stack";
+  return internalServerError(fakeError);
+}
 
 function createControllerStub(): Controller<string, string> {
   class ControllerStub implements Controller<string, string> {
@@ -29,6 +36,12 @@ function createLogErrorRepositoryStub(): LogErrorRepository {
   return new LogErrorRepositoryStub();
 }
 
+type SutTypes = {
+  sut: LogControllerDecorator<string, string>;
+  controllerStub: Controller<string, string | Error>;
+  logErrorRepositoryStub: LogErrorRepository;
+};
+
 function createSut(): SutTypes {
   const controllerStub = createControllerStub();
   const logErrorRepositoryStub = createLogErrorRepositoryStub();
@@ -40,41 +53,29 @@ describe("LogControllerDecorator", () => {
   it("should call the provided controller handle method", async () => {
     const { sut, controllerStub } = createSut();
     const handleSpy = jest.spyOn(controllerStub, "handle");
-    const input: HttpRequest<string> = {
-      body: "any_body",
-    };
 
-    await sut.handle(input);
+    await sut.handle(createFakeRequest());
 
-    expect(handleSpy).toHaveBeenCalledWith(input);
+    expect(handleSpy).toHaveBeenCalledWith(createFakeRequest());
   });
 
   it("should return the same thing as the provided controller does", async () => {
     const { sut, controllerStub } = createSut();
-    const input: HttpRequest<string> = {
-      body: "any_body",
-    };
 
-    const controllerStubResponse = await controllerStub.handle(input);
-    const sutResponse = await sut.handle(input);
+    const controllerStubResponse = await controllerStub.handle(createFakeRequest());
+    const sutResponse = await sut.handle(createFakeRequest());
 
     expect(sutResponse).toEqual(controllerStubResponse);
   });
 
   it("should call LogErrorRepository if controller returns a server error", async () => {
     const { sut, controllerStub, logErrorRepositoryStub } = createSut();
-    const fakeError = new Error();
-    fakeError.stack = "any_stack";
-    jest
-      .spyOn(controllerStub, "handle")
-      .mockReturnValueOnce(Promise.resolve(internalServerError(fakeError)));
-    const input: HttpRequest<string> = {
-      body: "any_body",
-    };
+    const fakeServerError = createFakeServerError();
+    jest.spyOn(controllerStub, "handle").mockReturnValueOnce(Promise.resolve(fakeServerError));
     const logSpy = jest.spyOn(logErrorRepositoryStub, "log");
 
-    await sut.handle(input);
+    await sut.handle(createFakeRequest());
 
-    expect(logSpy).toHaveBeenCalledWith(fakeError.stack);
+    expect(logSpy).toHaveBeenCalledWith("any_stack");
   });
 });
