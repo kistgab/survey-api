@@ -30,7 +30,10 @@ export default class SignUpController
     httpRequest: HttpRequest<RequestSignUpBody>,
   ): Promise<HttpResponse<Error | OutputAddAccountDto>> {
     try {
-      this.validation.validate(httpRequest.body);
+      const validationError = this.validation.validate(httpRequest.body);
+      if (validationError) {
+        return unprocessableContent(validationError);
+      }
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
       }
