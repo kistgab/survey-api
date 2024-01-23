@@ -6,6 +6,7 @@ import { internalServerError, ok, unprocessableContent } from "../../helpers/htt
 import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
+import Validation from "../../protocols/validation";
 
 export type RequestSignUpBody = {
   name: string;
@@ -22,12 +23,14 @@ export default class SignUpController
   constructor(
     private readonly emailValidator: EmailValidator,
     private readonly addAccount: AddAccount,
+    private readonly validation: Validation,
   ) {}
 
   async handle(
     httpRequest: HttpRequest<RequestSignUpBody>,
   ): Promise<HttpResponse<Error | OutputAddAccountDto>> {
     try {
+      this.validation.validate(httpRequest.body);
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
       }
