@@ -1,3 +1,4 @@
+import Authentication from "../../../domain/usecases/authentication";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, unprocessableContent } from "../../helpers/http-helper";
@@ -17,7 +18,17 @@ function createFakeRequest(): HttpRequest<RequestLoginBody> {
 type CreateSutType = {
   sut: LoginController;
   emailValidatorStub: EmailValidator;
+  authenticationStub: Authentication;
 };
+
+function createAuthenticationStub(): Authentication {
+  class AuthenticationStub implements Authentication {
+    async auth(): Promise<string> {
+      return Promise.resolve("any_token");
+    }
+  }
+  return new AuthenticationStub();
+}
 
 function createEmailValidatorStub(): EmailValidator {
   class EmailValidatorStub implements EmailValidator {
@@ -30,8 +41,9 @@ function createEmailValidatorStub(): EmailValidator {
 
 function createSut(): CreateSutType {
   const emailValidatorStub = createEmailValidatorStub();
-  const sut = new LoginController(emailValidatorStub);
-  return { sut, emailValidatorStub };
+  const authenticationStub = createAuthenticationStub();
+  const sut = new LoginController(emailValidatorStub, authenticationStub);
+  return { sut, emailValidatorStub, authenticationStub };
 }
 
 describe("Login Controller", () => {
@@ -100,5 +112,14 @@ describe("Login Controller", () => {
     const result = await sut.handle(httpRequest);
 
     expect(result).toEqual(internalServerError(new Error("Email Validator Error")));
+  });
+
+  it("should call Authentication with correct params", async () => {
+    const { sut, authenticationStub } = createSut();
+    const authSpy = jest.spyOn(authenticationStub, "auth");
+
+    await sut.handle(createFakeRequest());
+
+    expect(authSpy).toHaveBeenCalledWith("any_email@mail.com", "any_password");
   });
 });
