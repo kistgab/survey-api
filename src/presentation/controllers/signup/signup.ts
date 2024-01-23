@@ -15,15 +15,13 @@ export type RequestSignUpBody = {
   passwordConfirmation: string;
 };
 
-type RequestBodyField = keyof RequestSignUpBody;
-
 export default class SignUpController
   implements Controller<RequestSignUpBody, Error | OutputAddAccountDto>
 {
   constructor(
     private readonly emailValidator: EmailValidator,
     private readonly addAccount: AddAccount,
-    private readonly validation: Validation,
+    private readonly validation: Validation<unknown>,
   ) {}
 
   async handle(

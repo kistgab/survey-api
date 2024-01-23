@@ -1,3 +1,3 @@
-export default interface Validation {
-  validate<T>(input: T): Error | null;
+export default interface Validation<T> {
+  validate(input: T): Error | undefined;
 }

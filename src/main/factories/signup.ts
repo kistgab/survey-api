@@ -7,6 +7,7 @@ import SignUpController, { RequestSignUpBody } from "../../presentation/controll
 import Controller from "../../presentation/protocols/controller";
 import EmailValidatorAdapter from "../../utils/email-validator-adapter";
 import LogControllerDecorator from "../decorators/log/log";
+import SignUpValidationFactory from "./signup-validation";
 
 export default abstract class SignUpControllerFactory {
   static create(): Controller<RequestSignUpBody, Error | OutputAddAccountDto> {
@@ -15,7 +16,8 @@ export default abstract class SignUpControllerFactory {
     const encrypter = new BCryptAdapter(salt);
     const accountRepository = new AccountMongoRepository();
     const addAccount = new DbAddAccount(encrypter, accountRepository);
-    const signUpController = new SignUpController(emailValidator, addAccount);
+    const validation = SignUpValidationFactory.create();
+    const signUpController = new SignUpController(emailValidator, addAccount, validation);
     const logErrorRepository = new LogMongoRepository();
     return new LogControllerDecorator(signUpController, logErrorRepository);
   }

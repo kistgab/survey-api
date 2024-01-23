@@ -47,10 +47,10 @@ function createAddAccount(): AddAccount {
   return new AddAccountStub();
 }
 
-function createValidation(): Validation {
-  class ValidationStub implements Validation {
-    validate(): Error | null {
-      return null;
+function createValidation(): Validation<string> {
+  class ValidationStub implements Validation<string> {
+    validate(): Error | undefined {
+      return;
     }
   }
   return new ValidationStub();
@@ -60,7 +60,7 @@ type createSutReturn = {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
   addAccountStub: AddAccount;
-  validationStub: Validation;
+  validationStub: Validation<unknown>;
 };
 
 function createSut(): createSutReturn {
