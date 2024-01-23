@@ -6,6 +6,7 @@ import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest } from "../../protocols/http";
+import Validation from "../../protocols/validation";
 import SignUpController, { RequestSignUpBody } from "./signup";
 
 function createFakeRequest(): HttpRequest<RequestSignUpBody> {
@@ -46,20 +47,32 @@ function createAddAccount(): AddAccount {
   return new AddAccountStub();
 }
 
+function createValidation(): Validation {
+  class ValidationStub implements Validation {
+    validate(): Error | null {
+      return null;
+    }
+  }
+  return new ValidationStub();
+}
+
 type createSutReturn = {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
-  addAcountStub: AddAccount;
+  addAccountStub: AddAccount;
+  validationStub: Validation;
 };
 
 function createSut(): createSutReturn {
   const emailValidatorStub = createEmailValidator();
-  const addAcountStub = createAddAccount();
-  const sut = new SignUpController(emailValidatorStub, addAcountStub);
+  const addAccountStub = createAddAccount();
+  const validationStub = createValidation();
+  const sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
   return {
     sut,
     emailValidatorStub,
-    addAcountStub,
+    addAccountStub,
+    validationStub,
   };
 }
 
@@ -186,7 +199,7 @@ describe("SignUp Controller", () => {
   });
 
   it("Should call AddAcount with correct values", async () => {
-    const { sut, addAcountStub } = createSut();
+    const { sut, addAccountStub: addAcountStub } = createSut();
     const addSpy = jest.spyOn(addAcountStub, "add");
     const httpRequest = createFakeRequest();
 
@@ -200,7 +213,7 @@ describe("SignUp Controller", () => {
   });
 
   it("Should return 500 when the AddAccount throws an error", async () => {
-    const { sut, addAcountStub } = createSut();
+    const { sut, addAccountStub: addAcountStub } = createSut();
     jest.spyOn(addAcountStub, "add").mockImplementationOnce(async () => {
       return Promise.reject(new Error());
     });
@@ -216,5 +229,15 @@ describe("SignUp Controller", () => {
     const httpResponse = await sut.handle(createFakeRequest());
 
     expect(httpResponse).toEqual(ok(createFakeAccount()));
+  });
+
+  it("Should call Validation with correct values", async () => {
+    const { sut, validationStub } = createSut();
+    const addSpy = jest.spyOn(validationStub, "validate");
+    const input = createFakeRequest();
+
+    await sut.handle(input);
+
+    expect(addSpy).toHaveBeenCalledWith(input.body);
   });
 });
