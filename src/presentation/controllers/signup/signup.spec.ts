@@ -4,9 +4,9 @@ import { AddAccount } from "../../../domain/usecases/add-account";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
+import Validation from "../../helpers/validators/validation";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest } from "../../protocols/http";
-import Validation from "../../protocols/validation";
 import SignUpController, { RequestSignUpBody } from "./signup";
 
 function createFakeRequest(): HttpRequest<RequestSignUpBody> {
