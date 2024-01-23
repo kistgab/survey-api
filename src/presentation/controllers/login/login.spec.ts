@@ -1,7 +1,12 @@
 import Authentication from "../../../domain/usecases/authentication";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, unauthorized, unprocessableContent } from "../../helpers/http-helper";
+import {
+  internalServerError,
+  ok,
+  unauthorized,
+  unprocessableContent,
+} from "../../helpers/http-helper";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest } from "./../../protocols/http";
 import LoginController, { RequestLoginBody } from "./login";
@@ -143,5 +148,14 @@ describe("Login Controller", () => {
     const result = await sut.handle(httpRequest);
 
     expect(result).toEqual(internalServerError(new Error("Authentication error")));
+  });
+
+  it("should return 200 if valid credentials were provided", async () => {
+    const { sut } = createSut();
+    const httpRequest = createFakeRequest();
+
+    const result = await sut.handle(httpRequest);
+
+    expect(result).toEqual(ok({ accessToken: "any_token" }));
   });
 });
