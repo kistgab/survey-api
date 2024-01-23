@@ -37,17 +37,6 @@ export default class SignUpController
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
       }
-      const requiredFields: RequestBodyField[] = [
-        "name",
-        "email",
-        "password",
-        "passwordConfirmation",
-      ];
-      for (const field of requiredFields) {
-        if (!httpRequest.body?.[field]) {
-          return unprocessableContent(new MissingParamError(field));
-        }
-      }
       const { email, password, name, passwordConfirmation } = httpRequest.body;
       if (password !== passwordConfirmation) {
         return unprocessableContent(new InvalidParamError("passwordConfirmation"));
