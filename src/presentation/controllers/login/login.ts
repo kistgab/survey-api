@@ -1,7 +1,12 @@
 import Authentication from "../../../domain/usecases/authentication";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, unauthorized, unprocessableContent } from "../../helpers/http-helper";
+import {
+  internalServerError,
+  ok,
+  unauthorized,
+  unprocessableContent,
+} from "../../helpers/http-helper";
 import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
@@ -11,15 +16,23 @@ export type RequestLoginBody = {
   password: string;
 };
 
+export type ResponseLoginBody = {
+  accessToken: string;
+};
+
 type RequestBodyField = keyof RequestLoginBody;
 
-export default class LoginController implements Controller<RequestLoginBody, void | Error> {
+export default class LoginController
+  implements Controller<RequestLoginBody, ResponseLoginBody | Error>
+{
   constructor(
     private readonly emailValidator: EmailValidator,
     private readonly authentication: Authentication,
   ) {}
 
-  async handle(httpRequest: HttpRequest<RequestLoginBody>): Promise<HttpResponse<void | Error>> {
+  async handle(
+    httpRequest: HttpRequest<RequestLoginBody>,
+  ): Promise<HttpResponse<ResponseLoginBody | Error>> {
     try {
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
@@ -39,7 +52,7 @@ export default class LoginController implements Controller<RequestLoginBody, voi
       if (!accessToken) {
         return unauthorized();
       }
-      return unprocessableContent(new Error("error"));
+      return ok({ accessToken });
     } catch (error) {
       return internalServerError(error as Error);
     }
