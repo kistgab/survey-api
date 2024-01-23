@@ -1,7 +1,7 @@
 import Authentication from "../../../domain/usecases/authentication";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, unprocessableContent } from "../../helpers/http-helper";
+import { internalServerError, unauthorized, unprocessableContent } from "../../helpers/http-helper";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest } from "./../../protocols/http";
 import LoginController, { RequestLoginBody } from "./login";
@@ -23,7 +23,7 @@ type CreateSutType = {
 
 function createAuthenticationStub(): Authentication {
   class AuthenticationStub implements Authentication {
-    async auth(): Promise<string> {
+    async auth(): Promise<string | null> {
       return Promise.resolve("any_token");
     }
   }
@@ -121,5 +121,15 @@ describe("Login Controller", () => {
     await sut.handle(createFakeRequest());
 
     expect(authSpy).toHaveBeenCalledWith("any_email@mail.com", "any_password");
+  });
+
+  it("should return 401 if invalid credentials were provided", async () => {
+    const { sut, authenticationStub } = createSut();
+    const httpRequest = createFakeRequest();
+    jest.spyOn(authenticationStub, "auth").mockReturnValueOnce(Promise.resolve(null));
+
+    const result = await sut.handle(httpRequest);
+
+    expect(result).toEqual(unauthorized());
   });
 });
