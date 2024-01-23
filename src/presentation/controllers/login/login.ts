@@ -11,6 +11,8 @@ export type RequestLoginBody = {
   password: string;
 };
 
+type RequestBodyField = keyof RequestLoginBody;
+
 export default class LoginController implements Controller<RequestLoginBody, void | Error> {
   constructor(
     private readonly emailValidator: EmailValidator,
@@ -22,13 +24,13 @@ export default class LoginController implements Controller<RequestLoginBody, voi
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
       }
+      const requiredFields: RequestBodyField[] = ["email", "password"];
+      for (const field of requiredFields) {
+        if (!httpRequest.body?.[field]) {
+          return unprocessableContent(new MissingParamError(field));
+        }
+      }
       const { email, password } = httpRequest.body;
-      if (!email) {
-        return unprocessableContent(new MissingParamError("email"));
-      }
-      if (!password) {
-        return unprocessableContent(new MissingParamError("password"));
-      }
       const isValidEmail = this.emailValidator.isValid(email);
       if (!isValidEmail) {
         return unprocessableContent(new InvalidParamError("email"));
