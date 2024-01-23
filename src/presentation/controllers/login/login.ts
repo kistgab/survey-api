@@ -1,7 +1,7 @@
 import Authentication from "../../../domain/usecases/authentication";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, unprocessableContent } from "../../helpers/http-helper";
+import { internalServerError, unauthorized, unprocessableContent } from "../../helpers/http-helper";
 import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
@@ -35,9 +35,10 @@ export default class LoginController implements Controller<RequestLoginBody, voi
       if (!isValidEmail) {
         return unprocessableContent(new InvalidParamError("email"));
       }
-      await this.authentication.auth(email, password);
-
-      await Promise.resolve();
+      const accessToken = await this.authentication.auth(email, password);
+      if (!accessToken) {
+        return unauthorized();
+      }
       return unprocessableContent(new Error("error"));
     } catch (error) {
       return internalServerError(error as Error);
