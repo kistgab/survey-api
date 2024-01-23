@@ -1,3 +1,4 @@
+import Authentication from "../../../domain/usecases/authentication";
 import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, unprocessableContent } from "../../helpers/http-helper";
@@ -11,7 +12,10 @@ export type RequestLoginBody = {
 };
 
 export default class LoginController implements Controller<RequestLoginBody, void | Error> {
-  constructor(private readonly emailValidator: EmailValidator) {}
+  constructor(
+    private readonly emailValidator: EmailValidator,
+    private readonly authentication: Authentication,
+  ) {}
 
   async handle(httpRequest: HttpRequest<RequestLoginBody>): Promise<HttpResponse<void | Error>> {
     try {
@@ -29,6 +33,7 @@ export default class LoginController implements Controller<RequestLoginBody, voi
       if (!isValidEmail) {
         return unprocessableContent(new InvalidParamError("email"));
       }
+      await this.authentication.auth(email, password);
 
       await Promise.resolve();
       return unprocessableContent(new Error("error"));
