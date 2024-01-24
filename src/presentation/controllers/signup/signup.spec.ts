@@ -1,11 +1,9 @@
 import AccountModel from "../../../data/models/account-model";
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
-import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
 import Validation from "../../helpers/validators/validation";
-import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest } from "../../protocols/http";
 import SignUpController, { RequestSignUpBody } from "./signup";
 
@@ -29,15 +27,6 @@ function createFakeAccount(): AccountModel {
   };
 }
 
-function createEmailValidator(): EmailValidator {
-  class EmailValidatorStub implements EmailValidator {
-    isValid(): boolean {
-      return true;
-    }
-  }
-  return new EmailValidatorStub();
-}
-
 function createAddAccount(): AddAccount {
   class AddAccountStub implements AddAccount {
     async add(): Promise<OutputAddAccountDto> {
@@ -58,54 +47,22 @@ function createValidation(): Validation<string> {
 
 type createSutReturn = {
   sut: SignUpController;
-  emailValidatorStub: EmailValidator;
   addAccountStub: AddAccount;
   validationStub: Validation<unknown>;
 };
 
 function createSut(): createSutReturn {
-  const emailValidatorStub = createEmailValidator();
   const addAccountStub = createAddAccount();
   const validationStub = createValidation();
-  const sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
+  const sut = new SignUpController(addAccountStub, validationStub);
   return {
     sut,
-    emailValidatorStub,
     addAccountStub,
     validationStub,
   };
 }
 
 describe("SignUp Controller", () => {
-  it("Should return 422 when an invalid email provided", async () => {
-    const { sut, emailValidatorStub } = createSut();
-    jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
-
-    const httpResponse = await sut.handle(createFakeRequest());
-
-    expect(httpResponse).toEqual(unprocessableContent(new InvalidParamError("email")));
-  });
-
-  it("Should call EmailValidator with the provided email", async () => {
-    const { sut, emailValidatorStub } = createSut();
-    const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
-    const httpRequest = createFakeRequest();
-    await sut.handle(httpRequest);
-
-    expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body?.email);
-  });
-
-  it("Should return 500 when the EmailValidator throws an error", async () => {
-    const { sut, emailValidatorStub } = createSut();
-    jest.spyOn(emailValidatorStub, "isValid").mockImplementationOnce(() => {
-      throw new Error();
-    });
-
-    const httpResponse = await sut.handle(createFakeRequest());
-
-    expect(httpResponse).toEqual(internalServerError(new Error("stack")));
-  });
-
   it("Should return 422 if body wasn't provided", async () => {
     const { sut } = createSut();
     const httpRequest = {};

@@ -1,11 +1,9 @@
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
-import InvalidParamError from "../../errors/invalid-param-error";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
 import Validation from "../../helpers/validators/validation";
 import Controller from "../../protocols/controller";
-import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
 
 export type RequestSignUpBody = {
@@ -19,7 +17,6 @@ export default class SignUpController
   implements Controller<RequestSignUpBody, Error | OutputAddAccountDto>
 {
   constructor(
-    private readonly emailValidator: EmailValidator,
     private readonly addAccount: AddAccount,
     private readonly validation: Validation<unknown>,
   ) {}
@@ -36,9 +33,6 @@ export default class SignUpController
         return unprocessableContent(new MissingParamError("body"));
       }
       const { email, password, name } = httpRequest.body;
-      if (!this.emailValidator.isValid(email)) {
-        return unprocessableContent(new InvalidParamError("email"));
-      }
       const account = await this.addAccount.add({ email, name, password });
       return ok(account);
     } catch (error) {
