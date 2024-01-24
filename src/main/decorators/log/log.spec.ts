@@ -1,6 +1,6 @@
 import LogErrorRepository from "../../../data/protocols/log-error-repository";
 import ServerError from "../../../presentation/errors/server-error";
-import { internalServerError } from "../../../presentation/helpers/http-helper";
+import { internalServerError } from "../../../presentation/helpers/http/http-helper";
 import Controller from "../../../presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../presentation/protocols/http";
 import LogControllerDecorator from "./log";

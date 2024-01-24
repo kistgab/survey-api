@@ -2,7 +2,7 @@ import AccountModel from "../../../data/models/account-model";
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, ok, unprocessableContent } from "../../helpers/http-helper";
+import { internalServerError, ok, unprocessableContent } from "../../helpers/http/http-helper";
 import Validation from "../../helpers/validators/validation";
 import { HttpRequest } from "../../protocols/http";
 import SignUpController, { RequestSignUpBody } from "./signup";

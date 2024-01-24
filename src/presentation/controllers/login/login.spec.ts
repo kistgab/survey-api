@@ -5,7 +5,7 @@ import {
   ok,
   unauthorized,
   unprocessableContent,
-} from "../../helpers/http-helper";
+} from "../../helpers/http/http-helper";
 import Validation from "../../helpers/validators/validation";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest } from "./../../protocols/http";
