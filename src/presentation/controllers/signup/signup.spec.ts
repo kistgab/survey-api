@@ -106,24 +106,6 @@ describe("SignUp Controller", () => {
     expect(httpResponse).toEqual(internalServerError(new Error("stack")));
   });
 
-  it("Should return 422 if the password confirmation fails", async () => {
-    const { sut } = createSut();
-    const httpRequest = {
-      body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "different_password",
-      },
-    };
-
-    const httpResponse = await sut.handle(httpRequest);
-
-    expect(httpResponse).toEqual(
-      unprocessableContent(new InvalidParamError("passwordConfirmation")),
-    );
-  });
-
   it("Should return 422 if body wasn't provided", async () => {
     const { sut } = createSut();
     const httpRequest = {};

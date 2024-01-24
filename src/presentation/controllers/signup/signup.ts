@@ -35,10 +35,7 @@ export default class SignUpController
       if (!httpRequest.body) {
         return unprocessableContent(new MissingParamError("body"));
       }
-      const { email, password, name, passwordConfirmation } = httpRequest.body;
-      if (password !== passwordConfirmation) {
-        return unprocessableContent(new InvalidParamError("passwordConfirmation"));
-      }
+      const { email, password, name } = httpRequest.body;
       if (!this.emailValidator.isValid(email)) {
         return unprocessableContent(new InvalidParamError("email"));
       }
