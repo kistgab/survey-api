@@ -1,5 +1,5 @@
-import MissingParamError from "../../errors/missing-param-error";
-import Validation from "./validation";
+import MissingParamError from "../../../errors/missing-param-error";
+import Validation from "../validation";
 
 export default class RequiredFieldValidation<T> implements Validation<T> {
   constructor(private readonly fieldName: keyof T) {}
