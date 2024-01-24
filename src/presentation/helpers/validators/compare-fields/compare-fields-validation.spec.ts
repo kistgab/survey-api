@@ -14,4 +14,12 @@ describe("CompareField Validation", () => {
 
     expect(result).toEqual(new InvalidParamError("another_field"));
   });
+
+  it("should not return if validation pass", () => {
+    const sut = createSut();
+
+    const result = sut.validate({ any_field: "any_value", another_field: "any_value" });
+
+    expect(result).toBeUndefined();
+  });
 });
