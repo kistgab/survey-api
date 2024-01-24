@@ -6,8 +6,8 @@ import {
   unauthorized,
   unprocessableContent,
 } from "../../helpers/http/http-helper";
-import Validation from "../../helpers/validators/validation";
 import EmailValidator from "../../protocols/email-validator";
+import Validation from "../../protocols/validation";
 import { HttpRequest } from "./../../protocols/http";
 import LoginController, { RequestLoginBody } from "./login";
 

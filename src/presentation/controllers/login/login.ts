@@ -6,10 +6,10 @@ import {
   unauthorized,
   unprocessableContent,
 } from "../../helpers/http/http-helper";
-import Validation from "../../helpers/validators/validation";
 import Controller from "../../protocols/controller";
 import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
+import Validation from "../../protocols/validation";
 
 export type RequestLoginBody = {
   email: string;

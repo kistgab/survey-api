@@ -3,8 +3,8 @@ import CompareFieldsValidation from "../../../presentation/helpers/validators/co
 import ValidationComposite from "../../../presentation/helpers/validators/composite/validation-composite";
 import EmailValidation from "../../../presentation/helpers/validators/email/email-validation";
 import RequiredFieldValidation from "../../../presentation/helpers/validators/required-field/required-field-validation";
-import Validation from "../../../presentation/helpers/validators/validation";
 import EmailValidator from "../../../presentation/protocols/email-validator";
+import Validation from "../../../presentation/protocols/validation";
 import SignUpValidationFactory from "./signup-validation";
 
 type RequestSignUpBodyKeys = keyof RequestSignUpBody;

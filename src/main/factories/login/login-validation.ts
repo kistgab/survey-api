@@ -2,7 +2,7 @@ import { RequestLoginBody } from "../../../presentation/controllers/login/login"
 import ValidationComposite from "../../../presentation/helpers/validators/composite/validation-composite";
 import EmailValidation from "../../../presentation/helpers/validators/email/email-validation";
 import RequiredFieldValidation from "../../../presentation/helpers/validators/required-field/required-field-validation";
-import Validation from "../../../presentation/helpers/validators/validation";
+import Validation from "../../../presentation/protocols/validation";
 import EmailValidatorAdapter from "../../../utils/email-validator-adapter";
 
 type RequestLoginBodyKeys = keyof RequestLoginBody;
