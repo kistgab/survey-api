@@ -7,7 +7,6 @@ import {
   unprocessableContent,
 } from "../../helpers/http/http-helper";
 import Controller from "../../protocols/controller";
-import EmailValidator from "../../protocols/email-validator";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
 import Validation from "../../protocols/validation";
 
@@ -24,7 +23,6 @@ export default class LoginController
   implements Controller<RequestLoginBody, ResponseLoginBody | Error>
 {
   constructor(
-    private readonly emailValidator: EmailValidator,
     private readonly authentication: Authentication,
     private readonly validation: Validation<unknown>,
   ) {}

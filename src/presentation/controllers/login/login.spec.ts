@@ -6,7 +6,6 @@ import {
   unauthorized,
   unprocessableContent,
 } from "../../helpers/http/http-helper";
-import EmailValidator from "../../protocols/email-validator";
 import Validation from "../../protocols/validation";
 import { HttpRequest } from "./../../protocols/http";
 import LoginController, { RequestLoginBody } from "./login";
@@ -19,13 +18,6 @@ function createFakeRequest(): HttpRequest<RequestLoginBody> {
     },
   };
 }
-
-type CreateSutType = {
-  sut: LoginController;
-  emailValidatorStub: EmailValidator;
-  authenticationStub: Authentication;
-  validationStub: Validation<unknown>;
-};
 
 function createValidation(): Validation<string> {
   class ValidationStub implements Validation<string> {
@@ -45,21 +37,17 @@ function createAuthenticationStub(): Authentication {
   return new AuthenticationStub();
 }
 
-function createEmailValidatorStub(): EmailValidator {
-  class EmailValidatorStub implements EmailValidator {
-    isValid(): boolean {
-      return true;
-    }
-  }
-  return new EmailValidatorStub();
-}
+type CreateSutTypes = {
+  sut: LoginController;
+  authenticationStub: Authentication;
+  validationStub: Validation<unknown>;
+};
 
-function createSut(): CreateSutType {
-  const emailValidatorStub = createEmailValidatorStub();
+function createSut(): CreateSutTypes {
   const authenticationStub = createAuthenticationStub();
   const validationStub = createValidation();
-  const sut = new LoginController(emailValidatorStub, authenticationStub, validationStub);
-  return { sut, emailValidatorStub, authenticationStub, validationStub };
+  const sut = new LoginController(authenticationStub, validationStub);
+  return { sut, authenticationStub, validationStub };
 }
 
 describe("Login Controller", () => {
