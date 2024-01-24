@@ -51,4 +51,15 @@ describe("DbAuthentication UseCase", () => {
 
     expect(findSpy).toHaveBeenCalledWith("any_email@mail.com");
   });
+
+  it("should throw if FindAccountByEmailRepository throws", async () => {
+    const { sut, findAccountByEmailRepositoryStub } = createSut();
+    jest
+      .spyOn(findAccountByEmailRepositoryStub, "find")
+      .mockReturnValueOnce(Promise.reject(new Error("FindAccountByEmailRepository error")));
+
+    await expect(sut.auth(createFakeInputDto())).rejects.toThrow(
+      new Error("FindAccountByEmailRepository error"),
+    );
+  });
 });
