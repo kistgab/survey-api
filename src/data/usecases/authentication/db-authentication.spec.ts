@@ -14,7 +14,7 @@ function createFakeAccount(): AccountModel {
 
 function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
-    async find(): Promise<AccountModel> {
+    async find(): Promise<AccountModel | null> {
       return Promise.resolve(createFakeAccount());
     }
   }
@@ -61,5 +61,14 @@ describe("DbAuthentication UseCase", () => {
     await expect(sut.auth(createFakeInputDto())).rejects.toThrow(
       new Error("FindAccountByEmailRepository error"),
     );
+  });
+
+  it("should return null if FindAccountByEmailRepository returns null", async () => {
+    const { sut, findAccountByEmailRepositoryStub } = createSut();
+    jest.spyOn(findAccountByEmailRepositoryStub, "find").mockReturnValueOnce(Promise.resolve(null));
+
+    const result = await sut.auth(createFakeInputDto());
+
+    expect(result).toBeNull();
   });
 });
