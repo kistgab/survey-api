@@ -1,3 +1,4 @@
+import MissingParamError from "../../../errors/missing-param-error";
 import RequiredFieldValidation from "./required-field-validation";
 type anyType = { any_field: string };
 
@@ -11,7 +12,7 @@ describe("RequiredField Validation", () => {
 
     const result = sut.validate({} as anyType);
 
-    expect(result).toEqual(new Error("Missing param: any_field"));
+    expect(result).toEqual(new MissingParamError("any_field"));
   });
 
   it("should not return if validation pass", () => {
