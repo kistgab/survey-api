@@ -36,7 +36,7 @@ function createSut(): createSutReturn {
 }
 
 describe("Email Validation", () => {
-  it("Should return an error when an invalid email provided", () => {
+  it("Should return an error when EmailValidator returns false", () => {
     const { sut, emailValidatorStub } = createSut();
     jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
 
