@@ -1,6 +1,6 @@
 import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
 import AccountModel from "../../models/account-model";
-import FindAccountByEmailRepository from "../../protocols/find-account-by-email-repository";
+import FindAccountByEmailRepository from "../../protocols/db/find-account-by-email-repository";
 import DbAuthentication from "./db-authentication";
 
 function createFakeAccount(): AccountModel {

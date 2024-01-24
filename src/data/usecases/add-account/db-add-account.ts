@@ -1,7 +1,7 @@
 import { InputAddAccountDto, OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
-import AddAccountRepository from "../../protocols/add-account-repository";
-import Encrypter from "../../protocols/encrypter";
+import Encrypter from "../../protocols/cryptography/encrypter";
+import AddAccountRepository from "../../protocols/db/add-account-repository";
 
 export default class DbAddAccount implements AddAccount {
   constructor(
