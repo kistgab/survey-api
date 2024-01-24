@@ -10,7 +10,7 @@ export default class CompareFieldsValidation<T> implements Validation<T> {
   validate(input: T): Error | undefined {
     const areEqual = input[this.fieldName] === input[this.fieldToCompareName];
     if (!areEqual) {
-      return new InvalidParamError(this.fieldName.toString());
+      return new InvalidParamError(this.fieldToCompareName.toString());
     }
   }
 }
