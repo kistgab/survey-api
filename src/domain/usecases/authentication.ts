@@ -1,3 +1,5 @@
+import { InputAuthenticationDto } from "../dtos/authentication-dto";
+
 export default interface Authentication {
-  auth(email: string, password: string): Promise<string | null>;
+  auth(input: InputAuthenticationDto): Promise<string | null>;
 }

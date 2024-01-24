@@ -66,7 +66,7 @@ describe("Login Controller", () => {
 
     await sut.handle(createFakeRequest());
 
-    expect(authSpy).toHaveBeenCalledWith("any_email@mail.com", "any_password");
+    expect(authSpy).toHaveBeenCalledWith({ email: "any_email@mail.com", password: "any_password" });
   });
 
   it("should return 401 if invalid credentials were provided", async () => {
