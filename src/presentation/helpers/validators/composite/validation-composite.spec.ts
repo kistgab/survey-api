@@ -4,7 +4,7 @@ import ValidationComposite from "./validation-composite";
 
 type SutTypes = {
   sut: ValidationComposite<unknown>;
-  validationStub: Validation<unknown>;
+  validationStubs: Validation<unknown>[];
 };
 
 function createValidationStub(): Validation<unknown> {
@@ -17,18 +17,30 @@ function createValidationStub(): Validation<unknown> {
 }
 
 function createSut(): SutTypes {
-  const validationStub = createValidationStub();
-  const sut = new ValidationComposite([validationStub]);
-  return { sut, validationStub };
+  const validationStubs = [createValidationStub(), createValidationStub()];
+  const sut = new ValidationComposite(validationStubs);
+  return { sut, validationStubs };
 }
 
 describe("Validation Composite", () => {
   it("should return the same error that the internal validation returns", () => {
-    const { sut, validationStub } = createSut();
-    jest.spyOn(validationStub, "validate").mockReturnValueOnce(new MissingParamError("field"));
+    const { sut, validationStubs } = createSut();
+    jest.spyOn(validationStubs[1], "validate").mockReturnValueOnce(new MissingParamError("field"));
 
     const error = sut.validate({ field: "any_value" });
 
     expect(error).toEqual(new MissingParamError("field"));
+  });
+
+  it("should return the first error if more than one internal validation fails", () => {
+    const { sut, validationStubs } = createSut();
+    jest.spyOn(validationStubs[0], "validate").mockReturnValueOnce(new Error("firstError"));
+    jest
+      .spyOn(validationStubs[1], "validate")
+      .mockReturnValueOnce(new MissingParamError("secondError"));
+
+    const error = sut.validate({ field: "any_value" });
+
+    expect(error).toEqual(new Error("firstError"));
   });
 });
