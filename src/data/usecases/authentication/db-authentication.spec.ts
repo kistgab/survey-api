@@ -1,5 +1,6 @@
 import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
 import AccountModel from "../../models/account-model";
+import { HashComparer } from "../../protocols/cryptography/hash-comparer";
 import FindAccountByEmailRepository from "../../protocols/db/find-account-by-email-repository";
 import DbAuthentication from "./db-authentication";
 
@@ -21,6 +22,15 @@ function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
   return new FindAccountByEmailRepositoryStub();
 }
 
+function createHashComparerStub(): HashComparer {
+  class HashComparerStub implements HashComparer {
+    async compare(): Promise<boolean> {
+      return Promise.resolve(true);
+    }
+  }
+  return new HashComparerStub();
+}
+
 function createFakeInputDto(): InputAuthenticationDto {
   return {
     email: "any_email@mail.com",
@@ -31,14 +41,17 @@ function createFakeInputDto(): InputAuthenticationDto {
 type SutTypes = {
   sut: DbAuthentication;
   findAccountByEmailRepositoryStub: FindAccountByEmailRepository;
+  hashComparerStub: HashComparer;
 };
 
 function createSut(): SutTypes {
   const findAccountByEmailRepositoryStub = createFindAccountByEmailRepository();
-  const sut = new DbAuthentication(findAccountByEmailRepositoryStub);
+  const hashComparerStub = createHashComparerStub();
+  const sut = new DbAuthentication(findAccountByEmailRepositoryStub, hashComparerStub);
   return {
     sut,
     findAccountByEmailRepositoryStub,
+    hashComparerStub,
   };
 }
 
@@ -70,5 +83,14 @@ describe("DbAuthentication UseCase", () => {
     const result = await sut.auth(createFakeInputDto());
 
     expect(result).toBeNull();
+  });
+
+  it("should call HashComparer with correct values", async () => {
+    const { sut, hashComparerStub } = createSut();
+    const compareSpy = jest.spyOn(hashComparerStub, "compare");
+
+    await sut.auth(createFakeInputDto());
+
+    expect(compareSpy).toHaveBeenCalledWith("any_password", "hashed_password");
   });
 });
