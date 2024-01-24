@@ -1,4 +1,4 @@
-import MissingParamError from "../../errors/missing-param-error";
+import InvalidParamError from "../../errors/invalid-param-error";
 import Validation from "./validation";
 
 export default class CompareFieldsValidation<T> implements Validation<T> {
@@ -10,7 +10,7 @@ export default class CompareFieldsValidation<T> implements Validation<T> {
   validate(input: T): Error | undefined {
     const areEqual = input[this.fieldName] === input[this.fieldToCompareName];
     if (!areEqual) {
-      return new MissingParamError(this.fieldName.toString());
+      return new InvalidParamError(this.fieldName.toString());
     }
   }
 }
