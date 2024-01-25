@@ -13,9 +13,9 @@ import SignUpValidationFactory from "./signup-validation";
 export default abstract class SignUpControllerFactory {
   static create(): Controller<RequestSignUpBody, Error | OutputAddAccountDto> {
     const salt = 12;
-    const encrypter = new BCryptAdapter(salt);
+    const hasher = new BCryptAdapter(salt);
     const accountRepository = new AccountMongoRepository();
-    const addAccount = new DbAddAccount(encrypter, accountRepository);
+    const addAccount = new DbAddAccount(hasher, accountRepository);
     const validation = SignUpValidationFactory.create();
     const signUpController = new SignUpController(addAccount, validation);
     const logErrorRepository = new LogMongoRepository();
