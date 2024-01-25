@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import AccountModel from "../../../../data/models/account-model";
 import AddAccountModel from "../../../../data/models/add-account-model";
 import AddAccountRepository from "../../../../data/protocols/db/add-account-repository";
+import FindAccountByEmailRepository from "../../../../data/protocols/db/find-account-by-email-repository";
 import { MongoHelper } from "../helpers/mongo-helper";
 
-export class AccountMongoRepository implements AddAccountRepository {
+export class AccountMongoRepository implements AddAccountRepository, FindAccountByEmailRepository {
   async add(accountData: AddAccountModel): Promise<AccountModel> {
     const accountCollection = MongoHelper.getCollection("accounts");
     const result = await accountCollection.insertOne(accountData);
@@ -14,5 +16,15 @@ export class AccountMongoRepository implements AddAccountRepository {
       password: accountData.password,
     };
     return insertedAccount;
+  }
+
+  async findByEmail(email: string): Promise<AccountModel | null> {
+    const accountCollection = MongoHelper.getCollection("accounts");
+    const accountData = await accountCollection.findOne({ email });
+    if (accountData) {
+      const { _id, name, email, password } = accountData;
+      return { id: _id.toString(), name, email, password };
+    }
+    return null;
   }
 }
