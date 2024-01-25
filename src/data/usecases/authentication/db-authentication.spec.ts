@@ -146,4 +146,12 @@ describe("DbAuthentication UseCase", () => {
 
     await expect(sut.auth(createFakeInputDto())).rejects.toThrow(new Error("TokenGenerator error"));
   });
+
+  it("should return null if HashComparer returns false", async () => {
+    const { sut } = createSut();
+
+    const accessToken = await sut.auth(createFakeInputDto());
+
+    expect(accessToken).toBe("any_token");
+  });
 });
