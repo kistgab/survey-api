@@ -1,12 +1,14 @@
 import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
 import Authentication from "../../../domain/usecases/authentication";
 import { HashComparer } from "../../protocols/cryptography/hash-comparer";
+import TokenGenerator from "../../protocols/cryptography/token-generator";
 import FindAccountByEmailRepository from "../../protocols/db/find-account-by-email-repository";
 
 export default class DbAuthentication implements Authentication {
   constructor(
     private readonly findAccountByEmailRepository: FindAccountByEmailRepository,
     private readonly hashComparer: HashComparer,
+    private readonly tokenGenerator: TokenGenerator,
   ) {}
 
   async auth(input: InputAuthenticationDto): Promise<string | null> {
@@ -15,6 +17,7 @@ export default class DbAuthentication implements Authentication {
       return null;
     }
     await this.hashComparer.compare(input.password, foundAccount.password);
+    await this.tokenGenerator.generate(foundAccount.id);
     return null;
   }
 }
