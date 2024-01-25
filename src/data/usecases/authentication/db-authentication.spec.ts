@@ -1,6 +1,7 @@
 import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
 import AccountModel from "../../models/account-model";
-import FindAccountByEmailRepository from "../../protocols/find-account-by-email-repository";
+import { HashComparer } from "../../protocols/cryptography/hash-comparer";
+import FindAccountByEmailRepository from "../../protocols/db/find-account-by-email-repository";
 import DbAuthentication from "./db-authentication";
 
 function createFakeAccount(): AccountModel {
@@ -14,11 +15,20 @@ function createFakeAccount(): AccountModel {
 
 function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
-    async find(): Promise<AccountModel> {
+    async find(): Promise<AccountModel | null> {
       return Promise.resolve(createFakeAccount());
     }
   }
   return new FindAccountByEmailRepositoryStub();
+}
+
+function createHashComparerStub(): HashComparer {
+  class HashComparerStub implements HashComparer {
+    async compare(): Promise<boolean> {
+      return Promise.resolve(true);
+    }
+  }
+  return new HashComparerStub();
 }
 
 function createFakeInputDto(): InputAuthenticationDto {
@@ -31,14 +41,17 @@ function createFakeInputDto(): InputAuthenticationDto {
 type SutTypes = {
   sut: DbAuthentication;
   findAccountByEmailRepositoryStub: FindAccountByEmailRepository;
+  hashComparerStub: HashComparer;
 };
 
 function createSut(): SutTypes {
   const findAccountByEmailRepositoryStub = createFindAccountByEmailRepository();
-  const sut = new DbAuthentication(findAccountByEmailRepositoryStub);
+  const hashComparerStub = createHashComparerStub();
+  const sut = new DbAuthentication(findAccountByEmailRepositoryStub, hashComparerStub);
   return {
     sut,
     findAccountByEmailRepositoryStub,
+    hashComparerStub,
   };
 }
 
@@ -52,7 +65,7 @@ describe("DbAuthentication UseCase", () => {
     expect(findSpy).toHaveBeenCalledWith("any_email@mail.com");
   });
 
-  it("should throw the same error that FindAccountByEmailRepository throws", async () => {
+  it("should throw if FindAccountByEmailRepository throws", async () => {
     const { sut, findAccountByEmailRepositoryStub } = createSut();
     jest
       .spyOn(findAccountByEmailRepositoryStub, "find")
@@ -61,5 +74,23 @@ describe("DbAuthentication UseCase", () => {
     await expect(sut.auth(createFakeInputDto())).rejects.toThrow(
       new Error("FindAccountByEmailRepository error"),
     );
+  });
+
+  it("should return null if FindAccountByEmailRepository returns null", async () => {
+    const { sut, findAccountByEmailRepositoryStub } = createSut();
+    jest.spyOn(findAccountByEmailRepositoryStub, "find").mockReturnValueOnce(Promise.resolve(null));
+
+    const result = await sut.auth(createFakeInputDto());
+
+    expect(result).toBeNull();
+  });
+
+  it("should call HashComparer with correct values", async () => {
+    const { sut, hashComparerStub } = createSut();
+    const compareSpy = jest.spyOn(hashComparerStub, "compare");
+
+    await sut.auth(createFakeInputDto());
+
+    expect(compareSpy).toHaveBeenCalledWith("any_password", "hashed_password");
   });
 });
