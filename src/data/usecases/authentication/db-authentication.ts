@@ -1,7 +1,7 @@
 import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
 import Authentication from "../../../domain/usecases/authentication";
 import Encrypter from "../../protocols/cryptography/encrypter";
-import { HashComparer } from "../../protocols/cryptography/hash-comparer";
+import HashComparer from "../../protocols/cryptography/hash-comparer";
 import FindAccountByEmailRepository from "../../protocols/db/find-account-by-email-repository";
 import UpdateAccessTokenRepository from "../../protocols/db/update-access-token-repository";
 
