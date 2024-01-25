@@ -17,7 +17,7 @@ function createFakeAccount(): AccountModel {
 
 function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
-    async find(): Promise<AccountModel | null> {
+    async findByEmail(): Promise<AccountModel | null> {
       return Promise.resolve(createFakeAccount());
     }
   }
@@ -89,7 +89,7 @@ function createSut(): SutTypes {
 describe("DbAuthentication UseCase", () => {
   it("should call FindAccountByEmailRepository with correct email", async () => {
     const { sut, findAccountByEmailRepositoryStub } = createSut();
-    const findSpy = jest.spyOn(findAccountByEmailRepositoryStub, "find");
+    const findSpy = jest.spyOn(findAccountByEmailRepositoryStub, "findByEmail");
 
     await sut.auth(createFakeInputDto());
 
@@ -99,7 +99,7 @@ describe("DbAuthentication UseCase", () => {
   it("should throw if FindAccountByEmailRepository throws", async () => {
     const { sut, findAccountByEmailRepositoryStub } = createSut();
     jest
-      .spyOn(findAccountByEmailRepositoryStub, "find")
+      .spyOn(findAccountByEmailRepositoryStub, "findByEmail")
       .mockReturnValueOnce(Promise.reject(new Error("FindAccountByEmailRepository error")));
 
     await expect(sut.auth(createFakeInputDto())).rejects.toThrow(
@@ -109,7 +109,9 @@ describe("DbAuthentication UseCase", () => {
 
   it("should return null if FindAccountByEmailRepository returns null", async () => {
     const { sut, findAccountByEmailRepositoryStub } = createSut();
-    jest.spyOn(findAccountByEmailRepositoryStub, "find").mockReturnValueOnce(Promise.resolve(null));
+    jest
+      .spyOn(findAccountByEmailRepositoryStub, "findByEmail")
+      .mockReturnValueOnce(Promise.resolve(null));
 
     const result = await sut.auth(createFakeInputDto());
 

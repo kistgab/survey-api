@@ -14,7 +14,7 @@ export default class DbAuthentication implements Authentication {
   ) {}
 
   async auth(input: InputAuthenticationDto): Promise<string | null> {
-    const foundAccount = await this.findAccountByEmailRepository.find(input.email);
+    const foundAccount = await this.findAccountByEmailRepository.findByEmail(input.email);
     if (!foundAccount) {
       return null;
     }
