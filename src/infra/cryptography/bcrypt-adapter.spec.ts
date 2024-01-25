@@ -11,9 +11,7 @@ jest.mock("bcrypt", () => ({
     return Promise.resolve("hash");
   },
 
-  async compare(): Promise<boolean> {
-    return Promise.resolve(true);
-  },
+  compare: jest.fn().mockImplementation(async () => Promise.resolve(true)),
 }));
 
 const createSut = (): SutTypes => {
@@ -66,5 +64,15 @@ describe("BCrypt Adapter", () => {
     const result = await sut.compare("any_value", "any_hash");
 
     expect(result).toBeTruthy();
+  });
+
+  it("should return false when compare fails", async () => {
+    const { sut } = createSut();
+    // @ts-expect-error - idk why it throws this error, but it works
+    jest.spyOn(bcrypt, "compare").mockReturnValueOnce(false);
+
+    const result = await sut.compare("any_value", "any_value");
+
+    expect(result).toBeFalsy();
   });
 });
