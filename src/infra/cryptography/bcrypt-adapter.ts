@@ -10,7 +10,7 @@ export default class BCryptAdapter implements Hasher, HashComparer {
   }
 
   async compare(value: string, hash: string): Promise<boolean> {
-    await compare(value, hash);
-    return true;
+    const areSameText = await compare(value, hash);
+    return areSameText;
   }
 }
