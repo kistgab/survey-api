@@ -1,6 +1,7 @@
 import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
 import AccountModel from "../../models/account-model";
 import { HashComparer } from "../../protocols/cryptography/hash-comparer";
+import TokenGenerator from "../../protocols/cryptography/token-generator";
 import FindAccountByEmailRepository from "../../protocols/db/find-account-by-email-repository";
 import DbAuthentication from "./db-authentication";
 
@@ -31,6 +32,15 @@ function createHashComparerStub(): HashComparer {
   return new HashComparerStub();
 }
 
+function createTokenGeneratorStub(): TokenGenerator {
+  class TokenGeneratorStub implements TokenGenerator {
+    async generate(): Promise<string> {
+      return Promise.resolve("any_token");
+    }
+  }
+  return new TokenGeneratorStub();
+}
+
 function createFakeInputDto(): InputAuthenticationDto {
   return {
     email: "any_email@mail.com",
@@ -42,16 +52,23 @@ type SutTypes = {
   sut: DbAuthentication;
   findAccountByEmailRepositoryStub: FindAccountByEmailRepository;
   hashComparerStub: HashComparer;
+  tokenGeneratorStub: TokenGenerator;
 };
 
 function createSut(): SutTypes {
   const findAccountByEmailRepositoryStub = createFindAccountByEmailRepository();
   const hashComparerStub = createHashComparerStub();
-  const sut = new DbAuthentication(findAccountByEmailRepositoryStub, hashComparerStub);
+  const tokenGeneratorStub = createTokenGeneratorStub();
+  const sut = new DbAuthentication(
+    findAccountByEmailRepositoryStub,
+    hashComparerStub,
+    tokenGeneratorStub,
+  );
   return {
     sut,
     findAccountByEmailRepositoryStub,
     hashComparerStub,
+    tokenGeneratorStub,
   };
 }
 
@@ -110,5 +127,14 @@ describe("DbAuthentication UseCase", () => {
     const result = await sut.auth(createFakeInputDto());
 
     expect(result).toBeNull();
+  });
+
+  it("should call TokenGenerator with correct id", async () => {
+    const { sut, tokenGeneratorStub } = createSut();
+    const compareSpy = jest.spyOn(tokenGeneratorStub, "generate");
+
+    await sut.auth(createFakeInputDto());
+
+    expect(compareSpy).toHaveBeenCalledWith("any_id");
   });
 });
