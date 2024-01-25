@@ -1,3 +1,4 @@
+import { Collection } from "mongodb";
 import AddAccountModel from "../../../../data/models/add-account-model";
 import { MongoHelper } from "../helpers/mongo-helper";
 import { AccountMongoRepository } from "./account";
@@ -7,6 +8,7 @@ function createSut(): AccountMongoRepository {
 }
 
 describe("Account Mongo Repository", () => {
+  let accountCollection: Collection;
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);
   });
@@ -16,7 +18,8 @@ describe("Account Mongo Repository", () => {
   });
 
   beforeEach(async () => {
-    await MongoHelper.getCollection("accounts").deleteMany({});
+    accountCollection = MongoHelper.getCollection("accounts");
+    await accountCollection.deleteMany({});
   });
 
   it("should return an account on add success", async () => {
@@ -36,8 +39,13 @@ describe("Account Mongo Repository", () => {
   });
 
   it("should return an account on findByEmail success", async () => {
+    await accountCollection.insertOne({
+      email: "any_email@mail.com",
+      name: "any_name",
+      password: "any_password",
+    });
     const sut = createSut();
-    await sut.add({ email: "any_email@mail.com", name: "any_name", password: "any_password" });
+
     const account = await sut.findByEmail("any_email@mail.com");
 
     expect(account?.id).toBeDefined();
