@@ -21,10 +21,11 @@ export class AccountMongoRepository implements AddAccountRepository, FindAccount
   async findByEmail(email: string): Promise<AccountModel | null> {
     const accountCollection = MongoHelper.getCollection("accounts");
     const accountData = await accountCollection.findOne({ email });
-    if (accountData) {
-      const { _id, name, email, password } = accountData;
-      return { id: _id.toString(), name, email, password };
+    if (!accountData) {
+      return null;
     }
-    return null;
+    const { _id, name, email: foundEmail, password } = accountData;
+    const foundAccount = { id: _id.toString(), name, email: foundEmail, password };
+    return foundAccount;
   }
 }
