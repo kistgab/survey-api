@@ -16,8 +16,11 @@ export default class DbAuthentication implements Authentication {
     if (!foundAccount) {
       return null;
     }
-    await this.hashComparer.compare(input.password, foundAccount.password);
-    await this.tokenGenerator.generate(foundAccount.id);
-    return null;
+    const areSamePassword = await this.hashComparer.compare(input.password, foundAccount.password);
+    if (!areSamePassword) {
+      return null;
+    }
+    const accessToken = await this.tokenGenerator.generate(foundAccount.id);
+    return accessToken;
   }
 }
