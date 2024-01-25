@@ -19,7 +19,7 @@ describe("Account Mongo Repository", () => {
     await MongoHelper.getCollection("accounts").deleteMany({});
   });
 
-  it("should return an account on success", async () => {
+  it("should return an account on add success", async () => {
     const sut = createSut();
     const input: AddAccountModel = {
       name: "any_name",
@@ -33,5 +33,16 @@ describe("Account Mongo Repository", () => {
     expect(account.name).toBe("any_name");
     expect(account.email).toBe("any_email@mail.com");
     expect(account.password).toBe("any_password");
+  });
+
+  it("should return an account on findByEmail success", async () => {
+    const sut = createSut();
+    await sut.add({ email: "any_email@mail.com", name: "any_name", password: "any_password" });
+    const account = await sut.findByEmail("any_email@mail.com");
+
+    expect(account?.id).toBeDefined();
+    expect(account?.name).toBe("any_name");
+    expect(account?.email).toBe("any_email@mail.com");
+    expect(account?.password).toBe("any_password");
   });
 });
