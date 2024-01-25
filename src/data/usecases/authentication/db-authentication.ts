@@ -23,7 +23,7 @@ export default class DbAuthentication implements Authentication {
       return null;
     }
     const accessToken = await this.encrypter.encrypt(foundAccount.id);
-    await this.updateAccessTokenRepository.update(foundAccount.id, accessToken);
+    await this.updateAccessTokenRepository.updateAccessToken(foundAccount.id, accessToken);
     return accessToken;
   }
 }
