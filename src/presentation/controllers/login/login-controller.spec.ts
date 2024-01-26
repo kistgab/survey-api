@@ -6,9 +6,9 @@ import {
   unauthorized,
   unprocessableContent,
 } from "../../helpers/http/http-helper";
+import { HttpRequest } from "../../protocols/http";
 import Validation from "../../protocols/validation";
-import { HttpRequest } from "./../../protocols/http";
-import LoginController, { RequestLoginBody } from "./login";
+import LoginController, { RequestLoginBody } from "./login-controller";
 
 function createFakeRequest(): HttpRequest<RequestLoginBody> {
   return {

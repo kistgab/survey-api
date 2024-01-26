@@ -1,9 +1,9 @@
-import LogErrorRepository from "../../../data/protocols/db/log-error-repository";
+import LogErrorRepository from "../../../data/protocols/db/log/log-error-repository";
 import ServerError from "../../../presentation/errors/server-error";
 import { internalServerError } from "../../../presentation/helpers/http/http-helper";
 import Controller from "../../../presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../presentation/protocols/http";
-import LogControllerDecorator from "./log";
+import LogControllerDecorator from "./log-controller-decorator";
 
 function createFakeRequest(): HttpRequest<string> {
   return {

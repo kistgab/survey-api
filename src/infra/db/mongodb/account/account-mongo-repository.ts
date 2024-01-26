@@ -2,9 +2,9 @@
 import { ObjectId } from "mongodb";
 import AccountModel from "../../../../data/models/account-model";
 import AddAccountModel from "../../../../data/models/add-account-model";
-import AddAccountRepository from "../../../../data/protocols/db/add-account-repository";
-import FindAccountByEmailRepository from "../../../../data/protocols/db/find-account-by-email-repository";
-import UpdateAccessTokenRepository from "../../../../data/protocols/db/update-access-token-repository";
+import AddAccountRepository from "../../../../data/protocols/db/account/add-account-repository";
+import FindAccountByEmailRepository from "../../../../data/protocols/db/account/find-account-by-email-repository";
+import UpdateAccessTokenRepository from "../../../../data/protocols/db/account/update-access-token-repository";
 import { MongoHelper } from "../helpers/mongo-helper";
 
 export class AccountMongoRepository

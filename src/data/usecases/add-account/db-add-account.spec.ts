@@ -1,7 +1,7 @@
 import { InputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import AccountModel from "../../models/account-model";
 import Hasher from "../../protocols/cryptography/hasher";
-import AddAccountRepository from "../../protocols/db/add-account-repository";
+import AddAccountRepository from "../../protocols/db/account/add-account-repository";
 import DbAddAccount from "./db-add-account";
 
 function createFakeAccount(): AccountModel {

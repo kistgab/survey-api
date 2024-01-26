@@ -1,14 +1,14 @@
 import DbAddAccount from "../../../data/usecases/add-account/db-add-account";
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import BCryptAdapter from "../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter";
-import { AccountMongoRepository } from "../../../infra/db/mongodb/account-repository/account";
-import LogMongoRepository from "../../../infra/db/mongodb/log-repository/log";
+import { AccountMongoRepository } from "../../../infra/db/mongodb/account/account-mongo-repository";
+import LogMongoRepository from "../../../infra/db/mongodb/log/log-mongo-repository";
 import SignUpController, {
   RequestSignUpBody,
-} from "../../../presentation/controllers/signup/signup";
+} from "../../../presentation/controllers/signup/signup-controller";
 import Controller from "../../../presentation/protocols/controller";
-import LogControllerDecorator from "../../decorators/log/log";
-import SignUpValidationFactory from "./signup-validation";
+import LogControllerDecorator from "../../decorators/log-controller/log-controller-decorator";
+import SignUpValidationFactory from "./signup-validation-factory";
 
 export default abstract class SignUpControllerFactory {
   static create(): Controller<RequestSignUpBody, Error | OutputAddAccountDto> {

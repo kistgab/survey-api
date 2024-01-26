@@ -5,7 +5,7 @@ import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http/http-helper";
 import { HttpRequest } from "../../protocols/http";
 import Validation from "../../protocols/validation";
-import SignUpController, { RequestSignUpBody } from "./signup";
+import SignUpController, { RequestSignUpBody } from "./signup-controller";
 
 function createFakeRequest(): HttpRequest<RequestSignUpBody> {
   return {
