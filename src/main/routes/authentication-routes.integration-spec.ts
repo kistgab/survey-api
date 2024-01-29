@@ -15,13 +15,15 @@ describe("SignUp route", () => {
     await MongoHelper.getCollection("accounts").deleteMany({});
   });
 
-  it("should return an account on success", async () => {
-    const input = {
-      email: "any_email@mail.com",
-      name: "any_name",
-      password: "any_password",
-      passwordConfirmation: "any_password",
-    };
-    await request(app).post("/api/signup").send(input).expect(200);
+  describe("POST /signup", () => {
+    it("should return 200 on signup", async () => {
+      const input = {
+        email: "any_email@mail.com",
+        name: "any_name",
+        password: "any_password",
+        passwordConfirmation: "any_password",
+      };
+      await request(app).post("/api/signup").send(input).expect(200);
+    });
   });
 });
