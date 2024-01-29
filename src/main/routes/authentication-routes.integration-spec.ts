@@ -45,5 +45,13 @@ describe("SignUp route", () => {
       };
       await request(app).post("/api/login").send(input).expect(200);
     });
+
+    it("should return 401 when user is not valid", async () => {
+      const input = {
+        email: "invalid_email@mail.com",
+        password: "invalid_password",
+      };
+      await request(app).post("/api/login").send(input).expect(401);
+    });
   });
 });
