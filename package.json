@@ -47,8 +47,7 @@
   "lint-staged": {
     "*.{ts}": [
       "eslint 'src/**' --max-warnings 0",
-      "npm run test:staged",
-      "git add"
+      "npm run test:staged"
     ]
   },
   "dependencies": {
