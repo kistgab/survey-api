@@ -9,7 +9,7 @@ services:
     ports:
       - 27017:27017
     networks:
-      - network
+      - network1
   survey-api:
     container_name: survey-api-container
     build: .
@@ -21,6 +21,7 @@ services:
     ports:
       - 3000
     networks:
-      - network
-  networks:
-    - network
+      - network1
+networks:
+  network1:
+    driver: bridge
