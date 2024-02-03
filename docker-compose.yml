@@ -19,9 +19,11 @@ services:
     volumes:
       - ./dist:/usr/src/survey-api/dist
     ports:
-      - 3000
+      - ${PORT}:3000
     networks:
       - network1
+    env_file:
+      - .env
 networks:
   network1:
     driver: bridge
