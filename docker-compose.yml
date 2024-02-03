@@ -15,11 +15,14 @@ services:
     build: .
     image: "survey-api"
     restart: always
-    command: npm start
+    command: npm run debug
     volumes:
       - ./dist:/usr/src/survey-api/dist
+      - ./package.json:/usr/src/survey-api/package.json
+      - ./.env:/usr/src/survey-api/.env
     ports:
       - ${PORT}:3000
+      - 9222:9222
     networks:
       - network1
     env_file:

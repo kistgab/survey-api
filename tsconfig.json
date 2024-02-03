@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"]
-    }
+    },
+    "sourceMap": true
   },
   "include": ["src", "environment.d.ts"],
   "exclude": ["**/*.spec.ts", "**/*.integration-spec.ts"]
