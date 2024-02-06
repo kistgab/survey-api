@@ -1,7 +1,6 @@
 version: "3"
 services:
   mongo:
-    container_name: mongo-container
     image: mongo:6.0.13
     restart: always
     volumes:
@@ -12,14 +11,15 @@ services:
       - network1
   survey-api:
     container_name: survey-api-container
-    build: .
-    image: "survey-api"
+    image: node:20.11
+    working_dir: /usr/src/survey-api
     restart: always
-    command: npm run debug
     volumes:
       - ./dist:/usr/src/survey-api/dist
       - ./package.json:/usr/src/survey-api/package.json
+      - ./package-lock.json:/usr/src/survey-api/package-lock.json
       - ./.env:/usr/src/survey-api/.env
+    command: bash -c "npm ci --production && npm run debug"
     ports:
       - ${PORT}:3000
       - 9222:9222
