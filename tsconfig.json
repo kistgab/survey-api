@@ -16,7 +16,8 @@
     "paths": {
       "@src/*": ["src/*"]
     },
-    "sourceMap": true
+    "sourceMap": true,
+    "rootDir": "src"
   },
   "include": ["src", "environment.d.ts"],
   "exclude": ["**/*.spec.ts", "**/*.integration-spec.ts"]

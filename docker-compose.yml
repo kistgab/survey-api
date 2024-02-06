@@ -15,7 +15,7 @@ services:
     working_dir: /usr/src/survey-api
     restart: always
     volumes:
-      - ./dist:/usr/src/survey-api/dist
+      - ./dist/:/usr/src/survey-api/dist/
       - ./package.json:/usr/src/survey-api/package.json
       - ./package-lock.json:/usr/src/survey-api/package-lock.json
       - ./.env:/usr/src/survey-api/.env
