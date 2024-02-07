@@ -11,8 +11,11 @@ export default class DbAddAccount implements AddAccount {
     private readonly findAccountByEmailRepository: FindAccountByEmailRepository,
   ) {}
 
-  async add(account: InputAddAccountDto): Promise<OutputAddAccountDto> {
-    await this.findAccountByEmailRepository.findByEmail(account.email);
+  async add(account: InputAddAccountDto): Promise<OutputAddAccountDto | null> {
+    const existingAccount = await this.findAccountByEmailRepository.findByEmail(account.email);
+    if (existingAccount) {
+      return null;
+    }
     const encryptedPassword = await this.hasher.hash(account.password);
     const createdAccount = await this.addAccountRepository.add({
       email: account.email,
