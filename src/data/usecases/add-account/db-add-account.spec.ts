@@ -34,7 +34,7 @@ function createHasherStub(): Hasher {
 function createFindAccountByEmailRepositoryStub(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
     async findByEmail(): Promise<AccountModel | null> {
-      return Promise.resolve(createFakeAccount());
+      return Promise.resolve(null);
     }
   }
   return new FindAccountByEmailRepositoryStub();
@@ -122,5 +122,16 @@ describe("DbAddAccount Usecase", () => {
     await sut.add(createFakeAccount());
 
     expect(findSpy).toHaveBeenCalledWith("any_email@mail.com");
+  });
+
+  it("should return null when FindAccountByEmailRepository finds", async () => {
+    const { sut, findAccountByEmailRepositoryStub } = createSut();
+    jest
+      .spyOn(findAccountByEmailRepositoryStub, "findByEmail")
+      .mockReturnValueOnce(Promise.resolve(createFakeAccount()));
+
+    const result = await sut.add(createFakeInputAddAccountDto());
+
+    expect(result).toBeNull();
   });
 });
