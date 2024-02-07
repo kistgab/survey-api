@@ -2,6 +2,7 @@ import { InputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import AccountModel from "../../models/account-model";
 import Hasher from "../../protocols/cryptography/hasher";
 import AddAccountRepository from "../../protocols/db/account/add-account-repository";
+import FindAccountByEmailRepository from "../../protocols/db/account/find-account-by-email-repository";
 import DbAddAccount from "./db-add-account";
 
 function createFakeAccount(): AccountModel {
@@ -30,6 +31,15 @@ function createHasherStub(): Hasher {
   return new HasherStub();
 }
 
+function createFindAccountByEmailRepositoryStub(): FindAccountByEmailRepository {
+  class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
+    async findByEmail(): Promise<AccountModel | null> {
+      return Promise.resolve(createFakeAccount());
+    }
+  }
+  return new FindAccountByEmailRepositoryStub();
+}
+
 function createAddAccountRepositoryStub(): AddAccountRepository {
   class AddAccountRepositoryStub implements AddAccountRepository {
     async add(): Promise<AccountModel> {
@@ -43,14 +53,17 @@ type SutTypes = {
   sut: DbAddAccount;
   hasherStub: Hasher;
   addAccountRepositoryStub: AddAccountRepository;
+  findAccountByEmailRepositoryStub: FindAccountByEmailRepository;
 };
 
 function createSut(): SutTypes {
   const hasherStub = createHasherStub();
   const addAccountRepositoryStub = createAddAccountRepositoryStub();
+  const findAccountByEmailRepositoryStub = createFindAccountByEmailRepositoryStub();
   return {
-    sut: new DbAddAccount(hasherStub, addAccountRepositoryStub),
+    sut: new DbAddAccount(hasherStub, addAccountRepositoryStub, findAccountByEmailRepositoryStub),
     hasherStub,
+    findAccountByEmailRepositoryStub,
     addAccountRepositoryStub,
   };
 }
@@ -100,5 +113,14 @@ describe("DbAddAccount Usecase", () => {
     const result = await sut.add(createFakeInputAddAccountDto());
 
     expect(result).toEqual(createFakeAccount());
+  });
+
+  it("should call FindAccountByEmailRepository with correct email", async () => {
+    const { sut, findAccountByEmailRepositoryStub } = createSut();
+    const findSpy = jest.spyOn(findAccountByEmailRepositoryStub, "findByEmail");
+
+    await sut.add(createFakeAccount());
+
+    expect(findSpy).toHaveBeenCalledWith("any_email@mail.com");
   });
 });
