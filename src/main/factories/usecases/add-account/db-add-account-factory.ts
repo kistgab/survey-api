@@ -8,6 +8,6 @@ export default abstract class DbAddAccountFactory {
     const salt = 12;
     const hasher = new BCryptAdapter(salt);
     const accountRepository = new AccountMongoRepository();
-    return new DbAddAccount(hasher, accountRepository);
+    return new DbAddAccount(hasher, accountRepository, accountRepository);
   }
 }
