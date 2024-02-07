@@ -1,9 +1,9 @@
+import EmailValidatorAdapter from "../../../../infra/validators/email/email-validator-adapter";
 import { RequestLoginBody } from "../../../../presentation/controllers/login/login-controller";
-import ValidationComposite from "../../../../presentation/helpers/validators/composite/validation-composite";
-import EmailValidation from "../../../../presentation/helpers/validators/email/email-validation";
-import RequiredFieldValidation from "../../../../presentation/helpers/validators/required-field/required-field-validation";
 import Validation from "../../../../presentation/protocols/validation";
-import EmailValidatorAdapter from "../../../adapters/validators/email/email-validator-adapter";
+import ValidationComposite from "../../../../validation/validators/composite/validation-composite";
+import EmailValidation from "../../../../validation/validators/email/email-validation";
+import RequiredFieldValidation from "../../../../validation/validators/required-field/required-field-validation";
 
 type RequestLoginBodyKeys = keyof RequestLoginBody;
 
