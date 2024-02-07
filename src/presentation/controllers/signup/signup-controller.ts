@@ -1,5 +1,6 @@
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
+import Authentication from "../../../domain/usecases/authentication";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http/http-helper";
 import Controller from "../../protocols/controller";
@@ -19,6 +20,7 @@ export default class SignUpController
   constructor(
     private readonly addAccount: AddAccount,
     private readonly validation: Validation<unknown>,
+    private readonly authentication: Authentication,
   ) {}
 
   async handle(
@@ -34,6 +36,7 @@ export default class SignUpController
       }
       const { email, password, name } = httpRequest.body;
       const account = await this.addAccount.add({ email, name, password });
+      await this.authentication.auth({ email, password });
       return ok(account);
     } catch (error) {
       return internalServerError(error as Error);
