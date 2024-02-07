@@ -1,6 +1,7 @@
 import AccountModel from "../../../data/models/account-model";
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
+import Authentication from "../../../domain/usecases/authentication";
 import MissingParamError from "../../errors/missing-param-error";
 import { internalServerError, ok, unprocessableContent } from "../../helpers/http/http-helper";
 import { HttpRequest } from "../../protocols/http";
@@ -11,7 +12,7 @@ function createFakeRequest(): HttpRequest<RequestSignUpBody> {
   return {
     body: {
       name: "any_name",
-      email: "invalid-email@mail.com",
+      email: "any_email@mail.com",
       password: "any_password",
       passwordConfirmation: "any_password",
     },
@@ -20,14 +21,23 @@ function createFakeRequest(): HttpRequest<RequestSignUpBody> {
 
 function createFakeAccount(): AccountModel {
   return {
-    id: "valid_id",
-    name: "valid_name",
-    email: "valid_email@mail.com",
-    password: "valid_password",
+    id: "any_id",
+    name: "any_name",
+    email: "any_email@mail.com",
+    password: "hashed_password",
   };
 }
 
-function createAddAccount(): AddAccount {
+function createAuthenticationStub(): Authentication {
+  class AuthenticationStub implements Authentication {
+    async auth(): Promise<string | null> {
+      return Promise.resolve("any_token");
+    }
+  }
+  return new AuthenticationStub();
+}
+
+function createAddAccountStub(): AddAccount {
   class AddAccountStub implements AddAccount {
     async add(): Promise<OutputAddAccountDto> {
       return Promise.resolve(createFakeAccount());
@@ -36,7 +46,7 @@ function createAddAccount(): AddAccount {
   return new AddAccountStub();
 }
 
-function createValidation(): Validation<string> {
+function createValidationStub(): Validation<string> {
   class ValidationStub implements Validation<string> {
     validate(): Error | undefined {
       return;
@@ -48,15 +58,18 @@ function createValidation(): Validation<string> {
 type createSutReturn = {
   sut: SignUpController;
   addAccountStub: AddAccount;
+  authenticationStub: Authentication;
   validationStub: Validation<unknown>;
 };
 
 function createSut(): createSutReturn {
-  const addAccountStub = createAddAccount();
-  const validationStub = createValidation();
-  const sut = new SignUpController(addAccountStub, validationStub);
+  const addAccountStub = createAddAccountStub();
+  const validationStub = createValidationStub();
+  const authenticationStub = createAuthenticationStub();
+  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub);
   return {
     sut,
+    authenticationStub,
     addAccountStub,
     validationStub,
   };
@@ -123,5 +136,14 @@ describe("SignUp Controller", () => {
     const result = await sut.handle(input);
 
     expect(result).toEqual(unprocessableContent(new Error("any_error")));
+  });
+
+  it("should call Authentication with correct params", async () => {
+    const { sut, authenticationStub } = createSut();
+    const authSpy = jest.spyOn(authenticationStub, "auth");
+
+    await sut.handle(createFakeRequest());
+
+    expect(authSpy).toHaveBeenCalledWith({ email: "any_email@mail.com", password: "any_password" });
   });
 });
