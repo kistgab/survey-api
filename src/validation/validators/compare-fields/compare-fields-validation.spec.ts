@@ -1,4 +1,4 @@
-import InvalidParamError from "../../../errors/invalid-param-error";
+import InvalidParamError from "../../../presentation/errors/invalid-param-error";
 import CompareFieldValidation from "./compare-fields-validation";
 type anyType = { any_field: string; another_field: string };
 
