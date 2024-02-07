@@ -47,7 +47,7 @@
     "typescript": "^5.3.3"
   },
   "lint-staged": {
-    "*.{ts}": [
+    "*.ts": [
       "eslint 'src/**' --max-warnings 0",
       "npm run test:staged"
     ]
