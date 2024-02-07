@@ -2,8 +2,14 @@ import AccountModel from "../../../data/models/account-model";
 import { OutputAddAccountDto } from "../../../domain/dtos/add-account-dto";
 import { AddAccount } from "../../../domain/usecases/add-account";
 import Authentication from "../../../domain/usecases/authentication";
+import EmailAlreadyUsedError from "../../errors/email-already-used-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, ok, unprocessableContent } from "../../helpers/http/http-helper";
+import {
+  conflict,
+  internalServerError,
+  ok,
+  unprocessableContent,
+} from "../../helpers/http/http-helper";
 import { HttpRequest } from "../../protocols/http";
 import Validation from "../../protocols/validation";
 import SignUpController, { RequestSignUpBody } from "./signup-controller";
@@ -86,8 +92,8 @@ describe("SignUp Controller", () => {
   });
 
   it("Should call AddAcount with correct values", async () => {
-    const { sut, addAccountStub: addAcountStub } = createSut();
-    const addSpy = jest.spyOn(addAcountStub, "add");
+    const { sut, addAccountStub } = createSut();
+    const addSpy = jest.spyOn(addAccountStub, "add");
     const httpRequest = createFakeRequest();
 
     await sut.handle(createFakeRequest());
@@ -100,14 +106,23 @@ describe("SignUp Controller", () => {
   });
 
   it("Should return 500 when the AddAccount throws an error", async () => {
-    const { sut, addAccountStub: addAcountStub } = createSut();
-    jest.spyOn(addAcountStub, "add").mockImplementationOnce(async () => {
+    const { sut, addAccountStub } = createSut();
+    jest.spyOn(addAccountStub, "add").mockImplementationOnce(async () => {
       return Promise.reject(new Error());
     });
 
     const httpResponse = await sut.handle(createFakeRequest());
 
     expect(httpResponse).toEqual(internalServerError(new Error("stack")));
+  });
+
+  it("Should return 409 when AddAccount returns null", async () => {
+    const { sut, addAccountStub } = createSut();
+    jest.spyOn(addAccountStub, "add").mockReturnValueOnce(Promise.resolve(null));
+
+    const httpResponse = await sut.handle(createFakeRequest());
+
+    expect(httpResponse).toEqual(conflict(new EmailAlreadyUsedError()));
   });
 
   it("Should return 200 when the creation was sucessfull", async () => {
