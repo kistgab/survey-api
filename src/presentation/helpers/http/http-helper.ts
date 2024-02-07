@@ -29,3 +29,10 @@ export function ok<T>(body: T): HttpResponse<T> {
     body,
   };
 }
+
+export function conflict<T>(error: T): HttpResponse<T> {
+  return {
+    statusCode: 409,
+    body: error,
+  };
+}

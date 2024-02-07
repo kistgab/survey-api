@@ -1,7 +1,13 @@
 import { AddAccount } from "../../../domain/usecases/add-account";
 import Authentication from "../../../domain/usecases/authentication";
+import EmailAlreadyUsedError from "../../errors/email-already-used-error";
 import MissingParamError from "../../errors/missing-param-error";
-import { internalServerError, ok, unprocessableContent } from "../../helpers/http/http-helper";
+import {
+  conflict,
+  internalServerError,
+  ok,
+  unprocessableContent,
+} from "../../helpers/http/http-helper";
 import Controller from "../../protocols/controller";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
 import Validation from "../../protocols/validation";
@@ -38,7 +44,10 @@ export default class SignUpController
         return unprocessableContent(new MissingParamError("body"));
       }
       const { email, password, name } = httpRequest.body;
-      await this.addAccount.add({ email, name, password });
+      const account = await this.addAccount.add({ email, name, password });
+      if (!account) {
+        return conflict(new EmailAlreadyUsedError());
+      }
       const accessToken = await this.authentication.auth({ email, password });
       return ok({ accessToken: String(accessToken) });
     } catch (error) {
