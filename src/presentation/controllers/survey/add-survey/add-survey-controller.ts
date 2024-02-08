@@ -1,4 +1,4 @@
-import { badRequest, ok } from "../../../helpers/http/http-helper";
+import { ok, unprocessableContent } from "../../../helpers/http/http-helper";
 import Controller from "../../../protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../protocols/http";
 import Validation from "../../../protocols/validation";
@@ -19,7 +19,7 @@ export class AddSurveyController implements Controller<RequestAddSurveyBody, Err
   ): Promise<HttpResponse<Error | null>> {
     const error = this.validation.validate(httpRequest.body);
     if (error) {
-      return badRequest(error);
+      return unprocessableContent(error);
     }
     return Promise.resolve(ok(null));
   }
