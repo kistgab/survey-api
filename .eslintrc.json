@@ -2,7 +2,7 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.lint.json"
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
@@ -26,13 +26,6 @@
     "@typescript-eslint/no-misused-promises": "error",
     "import/no-unresolved": ["error", { "caseSensitive": true }],
     "import/no-duplicates": ["error", { "considerQueryString": true, "prefer-inline": true }]
-  },
-  "settings": {
-    "import/resolver": {
-      "typescript": {
-        "project": "./tsconfig.json"
-      }
-    }
   },
   "env": {
     "node": true,
