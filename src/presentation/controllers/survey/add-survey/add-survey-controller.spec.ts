@@ -16,16 +16,29 @@ function createFakeRequest(): HttpRequest<RequestAddSurveyBody> {
   };
 }
 
+type SutTypes = {
+  sut: AddSurveyController;
+  validationStub: Validation;
+};
+
+function createSut(): SutTypes {
+  class ValidationStub implements Validation {
+    validate(): Error | undefined {
+      return;
+    }
+  }
+  const validationStub = new ValidationStub();
+  const sut = new AddSurveyController(validationStub);
+  return {
+    sut,
+    validationStub,
+  };
+}
+
 describe("Add Survey Controller", () => {
   it("should call Validation with correct values", async () => {
-    class ValidationStub implements Validation {
-      validate(): Error | undefined {
-        return;
-      }
-    }
-    const validationStub = new ValidationStub();
+    const { validationStub, sut } = createSut();
     const validateSpy = jest.spyOn(validationStub, "validate");
-    const sut = new AddSurveyController(validationStub);
     const httpRequest = createFakeRequest();
 
     await sut.handle(httpRequest);
