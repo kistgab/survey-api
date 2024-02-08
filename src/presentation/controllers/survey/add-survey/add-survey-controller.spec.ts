@@ -1,5 +1,9 @@
 import AddSurvey from "../../../../domain/usecases/add-survey";
-import { internalServerError, unprocessableContent } from "../../../helpers/http/http-helper";
+import {
+  internalServerError,
+  noContent,
+  unprocessableContent,
+} from "../../../helpers/http/http-helper";
 import { HttpRequest } from "../../../protocols/http";
 import Validation from "../../../protocols/validation";
 import { AddSurveyController, RequestAddSurveyBody } from "./add-survey-controller";
@@ -92,5 +96,12 @@ describe("Add Survey Controller", () => {
     const response = await sut.handle(createFakeRequest());
 
     expect(response).toEqual(internalServerError(new Error("AddSurvey error")));
+  });
+
+  it("should return 204 on success", async () => {
+    const { sut } = createSut();
+    const response = await sut.handle(createFakeRequest());
+
+    expect(response).toEqual(noContent());
   });
 });
