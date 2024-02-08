@@ -14,15 +14,32 @@ function createFakeSurveyData(): InputAddSurveyDto {
   };
 }
 
+function createSurveyRepositoryStub(): AddSurveyRepository {
+  class AddSurveyRepositoryStub implements AddSurveyRepository {
+    async add(): Promise<void> {
+      return Promise.resolve();
+    }
+  }
+  return new AddSurveyRepositoryStub();
+}
+
+type SutTypes = {
+  sut: DbAddSurvey;
+  addSurveyRepositoryStub: AddSurveyRepository;
+};
+
+function createSut(): SutTypes {
+  const addSurveyRepositoryStub = createSurveyRepositoryStub();
+  const sut = new DbAddSurvey(addSurveyRepositoryStub);
+  return {
+    sut,
+    addSurveyRepositoryStub,
+  };
+}
+
 describe("DbAddSurvey", () => {
   it("should call AddSurveyRepository with correct values", async () => {
-    class AddSurveyRepositoryStub implements AddSurveyRepository {
-      async add(): Promise<void> {
-        return Promise.resolve();
-      }
-    }
-    const addSurveyRepositoryStub = new AddSurveyRepositoryStub();
-    const sut = new DbAddSurvey(addSurveyRepositoryStub);
+    const { sut, addSurveyRepositoryStub } = createSut();
     const addSpy = jest.spyOn(addSurveyRepositoryStub, "add");
     const input = createFakeSurveyData();
 
