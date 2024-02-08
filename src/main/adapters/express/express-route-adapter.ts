@@ -10,7 +10,8 @@ export default function adaptRoute<RequestBody, ResponseBody>(
       body: req.body as RequestBody,
     };
     const httpResponse = await controller.handle(httpRequest);
-    if (httpResponse.statusCode !== 200) {
+    const isSuccessStatusCode = httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
+    if (!isSuccessStatusCode) {
       res.status(httpResponse.statusCode).json({ error: (httpResponse.body as Error).message });
       return;
     }
