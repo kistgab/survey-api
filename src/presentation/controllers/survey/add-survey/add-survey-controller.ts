@@ -1,6 +1,10 @@
 import AddSurvey from "../../../../domain/usecases/add-survey";
 import MissingParamError from "../../../errors/missing-param-error";
-import { internalServerError, ok, unprocessableContent } from "../../../helpers/http/http-helper";
+import {
+  internalServerError,
+  noContent,
+  unprocessableContent,
+} from "../../../helpers/http/http-helper";
 import Controller from "../../../protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../protocols/http";
 import Validation from "../../../protocols/validation";
@@ -32,7 +36,7 @@ export class AddSurveyController implements Controller<RequestAddSurveyBody, Err
       }
       const { answers, question } = httpRequest.body;
       await this.addSurvey.add({ question, answers });
-      return Promise.resolve(ok(null));
+      return noContent();
     } catch (error) {
       return internalServerError(error as Error);
     }

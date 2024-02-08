@@ -43,3 +43,10 @@ export function badRequest<T>(error: T): HttpResponse<T> {
     body: error,
   };
 }
+
+export function noContent<T>(): HttpResponse<T | null> {
+  return {
+    statusCode: 204,
+    body: null,
+  };
+}
