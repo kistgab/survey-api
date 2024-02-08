@@ -1,10 +1,10 @@
-import EmailValidatorAdapter from "../../../../infra/validators/email/email-validator-adapter";
-import { RequestSignUpBody } from "../../../../presentation/controllers/signup/signup-controller";
-import Validation from "../../../../presentation/protocols/validation";
-import CompareFieldsValidation from "../../../../validation/validators/compare-fields/compare-fields-validation";
-import ValidationComposite from "../../../../validation/validators/composite/validation-composite";
-import EmailValidation from "../../../../validation/validators/email/email-validation";
-import RequiredFieldValidation from "../../../../validation/validators/required-field/required-field-validation";
+import EmailValidatorAdapter from "../../../../../infra/validators/email/email-validator-adapter";
+import { RequestSignUpBody } from "../../../../../presentation/controllers/signup/signup-controller";
+import Validation from "../../../../../presentation/protocols/validation";
+import CompareFieldsValidation from "../../../../../validation/validators/compare-fields/compare-fields-validation";
+import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";
+import EmailValidation from "../../../../../validation/validators/email/email-validation";
+import RequiredFieldValidation from "../../../../../validation/validators/required-field/required-field-validation";
 
 type RequestSignUpBodyKeys = keyof RequestSignUpBody;
 

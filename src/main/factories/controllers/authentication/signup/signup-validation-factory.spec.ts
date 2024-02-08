@@ -1,14 +1,14 @@
-import Validation from "../../../../presentation/protocols/validation";
-import EmailValidator from "../../../../validation/protocols/email-validator";
-import CompareFieldsValidation from "../../../../validation/validators/compare-fields/compare-fields-validation";
-import ValidationComposite from "../../../../validation/validators/composite/validation-composite";
-import EmailValidation from "../../../../validation/validators/email/email-validation";
-import RequiredFieldValidation from "../../../../validation/validators/required-field/required-field-validation";
-import { RequestSignUpBody } from "./../../../../presentation/controllers/signup/signup-controller";
+import { RequestSignUpBody } from "../../../../../presentation/controllers/signup/signup-controller";
+import Validation from "../../../../../presentation/protocols/validation";
+import EmailValidator from "../../../../../validation/protocols/email-validator";
+import CompareFieldsValidation from "../../../../../validation/validators/compare-fields/compare-fields-validation";
+import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";
+import EmailValidation from "../../../../../validation/validators/email/email-validation";
+import RequiredFieldValidation from "../../../../../validation/validators/required-field/required-field-validation";
 import SignUpValidationFactory from "./signup-validation-factory";
 
 type RequestSignUpBodyKeys = keyof RequestSignUpBody;
-jest.mock("../../../../validation/validators/composite/validation-composite");
+jest.mock("../../../../../validation/validators/composite/validation-composite");
 
 function createEmailValidatorStub(): EmailValidator {
   class EmailValidatorStub implements EmailValidator {

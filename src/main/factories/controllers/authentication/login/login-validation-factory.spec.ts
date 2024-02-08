@@ -1,13 +1,13 @@
-import { RequestLoginBody } from "../../../../presentation/controllers/login/login-controller";
-import Validation from "../../../../presentation/protocols/validation";
-import EmailValidator from "../../../../validation/protocols/email-validator";
-import ValidationComposite from "../../../../validation/validators/composite/validation-composite";
-import EmailValidation from "../../../../validation/validators/email/email-validation";
-import RequiredFieldValidation from "../../../../validation/validators/required-field/required-field-validation";
+import { RequestLoginBody } from "../../../../../presentation/controllers/login/login-controller";
+import Validation from "../../../../../presentation/protocols/validation";
+import EmailValidator from "../../../../../validation/protocols/email-validator";
+import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";
+import EmailValidation from "../../../../../validation/validators/email/email-validation";
+import RequiredFieldValidation from "../../../../../validation/validators/required-field/required-field-validation";
 import LoginValidationFactory from "./login-validation-factory";
 
 type RequestLoginBodyKeys = keyof RequestLoginBody;
-jest.mock("../../../../validation/validators/composite/validation-composite");
+jest.mock("../../../../../validation/validators/composite/validation-composite");
 
 function createEmailValidatorStub(): EmailValidator {
   class EmailValidatorStub implements EmailValidator {
