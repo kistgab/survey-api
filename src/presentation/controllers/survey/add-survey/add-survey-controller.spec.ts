@@ -1,3 +1,4 @@
+import AddSurvey from "../../../../domain/usecases/add-survey";
 import { unprocessableContent } from "../../../helpers/http/http-helper";
 import { HttpRequest } from "../../../protocols/http";
 import Validation from "../../../protocols/validation";
@@ -26,16 +27,28 @@ function createValidationStub(): Validation {
   return new ValidationStub();
 }
 
+function createAddSurveyStub(): AddSurvey {
+  class AddSurveyStub implements AddSurvey {
+    async add(): Promise<void> {
+      return Promise.resolve();
+    }
+  }
+  return new AddSurveyStub();
+}
+
 type SutTypes = {
   sut: AddSurveyController;
   validationStub: Validation;
+  addSurveyStub: AddSurvey;
 };
 
 function createSut(): SutTypes {
+  const addSurveyStub = createAddSurveyStub();
   const validationStub = createValidationStub();
-  const sut = new AddSurveyController(validationStub);
+  const sut = new AddSurveyController(validationStub, addSurveyStub);
   return {
     sut,
+    addSurveyStub,
     validationStub,
   };
 }
@@ -58,5 +71,15 @@ describe("Add Survey Controller", () => {
     const response = await sut.handle(createFakeRequest());
 
     expect(response).toEqual(unprocessableContent(new Error("Validation error")));
+  });
+
+  it("should call AddSurvey with correct values", async () => {
+    const { addSurveyStub, sut } = createSut();
+    const addSpy = jest.spyOn(addSurveyStub, "add");
+    const httpRequest = createFakeRequest();
+
+    await sut.handle(httpRequest);
+
+    expect(addSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 });
