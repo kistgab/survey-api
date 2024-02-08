@@ -1,6 +1,6 @@
 import AddSurvey from "../../../../domain/usecases/add-survey";
 import MissingParamError from "../../../errors/missing-param-error";
-import { ok, unprocessableContent } from "../../../helpers/http/http-helper";
+import { internalServerError, ok, unprocessableContent } from "../../../helpers/http/http-helper";
 import Controller from "../../../protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../protocols/http";
 import Validation from "../../../protocols/validation";
@@ -22,15 +22,19 @@ export class AddSurveyController implements Controller<RequestAddSurveyBody, Err
   async handle(
     httpRequest: HttpRequest<RequestAddSurveyBody>,
   ): Promise<HttpResponse<Error | null>> {
-    const error = this.validation.validate(httpRequest.body);
-    if (error) {
-      return unprocessableContent(error);
+    try {
+      const error = this.validation.validate(httpRequest.body);
+      if (error) {
+        return unprocessableContent(error);
+      }
+      if (!httpRequest.body) {
+        return unprocessableContent(new MissingParamError("body"));
+      }
+      const { answers, question } = httpRequest.body;
+      await this.addSurvey.add({ question, answers });
+      return Promise.resolve(ok(null));
+    } catch (error) {
+      return internalServerError(error as Error);
     }
-    if (!httpRequest.body) {
-      return unprocessableContent(new MissingParamError("body"));
-    }
-    const { answers, question } = httpRequest.body;
-    await this.addSurvey.add({ question, answers });
-    return Promise.resolve(ok(null));
   }
 }
