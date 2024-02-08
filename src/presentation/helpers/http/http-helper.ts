@@ -36,3 +36,10 @@ export function conflict<T>(error: T): HttpResponse<T> {
     body: error,
   };
 }
+
+export function badRequest<T>(error: T): HttpResponse<T> {
+  return {
+    statusCode: 400,
+    body: error,
+  };
+}
