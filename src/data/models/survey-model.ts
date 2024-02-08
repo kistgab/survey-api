@@ -1,5 +1,5 @@
 interface Answer {
-  image: string;
+  image?: string;
   answer: string;
 }
 
