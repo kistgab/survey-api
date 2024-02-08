@@ -16,18 +16,22 @@ function createFakeRequest(): HttpRequest<RequestAddSurveyBody> {
   };
 }
 
+function createValidationStub(): Validation {
+  class ValidationStub implements Validation {
+    validate(): Error | undefined {
+      return;
+    }
+  }
+  return new ValidationStub();
+}
+
 type SutTypes = {
   sut: AddSurveyController;
   validationStub: Validation;
 };
 
 function createSut(): SutTypes {
-  class ValidationStub implements Validation {
-    validate(): Error | undefined {
-      return;
-    }
-  }
-  const validationStub = new ValidationStub();
+  const validationStub = createValidationStub();
   const sut = new AddSurveyController(validationStub);
   return {
     sut,
