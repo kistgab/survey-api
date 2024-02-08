@@ -4,11 +4,11 @@ import ValidationComposite from "./validation-composite";
 
 type SutTypes = {
   sut: ValidationComposite<unknown>;
-  validationStubs: Validation<unknown>[];
+  validationStubs: Validation[];
 };
 
-function createValidationStub(): Validation<unknown> {
-  class ValidationStub implements Validation<unknown> {
+function createValidationStub(): Validation {
+  class ValidationStub implements Validation {
     validate(): Error | undefined {
       return;
     }

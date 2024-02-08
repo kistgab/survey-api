@@ -8,8 +8,8 @@ import RequiredFieldValidation from "../../../../../validation/validators/requir
 type RequestLoginBodyKeys = keyof RequestLoginBody;
 
 export default abstract class LoginValidationFactory {
-  static create(): Validation<unknown> {
-    const validations: Validation<unknown>[] = [];
+  static create(): Validation {
+    const validations: Validation[] = [];
     const requiredFields: RequestLoginBodyKeys[] = ["password", "email"];
     for (const field of requiredFields) {
       validations.push(new RequiredFieldValidation<RequestLoginBody>(field));

@@ -28,7 +28,7 @@ export default class SignUpController
 {
   constructor(
     private readonly addAccount: AddAccount,
-    private readonly validation: Validation<unknown>,
+    private readonly validation: Validation,
     private readonly authentication: Authentication,
   ) {}
 

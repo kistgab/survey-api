@@ -1,4 +1,4 @@
-import { RequestSignUpBody } from "../../../../../presentation/controllers/signup/signup-controller";
+import { RequestSignUpBody } from "../../../../../presentation/controllers/authentication/signup/signup-controller";
 import Validation from "../../../../../presentation/protocols/validation";
 import EmailValidator from "../../../../../validation/protocols/email-validator";
 import CompareFieldsValidation from "../../../../../validation/validators/compare-fields/compare-fields-validation";
@@ -21,7 +21,7 @@ function createEmailValidatorStub(): EmailValidator {
 
 describe("SignUp Validation Factory", () => {
   it("should call ValidationComposite with all validations", () => {
-    const validations: Validation<unknown>[] = [];
+    const validations: Validation[] = [];
     const requiredFields: RequestSignUpBodyKeys[] = [
       "name",
       "password",

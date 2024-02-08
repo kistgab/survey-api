@@ -40,7 +40,7 @@ function createAuthenticationStub(): Authentication {
 type CreateSutTypes = {
   sut: LoginController;
   authenticationStub: Authentication;
-  validationStub: Validation<unknown>;
+  validationStub: Validation;
 };
 
 function createSut(): CreateSutTypes {

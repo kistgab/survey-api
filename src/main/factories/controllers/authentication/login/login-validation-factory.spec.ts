@@ -20,7 +20,7 @@ function createEmailValidatorStub(): EmailValidator {
 
 describe("Login Validation Factory", () => {
   it("should call ValidationComposite with all validations", () => {
-    const validations: Validation<unknown>[] = [];
+    const validations: Validation[] = [];
     const requiredFields: RequestLoginBodyKeys[] = ["password", "email"];
     for (const field of requiredFields) {
       validations.push(new RequiredFieldValidation<RequestLoginBody>(field));

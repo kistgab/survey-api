@@ -65,7 +65,7 @@ type createSutReturn = {
   sut: SignUpController;
   addAccountStub: AddAccount;
   authenticationStub: Authentication;
-  validationStub: Validation<unknown>;
+  validationStub: Validation;
 };
 
 function createSut(): createSutReturn {

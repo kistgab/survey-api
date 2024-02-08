@@ -1,7 +1,7 @@
 import Validation from "../../../presentation/protocols/validation";
 
 export default class ValidationComposite<T> implements Validation<T> {
-  constructor(private readonly validations: Validation<unknown>[]) {}
+  constructor(private readonly validations: Validation[]) {}
 
   validate<T>(input: T): Error | undefined {
     for (const validation of this.validations) {

@@ -24,7 +24,7 @@ export default class LoginController
 {
   constructor(
     private readonly authentication: Authentication,
-    private readonly validation: Validation<unknown>,
+    private readonly validation: Validation,
   ) {}
 
   async handle(

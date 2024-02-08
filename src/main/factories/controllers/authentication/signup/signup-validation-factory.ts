@@ -9,8 +9,8 @@ import RequiredFieldValidation from "../../../../../validation/validators/requir
 type RequestSignUpBodyKeys = keyof RequestSignUpBody;
 
 export default abstract class SignUpValidationFactory {
-  static create(): Validation<unknown> {
-    const validations: Validation<unknown>[] = [];
+  static create(): Validation {
+    const validations: Validation[] = [];
     const requiredFields: RequestSignUpBodyKeys[] = [
       "name",
       "password",
