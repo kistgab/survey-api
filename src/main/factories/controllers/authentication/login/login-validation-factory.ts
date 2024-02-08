@@ -1,5 +1,5 @@
 import EmailValidatorAdapter from "../../../../../infra/validators/email/email-validator-adapter";
-import { RequestLoginBody } from "../../../../../presentation/controllers/login/login-controller";
+import { RequestLoginBody } from "../../../../../presentation/controllers/authentication/login/login-controller";
 import Validation from "../../../../../presentation/protocols/validation";
 import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";
 import EmailValidation from "../../../../../validation/validators/email/email-validation";

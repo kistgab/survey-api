@@ -1,7 +1,7 @@
 import LoginController, {
   RequestLoginBody,
   ResponseLoginBody,
-} from "../../../../../presentation/controllers/login/login-controller";
+} from "../../../../../presentation/controllers/authentication/login/login-controller";
 import Controller from "../../../../../presentation/protocols/controller";
 import LogControllerDecoratorFactory from "../../../decorators/log-controller-decorator-factory";
 import DbAuthenticationFactory from "../../../usecases/authentication/db-authentication-factory";

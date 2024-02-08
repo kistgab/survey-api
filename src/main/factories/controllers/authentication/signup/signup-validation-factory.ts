@@ -1,5 +1,5 @@
 import EmailValidatorAdapter from "../../../../../infra/validators/email/email-validator-adapter";
-import { RequestSignUpBody } from "../../../../../presentation/controllers/signup/signup-controller";
+import { RequestSignUpBody } from "../../../../../presentation/controllers/authentication/signup/signup-controller";
 import Validation from "../../../../../presentation/protocols/validation";
 import CompareFieldsValidation from "../../../../../validation/validators/compare-fields/compare-fields-validation";
 import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";

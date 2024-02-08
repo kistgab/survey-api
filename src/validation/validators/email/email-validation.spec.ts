@@ -1,4 +1,4 @@
-import { RequestSignUpBody } from "../../../presentation/controllers/signup/signup-controller";
+import { RequestSignUpBody } from "../../../presentation/controllers/authentication/signup/signup-controller";
 import InvalidParamError from "../../../presentation/errors/invalid-param-error";
 import EmailValidator from "../../protocols/email-validator";
 import EmailValidation from "./email-validation";

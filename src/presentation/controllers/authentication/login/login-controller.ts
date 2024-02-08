@@ -1,14 +1,14 @@
-import Authentication from "../../../domain/usecases/authentication";
-import MissingParamError from "../../errors/missing-param-error";
+import Authentication from "../../../../domain/usecases/authentication";
+import MissingParamError from "../../../errors/missing-param-error";
 import {
   internalServerError,
   ok,
   unauthorized,
   unprocessableContent,
-} from "../../helpers/http/http-helper";
-import Controller from "../../protocols/controller";
-import { HttpRequest, HttpResponse } from "../../protocols/http";
-import Validation from "../../protocols/validation";
+} from "../../../helpers/http/http-helper";
+import Controller from "../../../protocols/controller";
+import { HttpRequest, HttpResponse } from "../../../protocols/http";
+import Validation from "../../../protocols/validation";
 
 export type RequestLoginBody = {
   email: string;

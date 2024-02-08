@@ -1,4 +1,4 @@
-import { RequestLoginBody } from "../../../../../presentation/controllers/login/login-controller";
+import { RequestLoginBody } from "../../../../../presentation/controllers/authentication/login/login-controller";
 import Validation from "../../../../../presentation/protocols/validation";
 import EmailValidator from "../../../../../validation/protocols/email-validator";
 import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";
