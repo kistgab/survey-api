@@ -1,5 +1,5 @@
 import AddSurvey from "../../../../domain/usecases/add-survey";
-import { unprocessableContent } from "../../../helpers/http/http-helper";
+import { internalServerError, unprocessableContent } from "../../../helpers/http/http-helper";
 import { HttpRequest } from "../../../protocols/http";
 import Validation from "../../../protocols/validation";
 import { AddSurveyController, RequestAddSurveyBody } from "./add-survey-controller";
@@ -81,5 +81,16 @@ describe("Add Survey Controller", () => {
     await sut.handle(httpRequest);
 
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  it("should return 500 if AddSurvey throws", async () => {
+    const { addSurveyStub, sut } = createSut();
+    jest
+      .spyOn(addSurveyStub, "add")
+      .mockReturnValueOnce(Promise.reject(new Error("AddSurvey error")));
+
+    const response = await sut.handle(createFakeRequest());
+
+    expect(response).toEqual(internalServerError(new Error("AddSurvey error")));
   });
 });
