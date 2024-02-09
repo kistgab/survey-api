@@ -66,6 +66,15 @@ describe("DbFindAccountByToken UseCase", () => {
     expect(account).toBeNull();
   });
 
+  it("should throw if Decrypter throws", async () => {
+    const { sut, decrypterStub } = createSut();
+    jest
+      .spyOn(decrypterStub, "decrypt")
+      .mockReturnValueOnce(Promise.reject(new Error("Decrypt error")));
+
+    await expect(sut.findByToken("any_token")).rejects.toThrow(new Error("Decrypt error"));
+  });
+
   it("should call FindAccountByTokenRepository with correct values", async () => {
     const { sut, findAccountByRepositoryStub, decrypterStub } = createSut();
     jest.spyOn(decrypterStub, "decrypt").mockReturnValueOnce(Promise.resolve("decrypted_token"));
@@ -85,6 +94,17 @@ describe("DbFindAccountByToken UseCase", () => {
     const account = await sut.findByToken("any_token");
 
     expect(account).toBeNull();
+  });
+
+  it("should throw if Decrypter throws", async () => {
+    const { sut, findAccountByRepositoryStub } = createSut();
+    jest
+      .spyOn(findAccountByRepositoryStub, "findByToken")
+      .mockReturnValueOnce(Promise.reject(new Error("FindAccountByTokenRepository error")));
+
+    await expect(sut.findByToken("any_token")).rejects.toThrow(
+      new Error("FindAccountByTokenRepository error"),
+    );
   });
 
   it("should return an account on success", async () => {
