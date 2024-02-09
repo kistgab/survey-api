@@ -32,9 +32,9 @@ type SutTypes = {
   findAccountByTokenRepositoryStub: FindAccountByTokenRepository;
 };
 
-function createSut(): SutTypes {
+function createSut(role?: string): SutTypes {
   const findAccountByTokenRepositoryStub = createFindAccountByTokenRepositoryStub();
-  const sut = new AuthMiddleware(findAccountByTokenRepositoryStub);
+  const sut = new AuthMiddleware(findAccountByTokenRepositoryStub, role);
   return {
     sut,
     findAccountByTokenRepositoryStub,
@@ -51,12 +51,13 @@ describe("Auth Middleware", () => {
   });
 
   it("should call FindAccountByTokenRepository with correct accessToken", async () => {
-    const { sut, findAccountByTokenRepositoryStub } = createSut();
+    const role = "any_role";
+    const { sut, findAccountByTokenRepositoryStub } = createSut(role);
     const findAccountByTokenSpy = jest.spyOn(findAccountByTokenRepositoryStub, "findByToken");
 
     await sut.handle(createFakeRequest());
 
-    expect(findAccountByTokenSpy).toHaveBeenCalledWith("any_token");
+    expect(findAccountByTokenSpy).toHaveBeenCalledWith("any_token", role);
   });
 
   it("should return 403 if FindAccountByTokenRepository returns null", async () => {
