@@ -1,4 +1,4 @@
-import FindAccountByTokenRepository from "../../../data/protocols/db/account/find-account-by-token-repository";
+import FindAccountByToken from "../../../data/protocols/db/account/find-account-by-token-repository";
 import AccessDeniedError from "../../errors/access-denied-error";
 import { forbidden, internalServerError, ok } from "../../helpers/http/http-helper";
 import { HttpRequest, HttpResponse } from "../../protocols/http";
@@ -6,7 +6,7 @@ import Middleware from "../../protocols/middleware";
 
 export class AuthMiddleware implements Middleware {
   constructor(
-    private readonly findAccountByTokenRepository: FindAccountByTokenRepository,
+    private readonly findAccountByToken: FindAccountByToken,
     private readonly role?: string,
   ) {}
 
@@ -16,7 +16,7 @@ export class AuthMiddleware implements Middleware {
       if (!accessToken) {
         return forbidden(new AccessDeniedError());
       }
-      const account = await this.findAccountByTokenRepository.findByToken(accessToken, this.role);
+      const account = await this.findAccountByToken.findByToken(accessToken, this.role);
       if (account) {
         return ok({ accountId: account.id });
       }

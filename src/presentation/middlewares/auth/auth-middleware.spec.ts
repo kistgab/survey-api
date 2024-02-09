@@ -1,5 +1,5 @@
 import AccountModel from "../../../data/models/account-model";
-import FindAccountByTokenRepository from "../../../data/protocols/db/account/find-account-by-token-repository";
+import FindAccountByToken from "../../../data/protocols/db/account/find-account-by-token-repository";
 import AccessDeniedError from "../../errors/access-denied-error";
 import { forbidden, internalServerError, ok } from "../../helpers/http/http-helper";
 import { HttpRequest } from "../../protocols/http";
@@ -18,26 +18,26 @@ function createFakeAccount(): AccountModel {
   };
 }
 
-function createFindAccountByTokenRepositoryStub(): FindAccountByTokenRepository {
-  class FindAccountByTokenRepositoryStub implements FindAccountByTokenRepository {
+function createFindAccountByTokenStub(): FindAccountByToken {
+  class FindAccountByTokenStub implements FindAccountByToken {
     async findByToken(): Promise<AccountModel | null> {
       return Promise.resolve(createFakeAccount());
     }
   }
-  return new FindAccountByTokenRepositoryStub();
+  return new FindAccountByTokenStub();
 }
 
 type SutTypes = {
   sut: AuthMiddleware;
-  findAccountByTokenRepositoryStub: FindAccountByTokenRepository;
+  findAccountByTokenStub: FindAccountByToken;
 };
 
 function createSut(role?: string): SutTypes {
-  const findAccountByTokenRepositoryStub = createFindAccountByTokenRepositoryStub();
-  const sut = new AuthMiddleware(findAccountByTokenRepositoryStub, role);
+  const findAccountByTokenStub = createFindAccountByTokenStub();
+  const sut = new AuthMiddleware(findAccountByTokenStub, role);
   return {
     sut,
-    findAccountByTokenRepositoryStub,
+    findAccountByTokenStub,
   };
 }
 
@@ -50,28 +50,26 @@ describe("Auth Middleware", () => {
     expect(result).toEqual(forbidden(new AccessDeniedError()));
   });
 
-  it("should call FindAccountByTokenRepository with correct accessToken", async () => {
+  it("should call FindAccountByToken with correct accessToken", async () => {
     const role = "any_role";
-    const { sut, findAccountByTokenRepositoryStub } = createSut(role);
-    const findAccountByTokenSpy = jest.spyOn(findAccountByTokenRepositoryStub, "findByToken");
+    const { sut, findAccountByTokenStub } = createSut(role);
+    const findAccountByTokenSpy = jest.spyOn(findAccountByTokenStub, "findByToken");
 
     await sut.handle(createFakeRequest());
 
     expect(findAccountByTokenSpy).toHaveBeenCalledWith("any_token", role);
   });
 
-  it("should return 403 if FindAccountByTokenRepository returns null", async () => {
-    const { sut, findAccountByTokenRepositoryStub } = createSut();
-    jest
-      .spyOn(findAccountByTokenRepositoryStub, "findByToken")
-      .mockReturnValueOnce(Promise.resolve(null));
+  it("should return 403 if FindAccountByToken returns null", async () => {
+    const { sut, findAccountByTokenStub } = createSut();
+    jest.spyOn(findAccountByTokenStub, "findByToken").mockReturnValueOnce(Promise.resolve(null));
 
     const result = await sut.handle(createFakeRequest());
 
     expect(result).toEqual(forbidden(new AccessDeniedError()));
   });
 
-  it("should return 200 if FindAccountByTokenRepository returns an account", async () => {
+  it("should return 200 if FindAccountByToken returns an account", async () => {
     const { sut } = createSut();
 
     const result = await sut.handle(createFakeRequest());
@@ -79,10 +77,10 @@ describe("Auth Middleware", () => {
     expect(result).toEqual(ok({ accountId: "any_id" }));
   });
 
-  it("should return 403 if FindAccountByTokenRepository throws", async () => {
-    const { sut, findAccountByTokenRepositoryStub } = createSut();
+  it("should return 403 if FindAccountByToken throws", async () => {
+    const { sut, findAccountByTokenStub } = createSut();
     jest
-      .spyOn(findAccountByTokenRepositoryStub, "findByToken")
+      .spyOn(findAccountByTokenStub, "findByToken")
       .mockReturnValueOnce(Promise.reject(new Error("Repository Error")));
 
     const result = await sut.handle(createFakeRequest());
