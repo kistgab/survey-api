@@ -67,11 +67,12 @@ describe("DbFindAccountByToken UseCase", () => {
   });
 
   it("should call FindAccountByTokenRepository with correct values", async () => {
-    const { sut, findAccountByRepositoryStub } = createSut();
+    const { sut, findAccountByRepositoryStub, decrypterStub } = createSut();
+    jest.spyOn(decrypterStub, "decrypt").mockReturnValueOnce(Promise.resolve("decrypted_token"));
     const findByTokenSpy = jest.spyOn(findAccountByRepositoryStub, "findByToken");
 
     await sut.findByToken("any_token", "any_role");
 
-    expect(findByTokenSpy).toHaveBeenCalledWith("any_token", "any_role");
+    expect(findByTokenSpy).toHaveBeenCalledWith("decrypted_token", "any_role");
   });
 });
