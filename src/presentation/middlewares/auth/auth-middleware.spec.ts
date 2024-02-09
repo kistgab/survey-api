@@ -1,5 +1,5 @@
 import AccountModel from "../../../data/models/account-model";
-import FindAccountByToken from "../../../data/protocols/db/account/find-account-by-token-repository";
+import FindAccountByToken from "../../../domain/usecases/find-account-by-token";
 import AccessDeniedError from "../../errors/access-denied-error";
 import { forbidden, internalServerError, ok } from "../../helpers/http/http-helper";
 import { HttpRequest } from "../../protocols/http";
