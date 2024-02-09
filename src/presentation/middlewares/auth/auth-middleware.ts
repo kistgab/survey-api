@@ -5,7 +5,10 @@ import { HttpRequest, HttpResponse } from "../../protocols/http";
 import Middleware from "../../protocols/middleware";
 
 export class AuthMiddleware implements Middleware {
-  constructor(private readonly findAccountByTokenRepository: FindAccountByTokenRepository) {}
+  constructor(
+    private readonly findAccountByTokenRepository: FindAccountByTokenRepository,
+    private readonly role?: string,
+  ) {}
 
   async handle(httpRequest: HttpRequest<unknown>): Promise<HttpResponse<unknown>> {
     try {
@@ -13,7 +16,7 @@ export class AuthMiddleware implements Middleware {
       if (!accessToken) {
         return forbidden(new AccessDeniedError());
       }
-      const account = await this.findAccountByTokenRepository.findByToken(accessToken);
+      const account = await this.findAccountByTokenRepository.findByToken(accessToken, this.role);
       if (account) {
         return ok({ accountId: account.id });
       }
