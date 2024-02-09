@@ -1,10 +1,16 @@
+import AccountModel from "../../models/account-model";
 import Decrypter from "../../protocols/cryptography/decrypter";
+import FindAccountByTokenRepository from "./../../../data/protocols/db/account/find-account-by-token-repository";
 import DbFindAccountByToken from "./db-find-account-by-token";
 
-type SutTypes = {
-  sut: DbFindAccountByToken;
-  decrypterStub: Decrypter;
-};
+function createFakeAccount(): AccountModel {
+  return {
+    id: "any_id",
+    email: "any_email@mail.com",
+    password: "hashed_password",
+    name: "any_name",
+  };
+}
 
 function createDecrypter(): Decrypter {
   class DecrypterStub implements Decrypter {
@@ -12,16 +18,32 @@ function createDecrypter(): Decrypter {
       return Promise.resolve("any_value");
     }
   }
-  const decrypterStub = new DecrypterStub();
-  return decrypterStub;
+  return new DecrypterStub();
 }
+
+function createFindAccountByRepositoryStub(): FindAccountByTokenRepository {
+  class FindAccountByRepositoryStub implements FindAccountByTokenRepository {
+    async findByToken(): Promise<AccountModel | null> {
+      return Promise.resolve(createFakeAccount());
+    }
+  }
+  return new FindAccountByRepositoryStub();
+}
+
+type SutTypes = {
+  sut: DbFindAccountByToken;
+  decrypterStub: Decrypter;
+  findAccountByRepositoryStub: FindAccountByTokenRepository;
+};
 
 function createSut(): SutTypes {
   const decrypterStub = createDecrypter();
-  const sut = new DbFindAccountByToken(decrypterStub);
+  const findAccountByRepositoryStub = createFindAccountByRepositoryStub();
+  const sut = new DbFindAccountByToken(decrypterStub, findAccountByRepositoryStub);
   return {
     sut,
     decrypterStub,
+    findAccountByRepositoryStub,
   };
 }
 
@@ -42,5 +64,14 @@ describe("DbFindAccountByToken UseCase", () => {
     const account = await sut.findByToken("any_token");
 
     expect(account).toBeNull();
+  });
+
+  it("should call FindAccountByTokenRepository with correct values", async () => {
+    const { sut, findAccountByRepositoryStub } = createSut();
+    const findByTokenSpy = jest.spyOn(findAccountByRepositoryStub, "findByToken");
+
+    await sut.findByToken("any_token", "any_role");
+
+    expect(findByTokenSpy).toHaveBeenCalledWith("any_token", "any_role");
   });
 });
