@@ -50,3 +50,10 @@ export function noContent<T>(): HttpResponse<T | null> {
     body: null,
   };
 }
+
+export function forbidden<T>(error: T): HttpResponse<T> {
+  return {
+    statusCode: 403,
+    body: error,
+  };
+}
