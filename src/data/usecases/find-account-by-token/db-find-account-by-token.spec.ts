@@ -75,4 +75,15 @@ describe("DbFindAccountByToken UseCase", () => {
 
     expect(findByTokenSpy).toHaveBeenCalledWith("decrypted_token", "any_role");
   });
+
+  it("should return null if FindAccountByTokenRepository returns null", async () => {
+    const { sut, findAccountByRepositoryStub } = createSut();
+    jest
+      .spyOn(findAccountByRepositoryStub, "findByToken")
+      .mockReturnValueOnce(Promise.resolve(null));
+
+    const account = await sut.findByToken("any_token");
+
+    expect(account).toBeNull();
+  });
 });
