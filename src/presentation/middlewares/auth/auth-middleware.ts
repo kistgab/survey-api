@@ -8,10 +8,11 @@ export class AuthMiddleware implements Middleware {
   constructor(private readonly findAccountByTokenRepository: FindAccountByTokenRepository) {}
 
   async handle(httpRequest: HttpRequest<unknown>): Promise<HttpResponse<unknown>> {
-    await this.findAccountByTokenRepository.findByToken(
-      httpRequest.headers?.["x-access-token"] as string,
-    );
-
+    const accessToken = httpRequest.headers?.["x-access-token"] as string;
+    if (!accessToken) {
+      return forbidden(new AccessDeniedError());
+    }
+    await this.findAccountByTokenRepository.findByToken(accessToken);
     return forbidden(new AccessDeniedError());
   }
 }
