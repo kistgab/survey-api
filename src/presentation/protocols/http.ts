@@ -5,5 +5,8 @@ export interface HttpResponse<Body> {
 
 export interface HttpRequest<Body> {
   body?: Body;
-  headers?: unknown;
+  headers?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
 }
