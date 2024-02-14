@@ -122,6 +122,56 @@ describe("Account Mongo Repository", () => {
       expect(account?.password).toBe("any_password");
     });
 
+    it("should return an account on findByToken success (with admin role)", async () => {
+      await accountCollection.insertOne({
+        email: "any_email@mail.com",
+        name: "any_name",
+        password: "any_password",
+        accessToken: "any_token",
+        role: "admin",
+      });
+      const sut = createSut();
+
+      const account = await sut.findByToken("any_token", "admin");
+
+      expect(account?.id).toBeDefined();
+      expect(account?.name).toBe("any_name");
+      expect(account?.email).toBe("any_email@mail.com");
+      expect(account?.password).toBe("any_password");
+    });
+
+    it("should return null on findByToken success (with invalid role)", async () => {
+      await accountCollection.insertOne({
+        email: "any_email@mail.com",
+        name: "any_name",
+        password: "any_password",
+        accessToken: "any_token",
+      });
+      const sut = createSut();
+
+      const account = await sut.findByToken("any_token", "admin");
+
+      expect(account).toBeNull();
+    });
+
+    it("should return an account on findByToken success (if user is admin)", async () => {
+      await accountCollection.insertOne({
+        email: "any_email@mail.com",
+        name: "any_name",
+        password: "any_password",
+        accessToken: "any_token",
+        role: "admin",
+      });
+      const sut = createSut();
+
+      const account = await sut.findByToken("any_token");
+
+      expect(account?.id).toBeDefined();
+      expect(account?.name).toBe("any_name");
+      expect(account?.email).toBe("any_email@mail.com");
+      expect(account?.password).toBe("any_password");
+    });
+
     it("should return null on findByToken fail", async () => {
       const sut = createSut();
 
