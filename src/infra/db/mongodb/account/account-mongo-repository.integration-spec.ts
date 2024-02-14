@@ -85,4 +85,23 @@ describe("Account Mongo Repository", () => {
       expect(account?.accessToken).toBe("any_token");
     });
   });
+
+  describe("findByToken", () => {
+    it("should return an account on findByToken success (without role)", async () => {
+      await accountCollection.insertOne({
+        email: "any_email@mail.com",
+        name: "any_name",
+        password: "any_password",
+        accessToken: "any_token",
+      });
+      const sut = createSut();
+
+      const account = await sut.findByToken("any_token");
+
+      expect(account?.id).toBeDefined();
+      expect(account?.name).toBe("any_name");
+      expect(account?.email).toBe("any_email@mail.com");
+      expect(account?.password).toBe("any_password");
+    });
+  });
 });
