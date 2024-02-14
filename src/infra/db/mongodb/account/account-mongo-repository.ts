@@ -48,7 +48,10 @@ export class AccountMongoRepository
 
   async findByToken(token: string, role?: string | undefined): Promise<AccountModel | null> {
     const accountCollection = MongoHelper.getCollection("accounts");
-    const accountData = await accountCollection.findOne({ accessToken: token, role });
+    const accountData = await accountCollection.findOne({
+      accessToken: token,
+      $or: [{ role }, { role: "admin" }],
+    });
     if (!accountData) {
       return null;
     }
