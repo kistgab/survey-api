@@ -1,4 +1,5 @@
 import AddSurvey from "../../../../domain/usecases/add-survey";
+import MissingParamError from "../../../errors/missing-param-error";
 import {
   internalServerError,
   noContent,
@@ -96,6 +97,15 @@ describe("Add Survey Controller", () => {
     const response = await sut.handle(createFakeRequest());
 
     expect(response).toEqual(internalServerError(new Error("AddSurvey error")));
+  });
+
+  it("should return 422 if no body is provided", async () => {
+    const { sut } = createSut();
+    const httpRequest = {} as HttpRequest<RequestAddSurveyBody>;
+
+    const result = await sut.handle(httpRequest);
+
+    expect(result).toEqual(unprocessableContent(new MissingParamError("body")));
   });
 
   it("should return 204 on success", async () => {
