@@ -19,12 +19,12 @@ describe("SignUp route", () => {
   });
 
   describe("POST /surveys", () => {
-    it("should return 204 on add survey success", async () => {
+    it("should return 403 on adding survey without accessToken", async () => {
       const input = {
         question: "any_question",
         answers: [{ image: "any_image", answer: "any_answer" }, { answer: "other_answer" }],
       };
-      await request(app).post("/api/surveys").send(input).expect(204);
+      await request(app).post("/api/surveys").send(input).expect(403);
     });
   });
 });
