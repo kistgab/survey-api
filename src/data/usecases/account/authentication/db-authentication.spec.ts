@@ -1,9 +1,9 @@
-import { InputAuthenticationDto } from "../../../domain/dtos/authentication-dto";
-import AccountModel from "../../models/account-model";
-import Encrypter from "../../protocols/cryptography/encrypter";
-import HashComparer from "../../protocols/cryptography/hash-comparer";
-import FindAccountByEmailRepository from "../../protocols/db/account/find-account-by-email-repository";
-import UpdateAccessTokenRepository from "../../protocols/db/account/update-access-token-repository";
+import { InputAuthenticationDto } from "../../../../domain/dtos/authentication-dto";
+import AccountModel from "../../../models/account-model";
+import Encrypter from "../../../protocols/cryptography/encrypter";
+import HashComparer from "../../../protocols/cryptography/hash-comparer";
+import FindAccountByEmailRepository from "../../../protocols/db/account/find-account-by-email-repository";
+import UpdateAccessTokenRepository from "../../../protocols/db/account/update-access-token-repository";
 import DbAuthentication from "./db-authentication";
 
 function createFakeAccount(): AccountModel {

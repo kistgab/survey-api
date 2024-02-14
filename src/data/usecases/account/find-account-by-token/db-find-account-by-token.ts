@@ -1,7 +1,7 @@
-import FindAccountByToken from "../../../domain/usecases/find-account-by-token";
-import AccountModel from "../../models/account-model";
-import Decrypter from "../../protocols/cryptography/decrypter";
-import FindAccountByTokenRepository from "../../protocols/db/account/find-account-by-token-repository";
+import FindAccountByToken from "../../../../domain/usecases/find-account-by-token";
+import AccountModel from "../../../models/account-model";
+import Decrypter from "../../../protocols/cryptography/decrypter";
+import FindAccountByTokenRepository from "../../../protocols/db/account/find-account-by-token-repository";
 
 export default class DbFindAccountByToken implements FindAccountByToken {
   constructor(

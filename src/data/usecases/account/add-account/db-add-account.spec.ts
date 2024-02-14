@@ -1,8 +1,8 @@
-import { InputAddAccountDto } from "../../../domain/dtos/add-account-dto";
-import AccountModel from "../../models/account-model";
-import Hasher from "../../protocols/cryptography/hasher";
-import AddAccountRepository from "../../protocols/db/account/add-account-repository";
-import FindAccountByEmailRepository from "../../protocols/db/account/find-account-by-email-repository";
+import { InputAddAccountDto } from "../../../../domain/dtos/add-account-dto";
+import AccountModel from "../../../models/account-model";
+import Hasher from "../../../protocols/cryptography/hasher";
+import AddAccountRepository from "../../../protocols/db/account/add-account-repository";
+import FindAccountByEmailRepository from "../../../protocols/db/account/find-account-by-email-repository";
 import DbAddAccount from "./db-add-account";
 
 function createFakeAccount(): AccountModel {

@@ -1,5 +1,5 @@
-import { InputAddSurveyDto } from "./../../../domain/dtos/add-survey-dto";
-import AddSurveyRepository from "./../../protocols/db/survey/add-survey-repository";
+import { InputAddSurveyDto } from "./../../../../domain/dtos/add-survey-dto";
+import AddSurveyRepository from "./../../../protocols/db/survey/add-survey-repository";
 import DbAddSurvey from "./db-add-survey";
 
 function createFakeSurveyData(): InputAddSurveyDto {

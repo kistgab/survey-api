@@ -1,6 +1,6 @@
-import AccountModel from "../../models/account-model";
-import Decrypter from "../../protocols/cryptography/decrypter";
-import FindAccountByTokenRepository from "./../../../data/protocols/db/account/find-account-by-token-repository";
+import AccountModel from "../../../models/account-model";
+import Decrypter from "../../../protocols/cryptography/decrypter";
+import FindAccountByTokenRepository from "./../../../../data/protocols/db/account/find-account-by-token-repository";
 import DbFindAccountByToken from "./db-find-account-by-token";
 
 function createFakeAccount(): AccountModel {
