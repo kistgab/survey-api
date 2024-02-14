@@ -4,11 +4,16 @@ import AccountModel from "../../../../data/models/account-model";
 import AddAccountModel from "../../../../data/models/add-account-model";
 import AddAccountRepository from "../../../../data/protocols/db/account/add-account-repository";
 import FindAccountByEmailRepository from "../../../../data/protocols/db/account/find-account-by-email-repository";
+import FindAccountByTokenRepository from "../../../../data/protocols/db/account/find-account-by-token-repository";
 import UpdateAccessTokenRepository from "../../../../data/protocols/db/account/update-access-token-repository";
 import { MongoHelper } from "../helpers/mongo-helper";
 
 export class AccountMongoRepository
-  implements AddAccountRepository, FindAccountByEmailRepository, UpdateAccessTokenRepository
+  implements
+    AddAccountRepository,
+    FindAccountByEmailRepository,
+    UpdateAccessTokenRepository,
+    FindAccountByTokenRepository
 {
   async add(accountData: AddAccountModel): Promise<AccountModel> {
     const accountCollection = MongoHelper.getCollection("accounts");
@@ -39,5 +44,19 @@ export class AccountMongoRepository
       { _id: new ObjectId(userId) },
       { $set: { accessToken: token } },
     );
+  }
+
+  async findByToken(token: string, role?: string | undefined): Promise<AccountModel | null> {
+    const accountCollection = MongoHelper.getCollection("accounts");
+    const accountData = await accountCollection.findOne({
+      accessToken: token,
+      $or: [{ role }, { role: "admin" }],
+    });
+    if (!accountData) {
+      return null;
+    }
+    const { _id, name, email, password } = accountData;
+    const foundAccount = { id: _id.toString(), name, email, password };
+    return foundAccount;
   }
 }

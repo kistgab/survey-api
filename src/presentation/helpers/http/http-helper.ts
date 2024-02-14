@@ -36,3 +36,24 @@ export function conflict<T>(error: T): HttpResponse<T> {
     body: error,
   };
 }
+
+export function badRequest<T>(error: T): HttpResponse<T> {
+  return {
+    statusCode: 400,
+    body: error,
+  };
+}
+
+export function noContent<T>(): HttpResponse<T | null> {
+  return {
+    statusCode: 204,
+    body: null,
+  };
+}
+
+export function forbidden<T>(error: T): HttpResponse<T> {
+  return {
+    statusCode: 403,
+    body: error,
+  };
+}
