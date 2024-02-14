@@ -82,7 +82,7 @@ describe("DbFindAccountByToken UseCase", () => {
 
     await sut.findByToken("any_token", "any_role");
 
-    expect(findByTokenSpy).toHaveBeenCalledWith("decrypted_token", "any_role");
+    expect(findByTokenSpy).toHaveBeenCalledWith("any_token", "any_role");
   });
 
   it("should return null if FindAccountByTokenRepository returns null", async () => {

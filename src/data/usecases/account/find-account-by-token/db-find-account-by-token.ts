@@ -14,7 +14,7 @@ export default class DbFindAccountByToken implements FindAccountByToken {
     if (!accessToken) {
       return null;
     }
-    const account = await this.findAccountByRepository.findByToken(accessToken, role);
+    const account = await this.findAccountByRepository.findByToken(token, role);
     if (account) {
       return account;
     }
