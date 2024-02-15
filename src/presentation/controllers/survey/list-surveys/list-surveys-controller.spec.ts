@@ -1,5 +1,6 @@
 import * as Mockdate from "mockdate";
 import { SurveyModel } from "../../../../data/models/survey-model";
+import { internalServerError } from "../../../helpers/http/http-helper";
 import { ListSurveys } from "./../../../../domain/usecases/list-surveys";
 import ListSurveysController from "./list-surveys-controller";
 
@@ -57,5 +58,16 @@ describe("ListSurveys Controller", () => {
     await sut.handle({});
 
     expect(listSpy).toHaveBeenCalled();
+  });
+
+  it("should return 500 when ListSurveys throws", async () => {
+    const { sut, listSurveysStub } = createSut();
+    jest
+      .spyOn(listSurveysStub, "list")
+      .mockReturnValueOnce(Promise.reject(new Error("List surveys error")));
+
+    const result = await sut.handle({});
+
+    expect(result).toEqual(internalServerError(new Error("List surveys error")));
   });
 });
