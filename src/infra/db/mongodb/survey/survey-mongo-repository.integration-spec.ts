@@ -24,22 +24,24 @@ describe("Survey Mongo Repository", () => {
     return new SurveyMongoRepository();
   }
 
-  it("should add a survey on success", async () => {
-    const sut = createSut();
+  describe("add", () => {
+    it("should add a survey on success", async () => {
+      const sut = createSut();
 
-    await sut.add({
-      answers: [{ answer: "any_answer", image: "any_image" }, { answer: "any_answer" }],
-      question: "any_question",
-      date: new Date(),
+      await sut.add({
+        answers: [{ answer: "any_answer", image: "any_image" }, { answer: "any_answer" }],
+        question: "any_question",
+        date: new Date(),
+      });
+
+      const survey = await surveyCollection.findOne({ question: "any_question" });
+      expect(survey?._id).toBeDefined();
+      expect(survey?.question).toBe("any_question");
+      expect(survey?.answers).toEqual([
+        { answer: "any_answer", image: "any_image" },
+        { answer: "any_answer" },
+      ]);
+      expect(survey?.date).toEqual(new Date());
     });
-
-    const survey = await surveyCollection.findOne({ question: "any_question" });
-    expect(survey?._id).toBeDefined();
-    expect(survey?.question).toBe("any_question");
-    expect(survey?.answers).toEqual([
-      { answer: "any_answer", image: "any_image" },
-      { answer: "any_answer" },
-    ]);
-    expect(survey?.date).toEqual(new Date());
   });
 });
