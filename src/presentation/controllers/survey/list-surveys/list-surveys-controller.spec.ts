@@ -18,6 +18,28 @@ function createFakeSurveys(): SurveyModel[] {
     },
   ];
 }
+function createListSurveysStub(): ListSurveys {
+  class ListSurveysStub implements ListSurveys {
+    async list(): Promise<SurveyModel[]> {
+      return Promise.resolve(createFakeSurveys());
+    }
+  }
+  return new ListSurveysStub();
+}
+
+type SutTypes = {
+  sut: ListSurveysController;
+  listSurveysStub: ListSurveys;
+};
+
+function createSut(): SutTypes {
+  const listSurveysStub = createListSurveysStub();
+  const sut = new ListSurveysController(listSurveysStub);
+  return {
+    sut,
+    listSurveysStub,
+  };
+}
 
 describe("ListSurveys Controller", () => {
   beforeAll(() => {
@@ -29,14 +51,8 @@ describe("ListSurveys Controller", () => {
   });
 
   it("should call ListSurveys", async () => {
-    class ListSurveysStub implements ListSurveys {
-      async list(): Promise<SurveyModel[]> {
-        return Promise.resolve(createFakeSurveys());
-      }
-    }
-    const listSurveysStub = new ListSurveysStub();
+    const { sut, listSurveysStub } = createSut();
     const listSpy = jest.spyOn(listSurveysStub, "list");
-    const sut = new ListSurveysController(listSurveysStub);
 
     await sut.handle({});
 
