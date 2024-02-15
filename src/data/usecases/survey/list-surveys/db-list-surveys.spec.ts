@@ -71,4 +71,12 @@ describe("DbListSurveys UseCase", () => {
 
     await expect(sut.list()).rejects.toThrow("Repository error");
   });
+
+  it("should return a list of surveys on success", async () => {
+    const { sut } = createSut();
+
+    const result = await sut.list();
+
+    expect(result).toEqual(createFakeSurveys());
+  });
 });
