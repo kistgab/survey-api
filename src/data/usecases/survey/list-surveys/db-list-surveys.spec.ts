@@ -62,4 +62,13 @@ describe("DbListSurveys UseCase", () => {
 
     expect(findAllSpy).toHaveBeenCalledTimes(1);
   });
+
+  it("should throw if FindAllSurveysRepository throws", async () => {
+    const { sut, findAllSurveysRepositoryStub } = createSut();
+    jest
+      .spyOn(findAllSurveysRepositoryStub, "findAll")
+      .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
+
+    await expect(sut.list()).rejects.toThrow("Repository error");
+  });
 });
