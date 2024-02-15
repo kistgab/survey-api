@@ -1,6 +1,6 @@
 import * as Mockdate from "mockdate";
 import { SurveyModel } from "../../../../data/models/survey-model";
-import { internalServerError } from "../../../helpers/http/http-helper";
+import { internalServerError, ok } from "../../../helpers/http/http-helper";
 import { ListSurveys } from "./../../../../domain/usecases/list-surveys";
 import ListSurveysController from "./list-surveys-controller";
 
@@ -69,5 +69,13 @@ describe("ListSurveys Controller", () => {
     const result = await sut.handle({});
 
     expect(result).toEqual(internalServerError(new Error("List surveys error")));
+  });
+
+  it("should return 200 on success", async () => {
+    const { sut } = createSut();
+
+    const result = await sut.handle({});
+
+    expect(result).toEqual(ok(createFakeSurveys()));
   });
 });
