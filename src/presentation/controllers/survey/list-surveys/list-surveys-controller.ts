@@ -1,6 +1,6 @@
 import { SurveyModel } from "../../../../data/models/survey-model";
 import { ListSurveys } from "../../../../domain/usecases/list-surveys";
-import { internalServerError } from "../../../helpers/http/http-helper";
+import { internalServerError, ok } from "../../../helpers/http/http-helper";
 import Controller from "../../../protocols/controller";
 import { HttpRequest, HttpResponse } from "../../../protocols/http";
 
@@ -10,9 +10,8 @@ export default class ListSurveysController implements Controller<unknown, Survey
   async handle(httpRequest: HttpRequest): Promise<HttpResponse<SurveyModel[] | Error>> {
     try {
       httpRequest;
-      await Promise.resolve();
-      await this.listSurveys.list();
-      return { body: [], statusCode: 200 };
+      const surveys = await this.listSurveys.list();
+      return ok(surveys);
     } catch (error) {
       return internalServerError(error as Error);
     }
