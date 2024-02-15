@@ -29,16 +29,34 @@ function createFakeSurveys(): SurveyModel[] {
   ];
 }
 
+function createFindAllSurveysRepositoryStub(): FindAllSurveysRepository {
+  class FindAllSurveysRepositoryStub implements FindAllSurveysRepository {
+    async findAll(): Promise<SurveyModel[]> {
+      return Promise.resolve(createFakeSurveys());
+    }
+  }
+  return new FindAllSurveysRepositoryStub();
+}
+
+type SutTypes = {
+  sut: DbListSurveys;
+  findAllSurveysRepositoryStub: FindAllSurveysRepository;
+};
+
+function createSut(): SutTypes {
+  const findAllSurveysRepositoryStub = createFindAllSurveysRepositoryStub();
+  const sut = new DbListSurveys(findAllSurveysRepositoryStub);
+
+  return {
+    sut,
+    findAllSurveysRepositoryStub,
+  };
+}
+
 describe("DbListSurveys UseCase", () => {
   it("should call FindAllSurveysRepository", async () => {
-    class FindAllSurveysRepositoryStub implements FindAllSurveysRepository {
-      async findAll(): Promise<SurveyModel[]> {
-        return Promise.resolve(createFakeSurveys());
-      }
-    }
-    const findAllSurveysRepositoryStub = new FindAllSurveysRepositoryStub();
+    const { sut, findAllSurveysRepositoryStub } = createSut();
     const findAllSpy = jest.spyOn(findAllSurveysRepositoryStub, "findAll");
-    const sut = new DbListSurveys(findAllSurveysRepositoryStub);
 
     await sut.list();
 
