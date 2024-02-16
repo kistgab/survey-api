@@ -70,5 +70,13 @@ describe("Survey Mongo Repository", () => {
       expect(firstReturnedSurveyWithoutId).toEqual(survey1);
       expect(secondReturnedSurveyWithoutId).toEqual(survey2);
     });
+
+    it("should return an empty list", async () => {
+      const sut = createSut();
+
+      const surveys = await sut.findAll();
+
+      expect(surveys.length).toBe(0);
+    });
   });
 });
