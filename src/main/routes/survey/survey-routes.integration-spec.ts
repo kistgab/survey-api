@@ -57,4 +57,10 @@ describe("SignUp route", () => {
         .expect(204);
     });
   });
+
+  describe("GET /surveys", () => {
+    it("should return 403 on listing surveys without accessToken", async () => {
+      await request(app).get("/api/surveys").expect(403);
+    });
+  });
 });
