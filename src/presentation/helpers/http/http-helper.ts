@@ -38,13 +38,6 @@ export function conflict<T>(error: T): HttpResponse<T> {
   };
 }
 
-export function badRequest<T>(error: T): HttpResponse<T> {
-  return {
-    statusCode: 400,
-    body: error,
-  };
-}
-
 export function noContent<T>(): HttpResponse<T | null> {
   return {
     statusCode: 204,
