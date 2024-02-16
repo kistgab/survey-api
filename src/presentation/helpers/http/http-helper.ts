@@ -12,7 +12,8 @@ export function unprocessableContent<T>(error: T): HttpResponse<T> {
 export function internalServerError(error: Error): HttpResponse<ServerError> {
   return {
     statusCode: 500,
-    body: new ServerError(error.stack ?? ""),
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    body: new ServerError(error.stack!),
   };
 }
 
