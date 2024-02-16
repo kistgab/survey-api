@@ -62,5 +62,27 @@ describe("SignUp route", () => {
     it("should return 403 on listing surveys without accessToken", async () => {
       await request(app).get("/api/surveys").expect(403);
     });
+
+    it("should return 200 on adding survey with a valid accessToken", async () => {
+      const user = await accountCollection.insertOne({
+        name: "any_name",
+        email: "any_email@mail.com",
+        password: "any_password",
+      });
+      const insertedMongoId = user.insertedId;
+      const accessToken = jwt.sign({ id: insertedMongoId.id }, process.env.JWT_SECRET);
+      await accountCollection.updateOne(
+        {
+          _id: insertedMongoId,
+        },
+        { $set: { accessToken } },
+      );
+      await surveyCollection.insertOne({
+        question: "any_question",
+        answers: [{ image: "any_image", answer: "any_answer" }, { answer: "other_answer" }],
+        date: new Date(),
+      });
+      await request(app).get("/api/surveys").set("x-access-token", accessToken).expect(200);
+    });
   });
 });
