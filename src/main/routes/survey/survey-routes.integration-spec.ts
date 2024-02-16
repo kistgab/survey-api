@@ -4,9 +4,28 @@ import request from "supertest";
 import { MongoHelper } from "../../../infra/db/mongodb/helpers/mongo-helper";
 import app from "../../config/app";
 
+let surveyCollection: Collection;
+let accountCollection: Collection;
+
+async function createAccessToken(): Promise<string> {
+  const user = await accountCollection.insertOne({
+    name: "any_name",
+    email: "any_email@mail.com",
+    password: "any_password",
+    role: "admin",
+  });
+  const insertedMongoId = user.insertedId;
+  const accessToken = jwt.sign({ id: insertedMongoId.id }, process.env.JWT_SECRET);
+  await accountCollection.updateOne(
+    {
+      _id: insertedMongoId,
+    },
+    { $set: { accessToken } },
+  );
+  return accessToken;
+}
+
 describe("SignUp route", () => {
-  let surveyCollection: Collection;
-  let accountCollection: Collection;
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);
   });
@@ -32,29 +51,34 @@ describe("SignUp route", () => {
     });
 
     it("should return 204 on adding survey with a valid accessToken", async () => {
-      const user = await accountCollection.insertOne({
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        role: "admin",
-      });
-      const insertedMongoId = user.insertedId;
-      const accessToken = jwt.sign({ id: insertedMongoId.id }, process.env.JWT_SECRET);
-      await accountCollection.updateOne(
-        {
-          _id: insertedMongoId,
-        },
-        { $set: { accessToken } },
-      );
       const input = {
         question: "any_question",
         answers: [{ image: "any_image", answer: "any_answer" }, { answer: "other_answer" }],
       };
+      const accessToken = await createAccessToken();
+
       await request(app)
         .post("/api/surveys")
         .set("x-access-token", accessToken)
         .send(input)
         .expect(204);
+    });
+  });
+
+  describe("GET /surveys", () => {
+    it("should return 403 on listing surveys without accessToken", async () => {
+      await request(app).get("/api/surveys").expect(403);
+    });
+
+    it("should return 200 on adding survey with a valid accessToken", async () => {
+      await surveyCollection.insertOne({
+        question: "any_question",
+        answers: [{ image: "any_image", answer: "any_answer" }, { answer: "other_answer" }],
+        date: new Date(),
+      });
+      const accessToken = await createAccessToken();
+
+      await request(app).get("/api/surveys").set("x-access-token", accessToken).expect(200);
     });
   });
 });

@@ -1,3 +1,4 @@
+import * as Mockdate from "mockdate";
 import { InputAddSurveyDto } from "./../../../../domain/dtos/add-survey-dto";
 import AddSurveyRepository from "./../../../protocols/db/survey/add-survey-repository";
 import DbAddSurvey from "./db-add-survey";
@@ -38,6 +39,14 @@ function createSut(): SutTypes {
 }
 
 describe("DbAddSurvey", () => {
+  beforeAll(() => {
+    Mockdate.set(new Date());
+  });
+
+  afterAll(() => {
+    Mockdate.reset();
+  });
+
   it("should call AddSurveyRepository with correct values", async () => {
     const { sut, addSurveyRepositoryStub } = createSut();
     const addSpy = jest.spyOn(addSurveyRepositoryStub, "add");
@@ -45,7 +54,7 @@ describe("DbAddSurvey", () => {
 
     await sut.add(input);
 
-    expect(addSpy).toHaveBeenCalledWith(input);
+    expect(addSpy).toHaveBeenCalledWith({ ...input, date: new Date() });
   });
 
   it("should throw when AddSurveyRepository throws", async () => {

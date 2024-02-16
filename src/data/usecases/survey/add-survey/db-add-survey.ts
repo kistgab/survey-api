@@ -6,6 +6,7 @@ export default class DbAddSurvey implements AddSurvey {
   constructor(private readonly addSurveyRepository: AddSurveyRepository) {}
 
   async add(data: InputAddSurveyDto): Promise<void> {
-    await this.addSurveyRepository.add(data);
+    const date = new Date();
+    await this.addSurveyRepository.add({ ...data, date });
   }
 }
