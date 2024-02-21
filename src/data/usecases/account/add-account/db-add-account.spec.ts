@@ -124,7 +124,7 @@ describe("DbAddAccount Usecase", () => {
     expect(findSpy).toHaveBeenCalledWith("any_email@mail.com");
   });
 
-  it("should return null when FindAccountByEmailRepository finds", async () => {
+  it("should return null when FindAccountByEmailRepository does not find", async () => {
     const { sut, findAccountByEmailRepositoryStub } = createSut();
     jest
       .spyOn(findAccountByEmailRepositoryStub, "findByEmail")
