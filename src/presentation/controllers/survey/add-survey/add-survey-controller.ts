@@ -1,13 +1,13 @@
-import AddSurvey from "../../../../domain/usecases/add-survey";
-import MissingParamError from "../../../errors/missing-param-error";
+import AddSurvey from "@src/domain/usecases/add-survey";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
   noContent,
   unprocessableContent,
-} from "../../../helpers/http/http-helper";
-import Controller from "../../../protocols/controller";
-import { HttpRequest, HttpResponse } from "../../../protocols/http";
-import Validation from "../../../protocols/validation";
+} from "@src/presentation/helpers/http/http-helper";
+import Controller from "@src/presentation/protocols/controller";
+import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
+import Validation from "@src/presentation/protocols/validation";
 
 export interface RequestAddSurveyBody {
   question: string;

@@ -1,6 +1,6 @@
+import authenticationRoutes from "@src/main/routes/authentication/authentication-routes";
+import surveyRoutes from "@src/main/routes/survey/survey-routes";
 import { Express, Router } from "express";
-import authenticationRoutes from "../routes/authentication/authentication-routes";
-import surveyRoutes from "../routes/survey/survey-routes";
 
 export default function setupRoutes(app: Express): void {
   const router = Router();

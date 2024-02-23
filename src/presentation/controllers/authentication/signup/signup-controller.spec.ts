@@ -1,18 +1,20 @@
-import AccountModel from "../../../../data/models/account-model";
-import { OutputAddAccountDto } from "../../../../domain/dtos/add-account-dto";
-import Authentication from "../../../../domain/usecases/authentication";
-import EmailAlreadyUsedError from "../../../errors/email-already-used-error";
-import MissingParamError from "../../../errors/missing-param-error";
+import AccountModel from "@src/data/models/account-model";
+import { OutputAddAccountDto } from "@src/domain/dtos/add-account-dto";
+import { AddAccount } from "@src/domain/usecases/add-account";
+import Authentication from "@src/domain/usecases/authentication";
+import SignUpController, {
+  RequestSignUpBody,
+} from "@src/presentation/controllers/authentication/signup/signup-controller";
+import EmailAlreadyUsedError from "@src/presentation/errors/email-already-used-error";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   conflict,
   internalServerError,
   ok,
   unprocessableContent,
-} from "../../../helpers/http/http-helper";
-import { HttpRequest } from "../../../protocols/http";
-import Validation from "../../../protocols/validation";
-import { AddAccount } from "./../../../../domain/usecases/add-account";
-import SignUpController, { RequestSignUpBody } from "./signup-controller";
+} from "@src/presentation/helpers/http/http-helper";
+import { HttpRequest } from "@src/presentation/protocols/http";
+import Validation from "@src/presentation/protocols/validation";
 
 function createFakeRequest(): HttpRequest<RequestSignUpBody> {
   return {

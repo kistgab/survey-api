@@ -1,6 +1,6 @@
-import { ListSurveys } from "../../../../domain/usecases/list-surveys";
-import { SurveyModel } from "../../../models/survey-model";
-import { FindAllSurveysRepository } from "../../../protocols/db/survey/find-all-surveys-repository";
+import { SurveyModel } from "@src/data/models/survey-model";
+import { FindAllSurveysRepository } from "@src/data/protocols/db/survey/find-all-surveys-repository";
+import { ListSurveys } from "@src/domain/usecases/list-surveys";
 
 export class DbListSurveys implements ListSurveys {
   constructor(private readonly findAllSurveysRepository: FindAllSurveysRepository) {}

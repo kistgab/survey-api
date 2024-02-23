@@ -1,4 +1,4 @@
-import { InputAddSurveyDto } from "../dtos/add-survey-dto";
+import { InputAddSurveyDto } from "@src/domain/dtos/add-survey-dto";
 
 export default interface AddSurvey {
   add(survey: InputAddSurveyDto): Promise<void>;

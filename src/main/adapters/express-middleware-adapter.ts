@@ -1,6 +1,6 @@
+import { HttpRequest } from "@src/presentation/protocols/http";
+import Middleware from "@src/presentation/protocols/middleware";
 import { NextFunction, Request, Response } from "express";
-import { HttpRequest } from "../../presentation/protocols/http";
-import Middleware from "../../presentation/protocols/middleware";
 
 export default function adaptMiddleware(
   middleware: Middleware,

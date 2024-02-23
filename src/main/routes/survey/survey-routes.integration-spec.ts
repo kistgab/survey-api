@@ -1,8 +1,8 @@
+import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
+import app from "@src/main/config/app";
 import * as jwt from "jsonwebtoken";
 import { Collection } from "mongodb";
 import request from "supertest";
-import { MongoHelper } from "../../../infra/db/mongodb/helpers/mongo-helper";
-import app from "../../config/app";
 
 let surveyCollection: Collection;
 let accountCollection: Collection;

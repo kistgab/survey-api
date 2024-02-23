@@ -1,11 +1,11 @@
+import LoginValidationFactory from "@src/main/factories/controllers/authentication/login/login-validation-factory";
+import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
+import DbAuthenticationFactory from "@src/main/factories/usecases/authentication/db-authentication-factory";
 import LoginController, {
   RequestLoginBody,
   ResponseLoginBody,
-} from "../../../../../presentation/controllers/authentication/login/login-controller";
-import Controller from "../../../../../presentation/protocols/controller";
-import LogControllerDecoratorFactory from "../../../decorators/log-controller-decorator-factory";
-import DbAuthenticationFactory from "../../../usecases/authentication/db-authentication-factory";
-import LoginValidationFactory from "./login-validation-factory";
+} from "@src/presentation/controllers/authentication/login/login-controller";
+import Controller from "@src/presentation/protocols/controller";
 
 export default abstract class LoginControllerFactory {
   static create(): Controller<RequestLoginBody, ResponseLoginBody | Error> {

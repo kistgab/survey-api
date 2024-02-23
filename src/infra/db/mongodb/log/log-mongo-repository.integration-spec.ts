@@ -1,6 +1,6 @@
+import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
+import LogMongoRepository from "@src/infra/db/mongodb/log/log-mongo-repository";
 import { Collection } from "mongodb";
-import { MongoHelper } from "../helpers/mongo-helper";
-import LogMongoRepository from "./log-mongo-repository";
 
 function createSut(): LogMongoRepository {
   return new LogMongoRepository();

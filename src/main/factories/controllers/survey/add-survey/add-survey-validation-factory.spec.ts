@@ -1,11 +1,11 @@
-import { RequestAddSurveyBody } from "../../../../../presentation/controllers/survey/add-survey/add-survey-controller";
-import Validation from "../../../../../presentation/protocols/validation";
-import ValidationComposite from "../../../../../validation/validators/composite/validation-composite";
-import RequiredFieldValidation from "../../../../../validation/validators/required-field/required-field-validation";
-import AddSurveyValidationFactory from "./add-survey-validation-factory";
+import AddSurveyValidationFactory from "@src/main/factories/controllers/survey/add-survey/add-survey-validation-factory";
+import { RequestAddSurveyBody } from "@src/presentation/controllers/survey/add-survey/add-survey-controller";
+import Validation from "@src/presentation/protocols/validation";
+import ValidationComposite from "@src/validation/validators/composite/validation-composite";
+import RequiredFieldValidation from "@src/validation/validators/required-field/required-field-validation";
 
 type RequestAddSurveyBodyKeys = keyof RequestAddSurveyBody;
-jest.mock("../../../../../validation/validators/composite/validation-composite");
+jest.mock("@src/validation/validators/composite/validation-composite");
 
 describe("AddSurvey Validation Factory", () => {
   it("should call ValidationComposite with all validations", () => {

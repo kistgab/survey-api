@@ -1,16 +1,16 @@
-import { AddAccount } from "../../../../domain/usecases/add-account";
-import Authentication from "../../../../domain/usecases/authentication";
-import EmailAlreadyUsedError from "../../../errors/email-already-used-error";
-import MissingParamError from "../../../errors/missing-param-error";
+import { AddAccount } from "@src/domain/usecases/add-account";
+import Authentication from "@src/domain/usecases/authentication";
+import EmailAlreadyUsedError from "@src/presentation/errors/email-already-used-error";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   conflict,
   internalServerError,
   ok,
   unprocessableContent,
-} from "../../../helpers/http/http-helper";
-import Controller from "../../../protocols/controller";
-import { HttpRequest, HttpResponse } from "../../../protocols/http";
-import Validation from "../../../protocols/validation";
+} from "@src/presentation/helpers/http/http-helper";
+import Controller from "@src/presentation/protocols/controller";
+import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
+import Validation from "@src/presentation/protocols/validation";
 
 export type RequestSignUpBody = {
   name: string;

@@ -1,10 +1,9 @@
+import { bodyParser } from "@src/main/middlewares/body-parser/body-parser";
+import { contentType } from "@src/main/middlewares/content-type/content-type";
+import { cors } from "@src/main/middlewares/cors/cors";
 import { Express } from "express";
-import { bodyParser } from "../middlewares/body-parser/body-parser";
-import { contentType } from "../middlewares/content-type/content-type";
-import { cors } from "../middlewares/cors/cors";
 
 export default function setupMiddlewares(app: Express): void {
-  console.log("setup middlewares");
   app.use(bodyParser);
   app.use(cors);
   app.use(contentType);

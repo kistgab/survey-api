@@ -1,13 +1,16 @@
-import AddSurvey from "../../../../domain/usecases/add-survey";
-import MissingParamError from "../../../errors/missing-param-error";
+import AddSurvey from "@src/domain/usecases/add-survey";
+import {
+  AddSurveyController,
+  RequestAddSurveyBody,
+} from "@src/presentation/controllers/survey/add-survey/add-survey-controller";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
   noContent,
   unprocessableContent,
-} from "../../../helpers/http/http-helper";
-import { HttpRequest } from "../../../protocols/http";
-import Validation from "../../../protocols/validation";
-import { AddSurveyController, RequestAddSurveyBody } from "./add-survey-controller";
+} from "@src/presentation/helpers/http/http-helper";
+import { HttpRequest } from "@src/presentation/protocols/http";
+import Validation from "@src/presentation/protocols/validation";
 
 function createFakeRequest(): HttpRequest<RequestAddSurveyBody> {
   return {

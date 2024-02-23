@@ -1,8 +1,8 @@
+import { SurveyModel } from "@src/data/models/survey-model";
+import { ListSurveys } from "@src/domain/usecases/list-surveys";
+import ListSurveysController from "@src/presentation/controllers/survey/list-surveys/list-surveys-controller";
+import { internalServerError, noContent, ok } from "@src/presentation/helpers/http/http-helper";
 import * as Mockdate from "mockdate";
-import { SurveyModel } from "../../../../data/models/survey-model";
-import { internalServerError, noContent, ok } from "../../../helpers/http/http-helper";
-import { ListSurveys } from "./../../../../domain/usecases/list-surveys";
-import ListSurveysController from "./list-surveys-controller";
 
 function createFakeSurveys(): SurveyModel[] {
   return [

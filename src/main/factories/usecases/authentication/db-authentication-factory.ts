@@ -1,8 +1,8 @@
-import DbAuthentication from "../../../../data/usecases/account/authentication/db-authentication";
-import Authentication from "../../../../domain/usecases/authentication";
-import BCryptAdapter from "../../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter";
-import JwtAdapter from "../../../../infra/cryptography/jwt-adapter/jwt-adapter";
-import { AccountMongoRepository } from "../../../../infra/db/mongodb/account/account-mongo-repository";
+import DbAuthentication from "@src/data/usecases/account/authentication/db-authentication";
+import Authentication from "@src/domain/usecases/authentication";
+import BCryptAdapter from "@src/infra/cryptography/bcrypt-adapter/bcrypt-adapter";
+import JwtAdapter from "@src/infra/cryptography/jwt-adapter/jwt-adapter";
+import { AccountMongoRepository } from "@src/infra/db/mongodb/account/account-mongo-repository";
 
 export default abstract class DbAuthenticationFactory {
   static create(): Authentication {
