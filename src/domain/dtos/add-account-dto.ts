@@ -1,12 +1,12 @@
-export interface InputAddAccountDto {
+export type InputAddAccountDto = {
   name: string;
   email: string;
   password: string;
-}
+};
 
-export interface OutputAddAccountDto {
+export type OutputAddAccountDto = {
   id: string;
   name: string;
   email: string;
   password: string;
-}
+};

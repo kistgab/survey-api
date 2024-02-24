@@ -1,4 +1,4 @@
-import AddAccountModel from "@src/data/models/add-account-model";
+import { AddAccountModel } from "@src/data/models/add-account-model";
 import { AccountMongoRepository } from "@src/infra/db/mongodb/account/account-mongo-repository";
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { Collection } from "mongodb";

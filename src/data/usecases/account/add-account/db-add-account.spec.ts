@@ -1,4 +1,4 @@
-import AccountModel from "@src/data/models/account-model";
+import { AccountModel } from "@src/data/models/account-model";
 import Hasher from "@src/data/protocols/cryptography/hasher";
 import AddAccountRepository from "@src/data/protocols/db/account/add-account-repository";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";

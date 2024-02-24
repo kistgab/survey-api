@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import AccountModel from "@src/data/models/account-model";
-import AddAccountModel from "@src/data/models/add-account-model";
+import { AccountModel } from "@src/data/models/account-model";
+import { AddAccountModel } from "@src/data/models/add-account-model";
 import AddAccountRepository from "@src/data/protocols/db/account/add-account-repository";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import FindAccountByTokenRepository from "@src/data/protocols/db/account/find-account-by-token-repository";

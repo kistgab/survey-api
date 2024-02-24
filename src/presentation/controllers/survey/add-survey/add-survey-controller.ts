@@ -9,13 +9,13 @@ import Controller from "@src/presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
 import Validation from "@src/presentation/protocols/validation";
 
-export interface RequestAddSurveyBody {
+export type RequestAddSurveyBody = {
   question: string;
   answers: {
     image: string;
     answer: string;
   }[];
-}
+};
 
 export class AddSurveyController implements Controller<RequestAddSurveyBody, Error | null> {
   constructor(

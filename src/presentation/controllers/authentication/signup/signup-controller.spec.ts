@@ -1,4 +1,4 @@
-import AccountModel from "@src/data/models/account-model";
+import { AccountModel } from "@src/data/models/account-model";
 import { OutputAddAccountDto } from "@src/domain/dtos/add-account-dto";
 import { AddAccount } from "@src/domain/usecases/add-account";
 import Authentication from "@src/domain/usecases/authentication";
