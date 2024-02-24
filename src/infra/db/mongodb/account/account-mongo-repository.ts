@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import AccountModel from "@src/data/models/account-model";
+import AddAccountModel from "@src/data/models/add-account-model";
+import AddAccountRepository from "@src/data/protocols/db/account/add-account-repository";
+import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
+import FindAccountByTokenRepository from "@src/data/protocols/db/account/find-account-by-token-repository";
+import UpdateAccessTokenRepository from "@src/data/protocols/db/account/update-access-token-repository";
+import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { ObjectId } from "mongodb";
-import AccountModel from "../../../../data/models/account-model";
-import AddAccountModel from "../../../../data/models/add-account-model";
-import AddAccountRepository from "../../../../data/protocols/db/account/add-account-repository";
-import FindAccountByEmailRepository from "../../../../data/protocols/db/account/find-account-by-email-repository";
-import FindAccountByTokenRepository from "../../../../data/protocols/db/account/find-account-by-token-repository";
-import UpdateAccessTokenRepository from "../../../../data/protocols/db/account/update-access-token-repository";
-import { MongoHelper } from "../helpers/mongo-helper";
 
 export class AccountMongoRepository
   implements

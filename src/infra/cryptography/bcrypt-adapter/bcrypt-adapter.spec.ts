@@ -1,5 +1,5 @@
+import BCryptAdapter from "@src/infra/cryptography/bcrypt-adapter/bcrypt-adapter";
 import bcrypt from "bcrypt";
-import BCryptAdapter from "./bcrypt-adapter";
 
 type SutTypes = {
   salt: number;

@@ -1,6 +1,6 @@
-import DbAddSurvey from "../../../../data/usecases/survey/add-survey/db-add-survey";
-import AddSurvey from "../../../../domain/usecases/add-survey";
-import { SurveyMongoRepository } from "../../../../infra/db/mongodb/survey/survey-mongo-repository";
+import DbAddSurvey from "@src/data/usecases/survey/add-survey/db-add-survey";
+import AddSurvey from "@src/domain/usecases/add-survey";
+import { SurveyMongoRepository } from "@src/infra/db/mongodb/survey/survey-mongo-repository";
 
 export default abstract class DbAddSurveyFactory {
   static create(): AddSurvey {

@@ -1,11 +1,11 @@
+import AddSurveyValidationFactory from "@src/main/factories/controllers/survey/add-survey/add-survey-validation-factory";
+import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
+import DbAddSurveyFactory from "@src/main/factories/usecases/add-survey/db-add-survey-factory";
 import {
   AddSurveyController,
   RequestAddSurveyBody,
-} from "../../../../../presentation/controllers/survey/add-survey/add-survey-controller";
-import Controller from "../../../../../presentation/protocols/controller";
-import LogControllerDecoratorFactory from "../../../decorators/log-controller-decorator-factory";
-import DbAddSurveyFactory from "../../../usecases/add-survey/db-add-survey-factory";
-import AddSurveyValidationFactory from "./add-survey-validation-factory";
+} from "@src/presentation/controllers/survey/add-survey/add-survey-controller";
+import Controller from "@src/presentation/protocols/controller";
 
 export default abstract class AddSurveyControllerFactory {
   static create(): Controller<RequestAddSurveyBody, Error | null> {

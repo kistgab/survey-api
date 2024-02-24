@@ -1,8 +1,8 @@
-import { SurveyModel } from "../../../../../data/models/survey-model";
-import ListSurveysController from "../../../../../presentation/controllers/survey/list-surveys/list-surveys-controller";
-import Controller from "../../../../../presentation/protocols/controller";
-import LogControllerDecoratorFactory from "../../../decorators/log-controller-decorator-factory";
-import DbListSurveysFactory from "../../../usecases/list-surveys/db-list-surveys-factory";
+import { SurveyModel } from "@src/data/models/survey-model";
+import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
+import DbListSurveysFactory from "@src/main/factories/usecases/list-surveys/db-list-surveys-factory";
+import ListSurveysController from "@src/presentation/controllers/survey/list-surveys/list-surveys-controller";
+import Controller from "@src/presentation/protocols/controller";
 
 export default abstract class ListSurveysControllerFactory {
   static create(): Controller<unknown, SurveyModel[] | null> {

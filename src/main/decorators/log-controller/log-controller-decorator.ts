@@ -1,7 +1,7 @@
-import LogErrorRepository from "../../../data/protocols/db/log/log-error-repository";
-import ServerError from "../../../presentation/errors/server-error";
-import Controller from "../../../presentation/protocols/controller";
-import { HttpRequest, HttpResponse } from "../../../presentation/protocols/http";
+import LogErrorRepository from "@src/data/protocols/db/log/log-error-repository";
+import ServerError from "@src/presentation/errors/server-error";
+import Controller from "@src/presentation/protocols/controller";
+import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
 
 export default class LogControllerDecorator<Req, Res> implements Controller<Req, Res> {
   constructor(

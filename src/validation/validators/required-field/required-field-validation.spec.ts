@@ -1,5 +1,6 @@
-import MissingParamError from "../../../presentation/errors/missing-param-error";
-import RequiredFieldValidation from "./required-field-validation";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
+import RequiredFieldValidation from "@src/validation/validators/required-field/required-field-validation";
+
 type anyType = { any_field: string };
 
 function createSut(): RequiredFieldValidation<anyType> {

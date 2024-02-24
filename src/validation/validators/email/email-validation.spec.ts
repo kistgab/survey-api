@@ -1,7 +1,7 @@
-import { RequestSignUpBody } from "../../../presentation/controllers/authentication/signup/signup-controller";
-import InvalidParamError from "../../../presentation/errors/invalid-param-error";
-import EmailValidator from "../../protocols/email-validator";
-import EmailValidation from "./email-validation";
+import { RequestSignUpBody } from "@src/presentation/controllers/authentication/signup/signup-controller";
+import InvalidParamError from "@src/presentation/errors/invalid-param-error";
+import EmailValidator from "@src/validation/protocols/email-validator";
+import EmailValidation from "@src/validation/validators/email/email-validation";
 
 function createFakeInput(): RequestSignUpBody {
   return {

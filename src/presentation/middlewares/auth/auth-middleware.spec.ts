@@ -1,9 +1,9 @@
-import AccountModel from "../../../data/models/account-model";
-import FindAccountByToken from "../../../domain/usecases/find-account-by-token";
-import AccessDeniedError from "../../errors/access-denied-error";
-import { forbidden, internalServerError, ok } from "../../helpers/http/http-helper";
-import { HttpRequest } from "../../protocols/http";
-import { AuthMiddleware } from "./auth-middleware";
+import AccountModel from "@src/data/models/account-model";
+import FindAccountByToken from "@src/domain/usecases/find-account-by-token";
+import AccessDeniedError from "@src/presentation/errors/access-denied-error";
+import { forbidden, internalServerError, ok } from "@src/presentation/helpers/http/http-helper";
+import { AuthMiddleware } from "@src/presentation/middlewares/auth/auth-middleware";
+import { HttpRequest } from "@src/presentation/protocols/http";
 
 function createFakeRequest(): HttpRequest<unknown> {
   return { headers: { "x-access-token": "any_token" } };

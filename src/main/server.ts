@@ -1,5 +1,5 @@
-import { MongoHelper } from "../infra/db/mongodb/helpers/mongo-helper";
-import app from "./config/app";
+import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
+import app from "@src/main/config/app";
 
 MongoHelper.connect(process.env.MONGO_URL)
   .then(() => {
