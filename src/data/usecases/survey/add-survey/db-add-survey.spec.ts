@@ -1,7 +1,7 @@
+import AddSurveyRepository from "@src/data/protocols/db/survey/add-survey-repository";
+import DbAddSurvey from "@src/data/usecases/survey/add-survey/db-add-survey";
+import { InputAddSurveyDto } from "@src/domain/dtos/add-survey-dto";
 import * as Mockdate from "mockdate";
-import { InputAddSurveyDto } from "./../../../../domain/dtos/add-survey-dto";
-import AddSurveyRepository from "./../../../protocols/db/survey/add-survey-repository";
-import DbAddSurvey from "./db-add-survey";
 
 function createFakeSurveyData(): InputAddSurveyDto {
   return {

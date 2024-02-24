@@ -1,8 +1,8 @@
-import FindAccountByToken from "../../../domain/usecases/find-account-by-token";
-import AccessDeniedError from "../../errors/access-denied-error";
-import { forbidden, internalServerError, ok } from "../../helpers/http/http-helper";
-import { HttpRequest, HttpResponse } from "../../protocols/http";
-import Middleware from "../../protocols/middleware";
+import FindAccountByToken from "@src/domain/usecases/find-account-by-token";
+import AccessDeniedError from "@src/presentation/errors/access-denied-error";
+import { forbidden, internalServerError, ok } from "@src/presentation/helpers/http/http-helper";
+import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
+import Middleware from "@src/presentation/protocols/middleware";
 
 export class AuthMiddleware implements Middleware {
   constructor(

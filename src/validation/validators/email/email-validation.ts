@@ -1,6 +1,6 @@
-import InvalidParamError from "../../../presentation/errors/invalid-param-error";
-import Validation from "../../../presentation/protocols/validation";
-import EmailValidator from "../../protocols/email-validator";
+import InvalidParamError from "@src/presentation/errors/invalid-param-error";
+import Validation from "@src/presentation/protocols/validation";
+import EmailValidator from "@src/validation/protocols/email-validator";
 
 export default class EmailValidation<T> implements Validation<T> {
   constructor(

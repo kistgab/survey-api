@@ -1,12 +1,12 @@
+import SignUpValidationFactory from "@src/main/factories/controllers/authentication/signup/signup-validation-factory";
+import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
+import DbAddAccountFactory from "@src/main/factories/usecases/add-account/db-add-account-factory";
+import DbAuthenticationFactory from "@src/main/factories/usecases/authentication/db-authentication-factory";
 import SignUpController, {
   RequestSignUpBody,
   ResponseSignUpBody,
-} from "../../../../../presentation/controllers/authentication/signup/signup-controller";
-import Controller from "../../../../../presentation/protocols/controller";
-import LogControllerDecoratorFactory from "../../../decorators/log-controller-decorator-factory";
-import DbAddAccountFactory from "../../../usecases/add-account/db-add-account-factory";
-import DbAuthenticationFactory from "../../../usecases/authentication/db-authentication-factory";
-import SignUpValidationFactory from "./signup-validation-factory";
+} from "@src/presentation/controllers/authentication/signup/signup-controller";
+import Controller from "@src/presentation/protocols/controller";
 
 export default abstract class SignUpControllerFactory {
   static create(): Controller<RequestSignUpBody, Error | ResponseSignUpBody> {

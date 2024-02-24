@@ -1,6 +1,6 @@
-import LogMongoRepository from "../../../infra/db/mongodb/log/log-mongo-repository";
-import Controller from "../../../presentation/protocols/controller";
-import LogControllerDecorator from "../../decorators/log-controller/log-controller-decorator";
+import LogMongoRepository from "@src/infra/db/mongodb/log/log-mongo-repository";
+import LogControllerDecorator from "@src/main/decorators/log-controller/log-controller-decorator";
+import Controller from "@src/presentation/protocols/controller";
 
 export default abstract class LogControllerDecoratorFactory {
   static create<T, R>(controller: Controller<T, R>): Controller<T, R> {

@@ -1,6 +1,6 @@
-import ServerError from "../../errors/server-error";
-import UnauthorizedError from "../../errors/unauthorized-error";
-import { HttpResponse } from "../../protocols/http";
+import ServerError from "@src/presentation/errors/server-error";
+import UnauthorizedError from "@src/presentation/errors/unauthorized-error";
+import { HttpResponse } from "@src/presentation/protocols/http";
 
 export function unprocessableContent<T>(error: T): HttpResponse<T> {
   return {

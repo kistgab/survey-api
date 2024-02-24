@@ -1,9 +1,10 @@
-import InvalidParamError from "../../../presentation/errors/invalid-param-error";
-import CompareFieldValidation from "./compare-fields-validation";
+import InvalidParamError from "@src/presentation/errors/invalid-param-error";
+import CompareFieldsValidation from "@src/validation/validators/compare-fields/compare-fields-validation";
+
 type anyType = { any_field: string; another_field: string };
 
-function createSut(): CompareFieldValidation<anyType> {
-  return new CompareFieldValidation("any_field", "another_field");
+function createSut(): CompareFieldsValidation<anyType> {
+  return new CompareFieldsValidation("any_field", "another_field");
 }
 
 describe("CompareField Validation", () => {

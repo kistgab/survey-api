@@ -1,5 +1,5 @@
-import { DbListSurveys } from "../../../../data/usecases/survey/list-surveys/db-list-surveys";
-import { SurveyMongoRepository } from "../../../../infra/db/mongodb/survey/survey-mongo-repository";
+import { DbListSurveys } from "@src/data/usecases/survey/list-surveys/db-list-surveys";
+import { SurveyMongoRepository } from "@src/infra/db/mongodb/survey/survey-mongo-repository";
 
 export default abstract class DbListSurveysFactory {
   static create(): DbListSurveys {

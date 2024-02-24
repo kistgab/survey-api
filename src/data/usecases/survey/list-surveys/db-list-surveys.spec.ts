@@ -1,6 +1,6 @@
-import { SurveyModel } from "../../../models/survey-model";
-import { FindAllSurveysRepository } from "./../../../protocols/db/survey/find-all-surveys-repository";
-import { DbListSurveys } from "./db-list-surveys";
+import { SurveyModel } from "@src/data/models/survey-model";
+import { FindAllSurveysRepository } from "@src/data/protocols/db/survey/find-all-surveys-repository";
+import { DbListSurveys } from "@src/data/usecases/survey/list-surveys/db-list-surveys";
 
 function createFakeSurveys(): SurveyModel[] {
   return [

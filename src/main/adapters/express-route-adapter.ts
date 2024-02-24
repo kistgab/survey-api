@@ -1,7 +1,6 @@
+import Controller from "@src/presentation/protocols/controller";
+import { HttpRequest } from "@src/presentation/protocols/http";
 import { Request, Response } from "express";
-import Controller from "../../presentation/protocols/controller";
-import { HttpRequest } from "../../presentation/protocols/http";
-
 export default function adaptRoute<RequestBody, ResponseBody>(
   controller: Controller<RequestBody, ResponseBody>,
 ): (req: Request, res: Response) => void {

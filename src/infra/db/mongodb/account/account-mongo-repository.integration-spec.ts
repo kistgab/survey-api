@@ -1,7 +1,7 @@
+import AddAccountModel from "@src/data/models/add-account-model";
+import { AccountMongoRepository } from "@src/infra/db/mongodb/account/account-mongo-repository";
+import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { Collection } from "mongodb";
-import AddAccountModel from "../../../../data/models/add-account-model";
-import { MongoHelper } from "../helpers/mongo-helper";
-import { AccountMongoRepository } from "./account-mongo-repository";
 
 function createSut(): AccountMongoRepository {
   return new AccountMongoRepository();

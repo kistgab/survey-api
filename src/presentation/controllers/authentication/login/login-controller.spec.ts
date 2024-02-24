@@ -1,14 +1,16 @@
-import Authentication from "../../../../domain/usecases/authentication";
-import MissingParamError from "../../../errors/missing-param-error";
+import Authentication from "@src/domain/usecases/authentication";
+import LoginController, {
+  RequestLoginBody,
+} from "@src/presentation/controllers/authentication/login/login-controller";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
   ok,
   unauthorized,
   unprocessableContent,
-} from "../../../helpers/http/http-helper";
-import { HttpRequest } from "../../../protocols/http";
-import Validation from "../../../protocols/validation";
-import LoginController, { RequestLoginBody } from "./login-controller";
+} from "@src/presentation/helpers/http/http-helper";
+import { HttpRequest } from "@src/presentation/protocols/http";
+import Validation from "@src/presentation/protocols/validation";
 
 function createFakeRequest(): HttpRequest<RequestLoginBody> {
   return {

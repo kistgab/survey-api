@@ -1,7 +1,7 @@
+import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
+import { SurveyMongoRepository } from "@src/infra/db/mongodb/survey/survey-mongo-repository";
 import * as Mockdate from "mockdate";
 import { Collection } from "mongodb";
-import { MongoHelper } from "../helpers/mongo-helper";
-import { SurveyMongoRepository } from "./survey-mongo-repository";
 
 describe("Survey Mongo Repository", () => {
   let surveyCollection: Collection;

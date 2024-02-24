@@ -1,9 +1,9 @@
-import { InputAuthenticationDto } from "../../../../domain/dtos/authentication-dto";
-import Authentication from "../../../../domain/usecases/authentication";
-import Encrypter from "../../../protocols/cryptography/encrypter";
-import HashComparer from "../../../protocols/cryptography/hash-comparer";
-import FindAccountByEmailRepository from "../../../protocols/db/account/find-account-by-email-repository";
-import UpdateAccessTokenRepository from "../../../protocols/db/account/update-access-token-repository";
+import Encrypter from "@src/data/protocols/cryptography/encrypter";
+import HashComparer from "@src/data/protocols/cryptography/hash-comparer";
+import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
+import UpdateAccessTokenRepository from "@src/data/protocols/db/account/update-access-token-repository";
+import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
+import Authentication from "@src/domain/usecases/authentication";
 
 export default class DbAuthentication implements Authentication {
   constructor(
