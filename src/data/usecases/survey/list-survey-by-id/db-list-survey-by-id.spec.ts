@@ -3,7 +3,7 @@ import { FindByIdSurveysRepository } from "@src/data/protocols/db/survey/find-by
 import { DbListSurveyById } from "@src/data/usecases/survey/list-survey-by-id/db-list-survey-by-id";
 import { ListSurveyById } from "../../../../domain/usecases/list-survey-by-id";
 
-function createFakeSurveys(): SurveyModel {
+function createFakeSurvey(): SurveyModel {
   return {
     question: "any_question",
     answers: [
@@ -20,7 +20,7 @@ function createFakeSurveys(): SurveyModel {
 function createFindByIdSurveysRepositoryStub(): FindByIdSurveysRepository {
   class FindByIdSurveysRepositoryStub implements FindByIdSurveysRepository {
     async findById(): Promise<SurveyModel> {
-      return Promise.resolve(createFakeSurveys());
+      return Promise.resolve(createFakeSurvey());
     }
   }
   return new FindByIdSurveysRepositoryStub();
@@ -49,5 +49,13 @@ describe("DbListSurveyById UseCase", () => {
     await sut.list("any_id");
 
     expect(findByIdSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return a survey on success", async () => {
+    const { sut } = createSut();
+
+    const result = await sut.list("any_id");
+
+    expect(result).toEqual(createFakeSurvey());
   });
 });
