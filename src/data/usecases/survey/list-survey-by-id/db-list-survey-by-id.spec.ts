@@ -58,4 +58,13 @@ describe("DbListSurveyById UseCase", () => {
 
     expect(result).toEqual(createFakeSurvey());
   });
+
+  it("should throw if FindAllSurveysRepository throws", async () => {
+    const { sut, findByIdSurveysRepositoryStub } = createSut();
+    jest
+      .spyOn(findByIdSurveysRepositoryStub, "findById")
+      .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
+
+    await expect(sut.list("any_id")).rejects.toThrow("Repository error");
+  });
 });
