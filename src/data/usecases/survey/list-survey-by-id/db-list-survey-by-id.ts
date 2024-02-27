@@ -6,9 +6,7 @@ export class DbListSurveyById implements ListSurveyById {
   constructor(private readonly findByIdSurveysRepository: FindByIdSurveysRepository) {}
 
   async list(id: string): Promise<SurveyModel> {
-    await Promise.resolve(id);
-    await this.findByIdSurveysRepository.findById(id);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return null!;
+    const survey = await this.findByIdSurveysRepository.findById(id);
+    return survey;
   }
 }
