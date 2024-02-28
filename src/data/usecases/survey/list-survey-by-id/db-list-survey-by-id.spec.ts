@@ -1,5 +1,5 @@
 import { SurveyModel } from "@src/data/models/survey-model";
-import { FindByIdSurveysRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
+import { FindSurveyByIdRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
 import { DbListSurveyById } from "@src/data/usecases/survey/list-survey-by-id/db-list-survey-by-id";
 import * as Mockdate from "mockdate";
 import { ListSurveyById } from "../../../../domain/usecases/list-survey-by-id";
@@ -18,8 +18,8 @@ function createFakeSurvey(): SurveyModel {
   };
 }
 
-function createFindByIdSurveysRepositoryStub(): FindByIdSurveysRepository {
-  class FindByIdSurveysRepositoryStub implements FindByIdSurveysRepository {
+function createFindByIdSurveysRepositoryStub(): FindSurveyByIdRepository {
+  class FindByIdSurveysRepositoryStub implements FindSurveyByIdRepository {
     async findById(): Promise<SurveyModel> {
       return Promise.resolve(createFakeSurvey());
     }
@@ -29,7 +29,7 @@ function createFindByIdSurveysRepositoryStub(): FindByIdSurveysRepository {
 
 type SutTypes = {
   sut: ListSurveyById;
-  findByIdSurveysRepositoryStub: FindByIdSurveysRepository;
+  findByIdSurveysRepositoryStub: FindSurveyByIdRepository;
 };
 
 function createSut(): SutTypes {
