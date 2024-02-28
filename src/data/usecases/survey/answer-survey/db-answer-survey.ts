@@ -7,8 +7,7 @@ export class DbAnswerSurvey implements AnswerSurvey {
   constructor(private readonly saveSurveyAnswerRepository: SaveSurveyAnswerRepository) {}
 
   async answer(data: InputAnswerSurveyDto): Promise<SurveyAnswerModel> {
-    await this.saveSurveyAnswerRepository.save(data);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return null!;
+    const savedAnswer = await this.saveSurveyAnswerRepository.save(data);
+    return savedAnswer;
   }
 }
