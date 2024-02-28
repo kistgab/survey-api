@@ -18,27 +18,27 @@ function createFakeSurvey(): SurveyModel {
   };
 }
 
-function createFindByIdSurveysRepositoryStub(): FindSurveyByIdRepository {
-  class FindByIdSurveysRepositoryStub implements FindSurveyByIdRepository {
+function createFindSurveyByIdRepositoryStub(): FindSurveyByIdRepository {
+  class FindSurveyByIdRepositoryStub implements FindSurveyByIdRepository {
     async findById(): Promise<SurveyModel> {
       return Promise.resolve(createFakeSurvey());
     }
   }
-  return new FindByIdSurveysRepositoryStub();
+  return new FindSurveyByIdRepositoryStub();
 }
 
 type SutTypes = {
   sut: ListSurveyById;
-  findByIdSurveysRepositoryStub: FindSurveyByIdRepository;
+  findSurveyByIdRepositoryStub: FindSurveyByIdRepository;
 };
 
 function createSut(): SutTypes {
-  const findByIdSurveysRepositoryStub = createFindByIdSurveysRepositoryStub();
-  const sut = new DbListSurveyById(findByIdSurveysRepositoryStub);
+  const findSurveyByIdRepositoryStub = createFindSurveyByIdRepositoryStub();
+  const sut = new DbListSurveyById(findSurveyByIdRepositoryStub);
 
   return {
     sut,
-    findByIdSurveysRepositoryStub,
+    findSurveyByIdRepositoryStub,
   };
 }
 
@@ -52,8 +52,8 @@ describe("DbListSurveyById UseCase", () => {
   });
 
   it("should call FindByIdSurveysRepository", async () => {
-    const { sut, findByIdSurveysRepositoryStub } = createSut();
-    const findByIdSpy = jest.spyOn(findByIdSurveysRepositoryStub, "findById");
+    const { sut, findSurveyByIdRepositoryStub } = createSut();
+    const findByIdSpy = jest.spyOn(findSurveyByIdRepositoryStub, "findById");
 
     await sut.list("any_id");
 
@@ -68,10 +68,19 @@ describe("DbListSurveyById UseCase", () => {
     expect(result).toEqual(createFakeSurvey());
   });
 
+  it("should return null when repository returns null", async () => {
+    const { sut, findSurveyByIdRepositoryStub } = createSut();
+    jest.spyOn(findSurveyByIdRepositoryStub, "findById").mockReturnValueOnce(Promise.resolve(null));
+
+    const result = await sut.list("any_id");
+
+    expect(result).toBeNull();
+  });
+
   it("should throw if FindAllSurveysRepository throws", async () => {
-    const { sut, findByIdSurveysRepositoryStub } = createSut();
+    const { sut, findSurveyByIdRepositoryStub } = createSut();
     jest
-      .spyOn(findByIdSurveysRepositoryStub, "findById")
+      .spyOn(findSurveyByIdRepositoryStub, "findById")
       .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
 
     await expect(sut.list("any_id")).rejects.toThrow("Repository error");
