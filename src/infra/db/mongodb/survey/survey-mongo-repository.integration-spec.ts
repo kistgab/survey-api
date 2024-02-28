@@ -97,5 +97,14 @@ describe("Survey Mongo Repository", () => {
       expect(id).toBeDefined();
       expect(surveyWithoutId).toEqual(survey1);
     });
+
+    it("should return null when there is no survey with the specified id", async () => {
+      const sut = createSut();
+
+      const anyId = "55153a8014829a865bbf700d";
+      const survey = await sut.findById(anyId);
+
+      expect(survey).toBeNull();
+    });
   });
 });
