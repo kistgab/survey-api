@@ -7,7 +7,7 @@ import { Collection } from "mongodb";
 
 describe("Survey Answer Mongo Repository", () => {
   let surveyCollection: Collection;
-  // let surveyAnswerCollection: Collection;
+  let surveyAnswerCollection: Collection;
   let accountCollection: Collection;
 
   beforeAll(async () => {
@@ -22,7 +22,7 @@ describe("Survey Answer Mongo Repository", () => {
 
   beforeEach(async () => {
     surveyCollection = MongoHelper.getCollection("surveys");
-    // surveyAnswerCollection = MongoHelper.getCollection("surveyAnswers");
+    surveyAnswerCollection = MongoHelper.getCollection("surveyAnswers");
     accountCollection = MongoHelper.getCollection("accounts");
     await surveyCollection.deleteMany({});
   });
@@ -32,32 +32,31 @@ describe("Survey Answer Mongo Repository", () => {
   }
 
   async function createSurvey(): Promise<SurveyModel> {
-    const survey = await surveyCollection.insertOne({
-      answers: [{ answer: "any_answer", image: "any_image" }],
+    const surveyAnswer = {
+      answers: [
+        { answer: "any_answer", image: "any_image" },
+        { answer: "any_other_answer", image: "any_other_image" },
+      ],
       question: "any_question",
       date: new Date(),
-    });
-    const { insertedId } = survey;
+    };
+    const res = await surveyCollection.insertOne(surveyAnswer);
     return {
-      answers: [{ answer: "any_answer", image: "any_image" }],
-      question: "any_question",
-      date: new Date(),
-      id: insertedId.toString(),
+      ...surveyAnswer,
+      id: res.insertedId.toString(),
     };
   }
 
   async function createAccount(): Promise<AccountModel> {
-    const account = await accountCollection.insertOne({
+    const account = {
       name: "any_name",
       email: "any_email",
       password: "any_password",
-    });
-    const { insertedId } = account;
+    };
+    const res = await accountCollection.insertOne(account);
     return {
-      id: insertedId.toString(),
-      name: "any_name",
-      email: "any_email",
-      password: "any_password",
+      id: res.insertedId.toString(),
+      ...account,
     };
   }
 
@@ -80,6 +79,34 @@ describe("Survey Answer Mongo Repository", () => {
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[0].answer,
+        date: new Date(),
+      });
+    });
+
+    it("should update a survey answer if it's not new", async () => {
+      const sut = createSut();
+      const survey = await createSurvey();
+      const account = await createAccount();
+      const res = await surveyAnswerCollection.insertOne({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[0].answer,
+        date: new Date(),
+      });
+
+      const surveyAnswer = await sut.save({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[1].answer,
+        date: new Date(),
+      });
+
+      const { id, ...surveyAnswerWithoutId } = surveyAnswer;
+      expect(res.insertedId.toString()).toEqual(id);
+      expect(surveyAnswerWithoutId).toEqual({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[1].answer,
         date: new Date(),
       });
     });
