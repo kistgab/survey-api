@@ -1,5 +1,5 @@
 import { SurveyModel } from "@src/data/models/survey-model";
-import { ListSurveys } from "@src/domain/usecases/list-surveys";
+import { ListSurveys } from "@src/domain/usecases/survey/list-surveys";
 import { internalServerError, noContent, ok } from "@src/presentation/helpers/http/http-helper";
 import Controller from "@src/presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";

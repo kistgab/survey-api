@@ -1,6 +1,6 @@
 import { SurveyAnswerModel } from "@src/data/models/save-survey-answer-model";
 import { SaveSurveyAnswerRepository } from "@src/data/protocols/db/survey/save-survey-answer-repository";
-import { DbAnswerSurvey } from "@src/data/usecases/survey/answer-survey/db-answer-survey";
+import { DbAnswerSurvey } from "@src/data/usecases/survey-answer/answer-survey/db-answer-survey";
 import { InputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 import * as Mockdate from "mockdate";
 

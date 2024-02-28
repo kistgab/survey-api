@@ -3,7 +3,7 @@ import HashComparer from "@src/data/protocols/cryptography/hash-comparer";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import UpdateAccessTokenRepository from "@src/data/protocols/db/account/update-access-token-repository";
 import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
-import Authentication from "@src/domain/usecases/authentication";
+import Authentication from "@src/domain/usecases/account/authentication";
 
 export default class DbAuthentication implements Authentication {
   constructor(

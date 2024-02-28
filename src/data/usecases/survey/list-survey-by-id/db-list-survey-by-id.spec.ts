@@ -2,7 +2,7 @@ import { SurveyModel } from "@src/data/models/survey-model";
 import { FindSurveyByIdRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
 import { DbListSurveyById } from "@src/data/usecases/survey/list-survey-by-id/db-list-survey-by-id";
 import * as Mockdate from "mockdate";
-import { ListSurveyById } from "../../../../domain/usecases/list-survey-by-id";
+import { ListSurveyById } from "../../../../domain/usecases/survey/list-survey-by-id";
 
 function createFakeSurvey(): SurveyModel {
   return {
