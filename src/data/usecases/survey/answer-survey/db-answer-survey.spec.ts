@@ -64,4 +64,13 @@ describe("DbAnswerSurvey UseCase", () => {
 
     expect(addSpy).toHaveBeenCalledWith({ ...input, date: new Date() });
   });
+
+  it("should throw when SaveSurveyAnswerRepository throws", async () => {
+    const { sut, saveSurveyAnswerRepositoryStub } = createSut();
+    jest
+      .spyOn(saveSurveyAnswerRepositoryStub, "save")
+      .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
+
+    await expect(sut.answer(createFakeInputDto())).rejects.toThrow(new Error("Repository error"));
+  });
 });
