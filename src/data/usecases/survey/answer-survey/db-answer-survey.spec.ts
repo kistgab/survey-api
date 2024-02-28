@@ -4,7 +4,7 @@ import { DbAnswerSurvey } from "@src/data/usecases/survey/answer-survey/db-answe
 import { InputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 import * as Mockdate from "mockdate";
 
-function createFakeSurveyAnswerRequest(): SurveyAnswerModel {
+function createFakeSurveyAnswer(): SurveyAnswerModel {
   return {
     id: "valid_id",
     accountId: "valid_account_id",
@@ -26,7 +26,7 @@ function createFakeInputDto(): InputAnswerSurveyDto {
 function createSaveSurveyAnswerRepositoryStub(): SaveSurveyAnswerRepository {
   class SaveSurveyRepositoryStub implements SaveSurveyAnswerRepository {
     async save(): Promise<SurveyAnswerModel> {
-      return Promise.resolve(createFakeSurveyAnswerRequest());
+      return Promise.resolve(createFakeSurveyAnswer());
     }
   }
   return new SaveSurveyRepositoryStub();
@@ -72,5 +72,13 @@ describe("DbAnswerSurvey UseCase", () => {
       .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
 
     await expect(sut.answer(createFakeInputDto())).rejects.toThrow(new Error("Repository error"));
+  });
+
+  it("should return a survey answer on success", async () => {
+    const { sut } = createSut();
+
+    const result = await sut.answer(createFakeInputDto());
+
+    expect(result).toEqual(createFakeSurveyAnswer());
   });
 });
