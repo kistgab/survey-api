@@ -1,5 +1,6 @@
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
+import { unprocessableContent } from "@src/presentation/helpers/http/http-helper";
 import Controller from "@src/presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
 
@@ -14,7 +15,9 @@ export class AnswerSurveyController
     httpRequest: HttpRequest<InputAnswerSurveyDto, AnswerSurveyParams>,
   ): Promise<HttpResponse<OutputAnswerSurveyDto | Error>> {
     const { params } = httpRequest;
-    await this.listSurveyById.list(params?.surveyId || "");
-    return { body: {} as OutputAnswerSurveyDto, statusCode: 200 };
+    const survey = await this.listSurveyById.list(params?.surveyId || "");
+    if (!survey) return unprocessableContent(new Error("Survey not found"));
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return null!;
   }
 }
