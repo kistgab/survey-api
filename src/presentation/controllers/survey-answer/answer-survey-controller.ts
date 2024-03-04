@@ -1,6 +1,7 @@
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
 import InvalidParamError from "@src/presentation/errors/invalid-param-error";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
   unprocessableContent,
@@ -21,6 +22,9 @@ export class AnswerSurveyController
     try {
       const { params } = httpRequest;
       const { body } = httpRequest;
+      if (!body) {
+        return unprocessableContent(new MissingParamError("body"));
+      }
       const survey = await this.listSurveyById.list(params?.surveyId || "");
       if (!survey) {
         return unprocessableContent(new Error("Survey not found"));
