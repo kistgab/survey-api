@@ -5,6 +5,7 @@ import {
   AnswerSurveyController,
   AnswerSurveyParams,
 } from "@src/presentation/controllers/survey-answer/answer-survey-controller";
+import InvalidParamError from "@src/presentation/errors/invalid-param-error";
 import {
   internalServerError,
   unprocessableContent,
@@ -93,5 +94,41 @@ describe("AnswerSurvey Controller", () => {
     const response = await sut.handle(createFakeRequest());
 
     expect(response).toEqual(internalServerError(new Error("any_error")));
+  });
+
+  it("should return 422 if an invalid answer is provided", async () => {
+    const { sut } = createSut();
+
+    const response = await sut.handle({
+      params: {
+        surveyId: "any_survey_id",
+      },
+      body: {
+        answer: "invalid_answer",
+        date: new Date(),
+        accountId: "any_account_id",
+        surveyId: "any_survey_id",
+      },
+    });
+
+    expect(response).toEqual(unprocessableContent(new InvalidParamError("answer")));
+  });
+
+  it("should return 422 if no body was provided", async () => {
+    const { sut } = createSut();
+
+    const response = await sut.handle({
+      params: {
+        surveyId: "any_survey_id",
+      },
+      body: {
+        answer: "invalid_answer",
+        date: new Date(),
+        accountId: "any_account_id",
+        surveyId: "any_survey_id",
+      },
+    });
+
+    expect(response).toEqual(unprocessableContent(new InvalidParamError("answer")));
   });
 });
