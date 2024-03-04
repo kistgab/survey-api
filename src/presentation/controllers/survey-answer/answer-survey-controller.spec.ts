@@ -6,6 +6,7 @@ import {
   AnswerSurveyParams,
 } from "@src/presentation/controllers/survey-answer/answer-survey-controller";
 import InvalidParamError from "@src/presentation/errors/invalid-param-error";
+import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
   unprocessableContent,
@@ -39,6 +40,12 @@ function createListSurveyByIdStub(): ListSurveyById {
 function createFakeRequest(): HttpRequest<InputAnswerSurveyDto, AnswerSurveyParams> {
   return {
     params: {
+      surveyId: "any_survey_id",
+    },
+    body: {
+      answer: "any_answer",
+      date: new Date(),
+      accountId: "any_account_id",
       surveyId: "any_survey_id",
     },
   };
@@ -121,14 +128,8 @@ describe("AnswerSurvey Controller", () => {
       params: {
         surveyId: "any_survey_id",
       },
-      body: {
-        answer: "invalid_answer",
-        date: new Date(),
-        accountId: "any_account_id",
-        surveyId: "any_survey_id",
-      },
     });
 
-    expect(response).toEqual(unprocessableContent(new InvalidParamError("answer")));
+    expect(response).toEqual(unprocessableContent(new MissingParamError("body")));
   });
 });
