@@ -5,7 +5,10 @@ import {
   AnswerSurveyController,
   AnswerSurveyParams,
 } from "@src/presentation/controllers/survey-answer/answer-survey-controller";
-import { unprocessableContent } from "@src/presentation/helpers/http/http-helper";
+import {
+  internalServerError,
+  unprocessableContent,
+} from "@src/presentation/helpers/http/http-helper";
 import { HttpRequest } from "@src/presentation/protocols/http";
 import * as Mockdate from "mockdate";
 
@@ -63,7 +66,7 @@ describe("AnswerSurvey Controller", () => {
     Mockdate.reset();
   });
 
-  it("should call FindSurveyById with correct values", async () => {
+  it("should call ListSurveyById with correct values", async () => {
     const { sut, listSurveyByIdStub } = createSut();
     const listByIdSpy = jest.spyOn(listSurveyByIdStub, "list");
 
@@ -72,12 +75,23 @@ describe("AnswerSurvey Controller", () => {
     expect(listByIdSpy).toHaveBeenCalledWith("any_survey_id");
   });
 
-  it("should return 422 if FindSurveyById returns null", async () => {
+  it("should return 422 if ListSurveyById returns null", async () => {
     const { sut, listSurveyByIdStub } = createSut();
     jest.spyOn(listSurveyByIdStub, "list").mockReturnValueOnce(Promise.resolve(null));
 
     const response = await sut.handle(createFakeRequest());
 
     expect(response).toEqual(unprocessableContent(new Error("Survey not found")));
+  });
+
+  it("should return 500 if ListSurveyById throws", async () => {
+    const { sut, listSurveyByIdStub } = createSut();
+    jest
+      .spyOn(listSurveyByIdStub, "list")
+      .mockReturnValueOnce(Promise.reject(new Error("any_error")));
+
+    const response = await sut.handle(createFakeRequest());
+
+    expect(response).toEqual(internalServerError(new Error("any_error")));
   });
 });
