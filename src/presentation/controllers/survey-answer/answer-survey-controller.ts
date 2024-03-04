@@ -1,5 +1,6 @@
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
+import InvalidParamError from "@src/presentation/errors/invalid-param-error";
 import {
   internalServerError,
   unprocessableContent,
@@ -19,8 +20,15 @@ export class AnswerSurveyController
   ): Promise<HttpResponse<OutputAnswerSurveyDto | Error>> {
     try {
       const { params } = httpRequest;
+      const { body } = httpRequest;
       const survey = await this.listSurveyById.list(params?.surveyId || "");
-      if (!survey) return unprocessableContent(new Error("Survey not found"));
+      if (!survey) {
+        return unprocessableContent(new Error("Survey not found"));
+      }
+      const surveyAnswers = survey.answers.map((answer) => answer.answer);
+      if (!surveyAnswers.includes(body?.answer || "")) {
+        return unprocessableContent(new InvalidParamError("answer"));
+      }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return null!;
     } catch (error) {
