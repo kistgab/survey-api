@@ -25,7 +25,7 @@ async function createAccessToken(): Promise<string> {
   return accessToken;
 }
 
-describe("SignUp route", () => {
+describe("Survey routes", () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);
   });
