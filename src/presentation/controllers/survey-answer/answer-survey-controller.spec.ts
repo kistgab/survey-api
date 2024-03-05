@@ -10,6 +10,7 @@ import InvalidParamError from "@src/presentation/errors/invalid-param-error";
 import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
+  ok,
   unprocessableContent,
 } from "@src/presentation/helpers/http/http-helper";
 import { HttpRequest } from "@src/presentation/protocols/http";
@@ -29,6 +30,16 @@ function createFakeSurvey(): SurveyModel {
   };
 }
 
+function createFakeSurveyAnswer(): OutputAnswerSurveyDto {
+  return {
+    id: "any_id",
+    surveyId: "any_survey_id",
+    accountId: "any_account_id",
+    date: new Date(),
+    answer: "any_answer",
+  };
+}
+
 function createListSurveyByIdStub(): ListSurveyById {
   class ListSurveyByIdStub implements ListSurveyById {
     async list(): Promise<SurveyModel | null> {
@@ -41,13 +52,7 @@ function createListSurveyByIdStub(): ListSurveyById {
 function createAnswerSurveyStub(): AnswerSurvey {
   class AnswerSurveyStub implements AnswerSurvey {
     async answer(): Promise<OutputAnswerSurveyDto> {
-      return Promise.resolve({
-        id: "any_id",
-        surveyId: "any_survey_id",
-        accountId: "any_account_id",
-        date: new Date(),
-        answer: "any_answer",
-      });
+      return Promise.resolve(createFakeSurveyAnswer());
     }
   }
   return new AnswerSurveyStub();
@@ -174,5 +179,13 @@ describe("AnswerSurvey Controller", () => {
     const response = await sut.handle(createFakeRequest());
 
     expect(response).toEqual(internalServerError(new Error("any_error")));
+  });
+
+  it("should return 200 on success", async () => {
+    const { sut } = createSut();
+
+    const response = await sut.handle(createFakeRequest());
+
+    expect(response).toEqual(ok(createFakeSurveyAnswer()));
   });
 });
