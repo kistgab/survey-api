@@ -1,4 +1,5 @@
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
+import AnswerSurvey from "@src/domain/usecases/survey-answer/answer-survey";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
 import InvalidParamError from "@src/presentation/errors/invalid-param-error";
 import MissingParamError from "@src/presentation/errors/missing-param-error";
@@ -14,7 +15,10 @@ export type AnswerSurveyParams = { surveyId: string };
 export class AnswerSurveyController
   implements Controller<InputAnswerSurveyDto, OutputAnswerSurveyDto>
 {
-  constructor(private readonly listSurveyById: ListSurveyById) {}
+  constructor(
+    private readonly listSurveyById: ListSurveyById,
+    private readonly answerSurvey: AnswerSurvey,
+  ) {}
 
   async handle(
     httpRequest: HttpRequest<InputAnswerSurveyDto, AnswerSurveyParams>,
@@ -33,6 +37,8 @@ export class AnswerSurveyController
       if (!surveyAnswers.includes(body?.answer || "")) {
         return unprocessableContent(new InvalidParamError("answer"));
       }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await this.answerSurvey.answer({ ...body, surveyId: params!.surveyId });
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return null!;
     } catch (error) {

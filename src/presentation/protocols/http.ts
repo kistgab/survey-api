@@ -10,4 +10,5 @@ export type HttpRequest<Body = unknown, Params = unknown> = {
     [key: string]: any;
   };
   params?: Params;
+  accountId?: string;
 };
