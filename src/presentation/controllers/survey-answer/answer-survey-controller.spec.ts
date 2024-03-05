@@ -1,5 +1,6 @@
 import { SurveyModel } from "@src/data/models/survey-model";
-import { InputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
+import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
+import AnswerSurvey from "@src/domain/usecases/survey-answer/answer-survey";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
 import {
   AnswerSurveyController,
@@ -37,6 +38,21 @@ function createListSurveyByIdStub(): ListSurveyById {
   return new ListSurveyByIdStub();
 }
 
+function createAnswerSurveyStub(): AnswerSurvey {
+  class AnswerSurveyStub implements AnswerSurvey {
+    async answer(): Promise<OutputAnswerSurveyDto> {
+      return Promise.resolve({
+        id: "any_id",
+        surveyId: "any_survey_id",
+        accountId: "any_account_id",
+        date: new Date(),
+        answer: "any_answer",
+      });
+    }
+  }
+  return new AnswerSurveyStub();
+}
+
 function createFakeRequest(): HttpRequest<InputAnswerSurveyDto, AnswerSurveyParams> {
   return {
     params: {
@@ -54,12 +70,15 @@ function createFakeRequest(): HttpRequest<InputAnswerSurveyDto, AnswerSurveyPara
 type SutTypes = {
   sut: AnswerSurveyController;
   listSurveyByIdStub: ListSurveyById;
+  answerSurveyStub: AnswerSurvey;
 };
 
 function createSut(): SutTypes {
+  const answerSurveyStub = createAnswerSurveyStub();
   const listSurveyByIdStub = createListSurveyByIdStub();
-  const sut = new AnswerSurveyController(listSurveyByIdStub);
+  const sut = new AnswerSurveyController(listSurveyByIdStub, answerSurveyStub);
   return {
+    answerSurveyStub,
     sut,
     listSurveyByIdStub,
   };
@@ -131,5 +150,18 @@ describe("AnswerSurvey Controller", () => {
     });
 
     expect(response).toEqual(unprocessableContent(new MissingParamError("body")));
+  });
+
+  it("should call SaveSurveyAnswer with correct values", async () => {
+    const { sut, answerSurveyStub } = createSut();
+    const answerSpy = jest.spyOn(answerSurveyStub, "answer");
+    await sut.handle(createFakeRequest());
+
+    expect(answerSpy).toHaveBeenCalledWith({
+      surveyId: "any_survey_id",
+      accountId: "any_account_id",
+      date: new Date(),
+      answer: "any_answer",
+    });
   });
 });
