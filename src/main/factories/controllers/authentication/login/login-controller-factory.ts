@@ -1,6 +1,6 @@
 import LoginValidationFactory from "@src/main/factories/controllers/authentication/login/login-validation-factory";
 import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
-import DbAuthenticationFactory from "@src/main/factories/usecases/authentication/db-authentication-factory";
+import DbAuthenticationFactory from "@src/main/factories/usecases/account/authentication/db-authentication-factory";
 import LoginController, {
   RequestLoginBody,
   ResponseLoginBody,

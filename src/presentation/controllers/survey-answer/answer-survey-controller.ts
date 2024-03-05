@@ -13,6 +13,14 @@ import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
 
 export type AnswerSurveyParams = { surveyId: string };
 
+export type RequestAnswerSurvey = {
+  answer: string;
+};
+
+export type ResponseAnswerSurvey = {
+  answer: string;
+};
+
 export class AnswerSurveyController
   implements Controller<InputAnswerSurveyDto, OutputAnswerSurveyDto>
 {
@@ -38,8 +46,13 @@ export class AnswerSurveyController
       if (!surveyAnswers.includes(body?.answer || "")) {
         return unprocessableContent(new InvalidParamError("answer"));
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const response = await this.answerSurvey.answer({ ...body, surveyId: params!.surveyId });
+      const response = await this.answerSurvey.answer({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        surveyId: params!.surveyId,
+        answer: body.answer,
+        date: new Date(),
+        accountId: body.accountId,
+      });
       return ok(response);
     } catch (error) {
       return internalServerError(error as Error);
