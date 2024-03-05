@@ -5,6 +5,7 @@ import InvalidParamError from "@src/presentation/errors/invalid-param-error";
 import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,
+  ok,
   unprocessableContent,
 } from "@src/presentation/helpers/http/http-helper";
 import Controller from "@src/presentation/protocols/controller";
@@ -38,9 +39,8 @@ export class AnswerSurveyController
         return unprocessableContent(new InvalidParamError("answer"));
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await this.answerSurvey.answer({ ...body, surveyId: params!.surveyId });
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return null!;
+      const response = await this.answerSurvey.answer({ ...body, surveyId: params!.surveyId });
+      return ok(response);
     } catch (error) {
       return internalServerError(error as Error);
     }
