@@ -164,4 +164,15 @@ describe("AnswerSurvey Controller", () => {
       answer: "any_answer",
     });
   });
+
+  it("should return 500 if AnserSurvey throws", async () => {
+    const { sut, answerSurveyStub } = createSut();
+    jest
+      .spyOn(answerSurveyStub, "answer")
+      .mockReturnValueOnce(Promise.reject(new Error("any_error")));
+
+    const response = await sut.handle(createFakeRequest());
+
+    expect(response).toEqual(internalServerError(new Error("any_error")));
+  });
 });
