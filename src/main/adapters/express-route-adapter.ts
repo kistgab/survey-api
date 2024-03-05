@@ -7,6 +7,8 @@ export default function adaptRoute<RequestBody, ResponseBody>(
   async function adaptToExpress(req: Request, res: Response): Promise<void> {
     const httpRequest: HttpRequest<RequestBody> = {
       body: req.body as RequestBody,
+      params: req.params,
+      accountId: req.accountId,
     };
     const httpResponse = await controller.handle(httpRequest);
     const isSuccessStatusCode = httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
