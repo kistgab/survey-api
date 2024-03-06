@@ -1,4 +1,4 @@
-import AddSurvey from "@src/domain/usecases/add-survey";
+import AddSurvey from "@src/domain/usecases/survey/add-survey";
 import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,

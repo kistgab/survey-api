@@ -79,4 +79,32 @@ describe("Survey Mongo Repository", () => {
       expect(surveys.length).toBe(0);
     });
   });
+
+  describe("findById", () => {
+    it("should load survey by id on success", async () => {
+      const survey1 = {
+        answers: [{ answer: "any_answer", image: "any_image" }],
+        question: "any_question",
+        date: new Date(),
+      };
+      const insertResult = await surveyCollection.insertOne({ ...survey1 });
+      const sut = createSut();
+
+      const survey = await sut.findById(insertResult.insertedId.toString());
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { id, ...surveyWithoutId } = survey!;
+
+      expect(id).toBeDefined();
+      expect(surveyWithoutId).toEqual(survey1);
+    });
+
+    it("should return null when there is no survey with the specified id", async () => {
+      const sut = createSut();
+
+      const anyId = "55153a8014829a865bbf700d";
+      const survey = await sut.findById(anyId);
+
+      expect(survey).toBeNull();
+    });
+  });
 });

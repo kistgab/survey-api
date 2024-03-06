@@ -1,7 +1,7 @@
 import SignUpValidationFactory from "@src/main/factories/controllers/authentication/signup/signup-validation-factory";
 import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
-import DbAddAccountFactory from "@src/main/factories/usecases/add-account/db-add-account-factory";
-import DbAuthenticationFactory from "@src/main/factories/usecases/authentication/db-authentication-factory";
+import DbAddAccountFactory from "@src/main/factories/usecases/account/add-account/db-add-account-factory";
+import DbAuthenticationFactory from "@src/main/factories/usecases/account/authentication/db-authentication-factory";
 import SignUpController, {
   RequestSignUpBody,
   ResponseSignUpBody,

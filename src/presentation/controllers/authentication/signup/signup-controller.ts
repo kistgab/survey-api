@@ -1,5 +1,5 @@
-import { AddAccount } from "@src/domain/usecases/add-account";
-import Authentication from "@src/domain/usecases/authentication";
+import { AddAccount } from "@src/domain/usecases/account/add-account";
+import Authentication from "@src/domain/usecases/account/authentication";
 import EmailAlreadyUsedError from "@src/presentation/errors/email-already-used-error";
 import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {

@@ -2,7 +2,7 @@ import Hasher from "@src/data/protocols/cryptography/hasher";
 import AddAccountRepository from "@src/data/protocols/db/account/add-account-repository";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import { InputAddAccountDto, OutputAddAccountDto } from "@src/domain/dtos/add-account-dto";
-import { AddAccount } from "@src/domain/usecases/add-account";
+import { AddAccount } from "@src/domain/usecases/account/add-account";
 
 export default class DbAddAccount implements AddAccount {
   constructor(

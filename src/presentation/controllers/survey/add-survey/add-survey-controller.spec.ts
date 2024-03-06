@@ -1,4 +1,4 @@
-import AddSurvey from "@src/domain/usecases/add-survey";
+import AddSurvey from "@src/domain/usecases/survey/add-survey";
 import {
   AddSurveyController,
   RequestAddSurveyBody,

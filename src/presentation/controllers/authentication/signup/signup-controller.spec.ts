@@ -1,7 +1,7 @@
 import { AccountModel } from "@src/data/models/account-model";
 import { OutputAddAccountDto } from "@src/domain/dtos/add-account-dto";
-import { AddAccount } from "@src/domain/usecases/add-account";
-import Authentication from "@src/domain/usecases/authentication";
+import { AddAccount } from "@src/domain/usecases/account/add-account";
+import Authentication from "@src/domain/usecases/account/authentication";
 import SignUpController, {
   RequestSignUpBody,
 } from "@src/presentation/controllers/authentication/signup/signup-controller";

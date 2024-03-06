@@ -1,4 +1,4 @@
-import FindAccountByToken from "@src/domain/usecases/find-account-by-token";
+import FindAccountByToken from "@src/domain/usecases/account/find-account-by-token";
 import AccessDeniedError from "@src/presentation/errors/access-denied-error";
 import { forbidden, internalServerError, ok } from "@src/presentation/helpers/http/http-helper";
 import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";

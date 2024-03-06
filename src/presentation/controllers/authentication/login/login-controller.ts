@@ -1,4 +1,4 @@
-import Authentication from "@src/domain/usecases/authentication";
+import Authentication from "@src/domain/usecases/account/authentication";
 import MissingParamError from "@src/presentation/errors/missing-param-error";
 import {
   internalServerError,

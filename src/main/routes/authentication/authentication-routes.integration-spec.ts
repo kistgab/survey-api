@@ -4,7 +4,7 @@ import { hash } from "bcrypt";
 import { Collection } from "mongodb";
 import request from "supertest";
 
-describe("SignUp route", () => {
+describe("Authentication routes", () => {
   let accountCollection: Collection;
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);

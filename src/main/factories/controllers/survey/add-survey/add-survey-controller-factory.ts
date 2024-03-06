@@ -1,6 +1,6 @@
 import AddSurveyValidationFactory from "@src/main/factories/controllers/survey/add-survey/add-survey-validation-factory";
 import LogControllerDecoratorFactory from "@src/main/factories/decorators/log-controller-decorator-factory";
-import DbAddSurveyFactory from "@src/main/factories/usecases/add-survey/db-add-survey-factory";
+import DbAddSurveyFactory from "@src/main/factories/usecases/survey/add-survey/db-add-survey-factory";
 import {
   AddSurveyController,
   RequestAddSurveyBody,

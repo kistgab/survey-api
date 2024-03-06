@@ -1,4 +1,4 @@
-import Authentication from "@src/domain/usecases/authentication";
+import Authentication from "@src/domain/usecases/account/authentication";
 import LoginController, {
   RequestLoginBody,
 } from "@src/presentation/controllers/authentication/login/login-controller";
