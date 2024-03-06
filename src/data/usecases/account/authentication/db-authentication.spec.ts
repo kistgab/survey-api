@@ -3,43 +3,18 @@ import Encrypter from "@src/data/protocols/cryptography/encrypter";
 import HashComparer from "@src/data/protocols/cryptography/hash-comparer";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import UpdateAccessTokenRepository from "@src/data/protocols/db/account/update-access-token-repository";
+import { mockEncrypter, mockHashComparer } from "@src/data/test/mock-cryptography";
 import DbAuthentication from "@src/data/usecases/account/authentication/db-authentication";
 import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
-
-function createFakeAccount(): AccountModel {
-  return {
-    id: "any_id",
-    name: "any_name",
-    email: "any_email@mail.com",
-    password: "hashed_password",
-  };
-}
+import { mockAccountModel } from "@src/domain/test/mock-account";
 
 function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
     async findByEmail(): Promise<AccountModel | null> {
-      return Promise.resolve(createFakeAccount());
+      return Promise.resolve(mockAccountModel());
     }
   }
   return new FindAccountByEmailRepositoryStub();
-}
-
-function createHashComparerStub(): HashComparer {
-  class HashComparerStub implements HashComparer {
-    async compare(): Promise<boolean> {
-      return Promise.resolve(true);
-    }
-  }
-  return new HashComparerStub();
-}
-
-function createEncrypterStub(): Encrypter {
-  class EncrypterStub implements Encrypter {
-    async encrypt(): Promise<string> {
-      return Promise.resolve("any_token");
-    }
-  }
-  return new EncrypterStub();
 }
 
 function createUpdateAccessTokenRepositoryStub(): UpdateAccessTokenRepository {
@@ -68,8 +43,8 @@ type SutTypes = {
 
 function createSut(): SutTypes {
   const findAccountByEmailRepositoryStub = createFindAccountByEmailRepository();
-  const hashComparerStub = createHashComparerStub();
-  const encrypterStub = createEncrypterStub();
+  const hashComparerStub = mockHashComparer();
+  const encrypterStub = mockEncrypter();
   const updateAccessTokenRepositoryStub = createUpdateAccessTokenRepositoryStub();
   const sut = new DbAuthentication(
     findAccountByEmailRepositoryStub,
@@ -124,7 +99,7 @@ describe("DbAuthentication UseCase", () => {
 
     await sut.auth(createFakeInputDto());
 
-    expect(compareSpy).toHaveBeenCalledWith("any_password", "hashed_password");
+    expect(compareSpy).toHaveBeenCalledWith("any_password", "any_password");
   });
 
   it("should throw if HashComparer throws", async () => {

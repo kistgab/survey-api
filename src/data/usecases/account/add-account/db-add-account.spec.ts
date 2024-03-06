@@ -2,17 +2,9 @@ import { AccountModel } from "@src/data/models/account-model";
 import Hasher from "@src/data/protocols/cryptography/hasher";
 import AddAccountRepository from "@src/data/protocols/db/account/add-account-repository";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
+import { mockHasher } from "@src/data/test/mock-cryptography";
 import DbAddAccount from "@src/data/usecases/account/add-account/db-add-account";
 import { mockAccountModel, mockInputAddAccountDto } from "@src/domain/test/mock-account";
-
-function createHasherStub(): Hasher {
-  class HasherStub implements Hasher {
-    async hash(): Promise<string> {
-      return Promise.resolve("hashed_password");
-    }
-  }
-  return new HasherStub();
-}
 
 function createFindAccountByEmailRepositoryStub(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
@@ -40,7 +32,7 @@ type SutTypes = {
 };
 
 function createSut(): SutTypes {
-  const hasherStub = createHasherStub();
+  const hasherStub = mockHasher();
   const addAccountRepositoryStub = createAddAccountRepositoryStub();
   const findAccountByEmailRepositoryStub = createFindAccountByEmailRepositoryStub();
   return {
@@ -90,7 +82,7 @@ describe("DbAddAccount Usecase", () => {
     await expect(sut.add(mockInputAddAccountDto())).rejects.toThrow("Repository error");
   });
 
-  it("should call the AddAccountRepository with the correct values", async () => {
+  it("should return the account on success", async () => {
     const { sut } = createSut();
 
     const result = await sut.add(mockInputAddAccountDto());

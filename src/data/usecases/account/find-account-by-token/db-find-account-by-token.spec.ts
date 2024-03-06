@@ -2,15 +2,7 @@ import { AccountModel } from "@src/data/models/account-model";
 import Decrypter from "@src/data/protocols/cryptography/decrypter";
 import FindAccountByTokenRepository from "@src/data/protocols/db/account/find-account-by-token-repository";
 import DbFindAccountByToken from "@src/data/usecases/account/find-account-by-token/db-find-account-by-token";
-
-function createFakeAccount(): AccountModel {
-  return {
-    id: "any_id",
-    email: "any_email@mail.com",
-    password: "hashed_password",
-    name: "any_name",
-  };
-}
+import { mockAccountModel } from "@src/domain/test/mock-account";
 
 function createDecrypter(): Decrypter {
   class DecrypterStub implements Decrypter {
@@ -24,7 +16,7 @@ function createDecrypter(): Decrypter {
 function createFindAccountByRepositoryStub(): FindAccountByTokenRepository {
   class FindAccountByRepositoryStub implements FindAccountByTokenRepository {
     async findByToken(): Promise<AccountModel | null> {
-      return Promise.resolve(createFakeAccount());
+      return Promise.resolve(mockAccountModel());
     }
   }
   return new FindAccountByRepositoryStub();
@@ -112,6 +104,6 @@ describe("DbFindAccountByToken UseCase", () => {
 
     const account = await sut.findByToken("any_token");
 
-    expect(account).toEqual(createFakeAccount());
+    expect(account).toEqual(mockAccountModel());
   });
 });

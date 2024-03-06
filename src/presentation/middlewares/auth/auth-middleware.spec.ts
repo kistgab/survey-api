@@ -1,4 +1,5 @@
 import { AccountModel } from "@src/data/models/account-model";
+import { mockAccountModel } from "@src/domain/test/mock-account";
 import FindAccountByToken from "@src/domain/usecases/account/find-account-by-token";
 import AccessDeniedError from "@src/presentation/errors/access-denied-error";
 import { forbidden, internalServerError, ok } from "@src/presentation/helpers/http/http-helper";
@@ -9,19 +10,10 @@ function createFakeRequest(): HttpRequest<unknown> {
   return { headers: { "x-access-token": "any_token" } };
 }
 
-function createFakeAccount(): AccountModel {
-  return {
-    id: "any_id",
-    email: "any_email@mail.com",
-    password: "hashed_password",
-    name: "any_name",
-  };
-}
-
 function createFindAccountByTokenStub(): FindAccountByToken {
   class FindAccountByTokenStub implements FindAccountByToken {
     async findByToken(): Promise<AccountModel | null> {
-      return Promise.resolve(createFakeAccount());
+      return Promise.resolve(mockAccountModel());
     }
   }
   return new FindAccountByTokenStub();

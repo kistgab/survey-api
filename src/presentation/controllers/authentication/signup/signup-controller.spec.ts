@@ -1,5 +1,5 @@
-import { AccountModel } from "@src/data/models/account-model";
 import { OutputAddAccountDto } from "@src/domain/dtos/add-account-dto";
+import { mockAccountModel } from "@src/domain/test/mock-account";
 import { AddAccount } from "@src/domain/usecases/account/add-account";
 import Authentication from "@src/domain/usecases/account/authentication";
 import SignUpController, {
@@ -27,15 +27,6 @@ function createFakeRequest(): HttpRequest<RequestSignUpBody> {
   };
 }
 
-function createFakeAccount(): AccountModel {
-  return {
-    id: "any_id",
-    name: "any_name",
-    email: "any_email@mail.com",
-    password: "hashed_password",
-  };
-}
-
 function createAuthenticationStub(): Authentication {
   class AuthenticationStub implements Authentication {
     async auth(): Promise<string | null> {
@@ -48,7 +39,7 @@ function createAuthenticationStub(): Authentication {
 function createAddAccountStub(): AddAccount {
   class AddAccountStub implements AddAccount {
     async add(): Promise<OutputAddAccountDto> {
-      return Promise.resolve(createFakeAccount());
+      return Promise.resolve(mockAccountModel());
     }
   }
   return new AddAccountStub();
