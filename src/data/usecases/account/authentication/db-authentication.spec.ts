@@ -4,6 +4,7 @@ import HashComparer from "@src/data/protocols/cryptography/hash-comparer";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import UpdateAccessTokenRepository from "@src/data/protocols/db/account/update-access-token-repository";
 import { mockEncrypter, mockHashComparer } from "@src/data/test/mock-cryptography";
+import { mockUpdateAccessTokenRepository } from "@src/data/test/mock-db-account";
 import DbAuthentication from "@src/data/usecases/account/authentication/db-authentication";
 import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
 import { mockAccountModel } from "@src/domain/test/mock-account";
@@ -15,15 +16,6 @@ function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
     }
   }
   return new FindAccountByEmailRepositoryStub();
-}
-
-function createUpdateAccessTokenRepositoryStub(): UpdateAccessTokenRepository {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken(): Promise<void> {
-      return Promise.resolve();
-    }
-  }
-  return new UpdateAccessTokenRepositoryStub();
 }
 
 function createFakeInputDto(): InputAuthenticationDto {
@@ -45,7 +37,7 @@ function createSut(): SutTypes {
   const findAccountByEmailRepositoryStub = createFindAccountByEmailRepository();
   const hashComparerStub = mockHashComparer();
   const encrypterStub = mockEncrypter();
-  const updateAccessTokenRepositoryStub = createUpdateAccessTokenRepositoryStub();
+  const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepository();
   const sut = new DbAuthentication(
     findAccountByEmailRepositoryStub,
     hashComparerStub,
