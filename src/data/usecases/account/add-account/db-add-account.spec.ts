@@ -1,11 +1,9 @@
+import { AccountModel } from "@src/data/models/account-model";
 import Hasher from "@src/data/protocols/cryptography/hasher";
 import AddAccountRepository from "@src/data/protocols/db/account/add-account-repository";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import { mockHasher } from "@src/data/test/mock-cryptography";
-import {
-  mockAddAccountRepository,
-  mockFindAccountByEmailRepository,
-} from "@src/data/test/mock-db-account";
+import { mockAddAccountRepository } from "@src/data/test/mock-db-account";
 import DbAddAccount from "@src/data/usecases/account/add-account/db-add-account";
 import { mockAccountModel, mockInputAddAccountDto } from "@src/domain/test/mock-account";
 
@@ -15,6 +13,15 @@ type SutTypes = {
   addAccountRepositoryStub: AddAccountRepository;
   findAccountByEmailRepositoryStub: FindAccountByEmailRepository;
 };
+
+function mockFindAccountByEmailRepository(): FindAccountByEmailRepository {
+  class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
+    async findByEmail(): Promise<AccountModel | null> {
+      return Promise.resolve(null);
+    }
+  }
+  return new FindAccountByEmailRepositoryStub();
+}
 
 function createSut(): SutTypes {
   const hasherStub = mockHasher();

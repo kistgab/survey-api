@@ -1,29 +1,14 @@
-import { AccountModel } from "@src/data/models/account-model";
 import Encrypter from "@src/data/protocols/cryptography/encrypter";
 import HashComparer from "@src/data/protocols/cryptography/hash-comparer";
 import FindAccountByEmailRepository from "@src/data/protocols/db/account/find-account-by-email-repository";
 import UpdateAccessTokenRepository from "@src/data/protocols/db/account/update-access-token-repository";
 import { mockEncrypter, mockHashComparer } from "@src/data/test/mock-cryptography";
-import { mockUpdateAccessTokenRepository } from "@src/data/test/mock-db-account";
+import {
+  mockFindAccountByEmailRepository,
+  mockUpdateAccessTokenRepository,
+} from "@src/data/test/mock-db-account";
 import DbAuthentication from "@src/data/usecases/account/authentication/db-authentication";
-import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
-import { mockAccountModel } from "@src/domain/test/mock-account";
-
-function createFindAccountByEmailRepository(): FindAccountByEmailRepository {
-  class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
-    async findByEmail(): Promise<AccountModel | null> {
-      return Promise.resolve(mockAccountModel());
-    }
-  }
-  return new FindAccountByEmailRepositoryStub();
-}
-
-function createFakeInputDto(): InputAuthenticationDto {
-  return {
-    email: "any_email@mail.com",
-    password: "any_password",
-  };
-}
+import { mockInputAuthenticationDto } from "@src/domain/test/mock-account";
 
 type SutTypes = {
   sut: DbAuthentication;
@@ -34,7 +19,7 @@ type SutTypes = {
 };
 
 function createSut(): SutTypes {
-  const findAccountByEmailRepositoryStub = createFindAccountByEmailRepository();
+  const findAccountByEmailRepositoryStub = mockFindAccountByEmailRepository();
   const hashComparerStub = mockHashComparer();
   const encrypterStub = mockEncrypter();
   const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepository();
@@ -58,7 +43,7 @@ describe("DbAuthentication UseCase", () => {
     const { sut, findAccountByEmailRepositoryStub } = createSut();
     const findSpy = jest.spyOn(findAccountByEmailRepositoryStub, "findByEmail");
 
-    await sut.auth(createFakeInputDto());
+    await sut.auth(mockInputAuthenticationDto());
 
     expect(findSpy).toHaveBeenCalledWith("any_email@mail.com");
   });
@@ -69,7 +54,7 @@ describe("DbAuthentication UseCase", () => {
       .spyOn(findAccountByEmailRepositoryStub, "findByEmail")
       .mockReturnValueOnce(Promise.reject(new Error("FindAccountByEmailRepository error")));
 
-    await expect(sut.auth(createFakeInputDto())).rejects.toThrow(
+    await expect(sut.auth(mockInputAuthenticationDto())).rejects.toThrow(
       new Error("FindAccountByEmailRepository error"),
     );
   });
@@ -80,7 +65,7 @@ describe("DbAuthentication UseCase", () => {
       .spyOn(findAccountByEmailRepositoryStub, "findByEmail")
       .mockReturnValueOnce(Promise.resolve(null));
 
-    const result = await sut.auth(createFakeInputDto());
+    const result = await sut.auth(mockInputAuthenticationDto());
 
     expect(result).toBeNull();
   });
@@ -89,7 +74,7 @@ describe("DbAuthentication UseCase", () => {
     const { sut, hashComparerStub } = createSut();
     const compareSpy = jest.spyOn(hashComparerStub, "compare");
 
-    await sut.auth(createFakeInputDto());
+    await sut.auth(mockInputAuthenticationDto());
 
     expect(compareSpy).toHaveBeenCalledWith("any_password", "any_password");
   });
@@ -100,14 +85,16 @@ describe("DbAuthentication UseCase", () => {
       .spyOn(hashComparerStub, "compare")
       .mockReturnValueOnce(Promise.reject(new Error("HashComparer error")));
 
-    await expect(sut.auth(createFakeInputDto())).rejects.toThrow(new Error("HashComparer error"));
+    await expect(sut.auth(mockInputAuthenticationDto())).rejects.toThrow(
+      new Error("HashComparer error"),
+    );
   });
 
   it("should return null if HashComparer returns false", async () => {
     const { sut, hashComparerStub } = createSut();
     jest.spyOn(hashComparerStub, "compare").mockReturnValueOnce(Promise.resolve(false));
 
-    const result = await sut.auth(createFakeInputDto());
+    const result = await sut.auth(mockInputAuthenticationDto());
 
     expect(result).toBeNull();
   });
@@ -116,7 +103,7 @@ describe("DbAuthentication UseCase", () => {
     const { sut, encrypterStub } = createSut();
     const compareSpy = jest.spyOn(encrypterStub, "encrypt");
 
-    await sut.auth(createFakeInputDto());
+    await sut.auth(mockInputAuthenticationDto());
 
     expect(compareSpy).toHaveBeenCalledWith("any_id");
   });
@@ -127,13 +114,15 @@ describe("DbAuthentication UseCase", () => {
       .spyOn(encrypterStub, "encrypt")
       .mockReturnValueOnce(Promise.reject(new Error("Encrypter error")));
 
-    await expect(sut.auth(createFakeInputDto())).rejects.toThrow(new Error("Encrypter error"));
+    await expect(sut.auth(mockInputAuthenticationDto())).rejects.toThrow(
+      new Error("Encrypter error"),
+    );
   });
 
   it("should return null if HashComparer returns false", async () => {
     const { sut } = createSut();
 
-    const accessToken = await sut.auth(createFakeInputDto());
+    const accessToken = await sut.auth(mockInputAuthenticationDto());
 
     expect(accessToken).toBe("any_token");
   });
@@ -142,7 +131,7 @@ describe("DbAuthentication UseCase", () => {
     const { sut, updateAccessTokenRepositoryStub } = createSut();
     const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, "updateAccessToken");
 
-    await sut.auth(createFakeInputDto());
+    await sut.auth(mockInputAuthenticationDto());
 
     expect(updateSpy).toHaveBeenCalledWith("any_id", "any_token");
   });
@@ -153,7 +142,7 @@ describe("DbAuthentication UseCase", () => {
       .spyOn(updateAccessTokenRepositoryStub, "updateAccessToken")
       .mockReturnValueOnce(Promise.reject(new Error("UpdateAccessTokenRepository error")));
 
-    await expect(sut.auth(createFakeInputDto())).rejects.toThrow(
+    await expect(sut.auth(mockInputAuthenticationDto())).rejects.toThrow(
       new Error("UpdateAccessTokenRepository error"),
     );
   });

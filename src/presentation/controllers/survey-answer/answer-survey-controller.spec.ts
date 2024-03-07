@@ -1,5 +1,6 @@
 import { SurveyModel } from "@src/data/models/survey-model";
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
+import { mockOutputSurveyAnswerDto, mockSurveyModel } from "@src/domain/test/mock-survey";
 import AnswerSurvey from "@src/domain/usecases/survey-answer/answer-survey";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
 import {
@@ -16,34 +17,10 @@ import {
 import { HttpRequest } from "@src/presentation/protocols/http";
 import * as Mockdate from "mockdate";
 
-function createFakeSurvey(): SurveyModel {
-  return {
-    question: "any_question",
-    answers: [
-      {
-        image: "any_image",
-        answer: "any_answer",
-      },
-    ],
-    date: new Date(),
-    id: "any_id",
-  };
-}
-
-function createFakeSurveyAnswer(): OutputAnswerSurveyDto {
-  return {
-    id: "any_id",
-    surveyId: "any_survey_id",
-    accountId: "any_account_id",
-    date: new Date(),
-    answer: "any_answer",
-  };
-}
-
 function createListSurveyByIdStub(): ListSurveyById {
   class ListSurveyByIdStub implements ListSurveyById {
     async list(): Promise<SurveyModel | null> {
-      return Promise.resolve(createFakeSurvey());
+      return Promise.resolve(mockSurveyModel());
     }
   }
   return new ListSurveyByIdStub();
@@ -52,7 +29,7 @@ function createListSurveyByIdStub(): ListSurveyById {
 function createAnswerSurveyStub(): AnswerSurvey {
   class AnswerSurveyStub implements AnswerSurvey {
     async answer(): Promise<OutputAnswerSurveyDto> {
-      return Promise.resolve(createFakeSurveyAnswer());
+      return Promise.resolve(mockOutputSurveyAnswerDto());
     }
   }
   return new AnswerSurveyStub();
@@ -186,6 +163,6 @@ describe("AnswerSurvey Controller", () => {
 
     const response = await sut.handle(createFakeRequest());
 
-    expect(response).toEqual(ok(createFakeSurveyAnswer()));
+    expect(response).toEqual(ok(mockOutputSurveyAnswerDto()));
   });
 });

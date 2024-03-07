@@ -17,7 +17,7 @@ export function mockAddAccountRepository(): AddAccountRepository {
 export function mockFindAccountByEmailRepository(): FindAccountByEmailRepository {
   class FindAccountByEmailRepositoryStub implements FindAccountByEmailRepository {
     async findByEmail(): Promise<AccountModel | null> {
-      return Promise.resolve(null);
+      return Promise.resolve(mockAccountModel());
     }
   }
   return new FindAccountByEmailRepositoryStub();

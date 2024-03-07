@@ -1,31 +1,9 @@
-import { SurveyModel } from "@src/data/models/survey-model";
 import { FindSurveyByIdRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
+import { mockFindSurveyByIdRepository } from "@src/data/test/mock-db-survey";
 import { DbListSurveyById } from "@src/data/usecases/survey/list-survey-by-id/db-list-survey-by-id";
+import { mockSurveyModel } from "@src/domain/test/mock-survey";
 import * as Mockdate from "mockdate";
 import { ListSurveyById } from "../../../../domain/usecases/survey/list-survey-by-id";
-
-function createFakeSurvey(): SurveyModel {
-  return {
-    question: "any_question",
-    answers: [
-      {
-        image: "any_image",
-        answer: "any_answer",
-      },
-    ],
-    date: new Date(),
-    id: "any_id",
-  };
-}
-
-function createFindSurveyByIdRepositoryStub(): FindSurveyByIdRepository {
-  class FindSurveyByIdRepositoryStub implements FindSurveyByIdRepository {
-    async findById(): Promise<SurveyModel> {
-      return Promise.resolve(createFakeSurvey());
-    }
-  }
-  return new FindSurveyByIdRepositoryStub();
-}
 
 type SutTypes = {
   sut: ListSurveyById;
@@ -33,7 +11,7 @@ type SutTypes = {
 };
 
 function createSut(): SutTypes {
-  const findSurveyByIdRepositoryStub = createFindSurveyByIdRepositoryStub();
+  const findSurveyByIdRepositoryStub = mockFindSurveyByIdRepository();
   const sut = new DbListSurveyById(findSurveyByIdRepositoryStub);
 
   return {
@@ -65,7 +43,7 @@ describe("DbListSurveyById UseCase", () => {
 
     const result = await sut.list("any_id");
 
-    expect(result).toEqual(createFakeSurvey());
+    expect(result).toEqual(mockSurveyModel());
   });
 
   it("should return null when repository returns null", async () => {

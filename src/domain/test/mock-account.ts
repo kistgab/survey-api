@@ -1,5 +1,6 @@
 import { AccountModel } from "@src/data/models/account-model";
 import { InputAddAccountDto } from "@src/domain/dtos/add-account-dto";
+import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
 
 export function mockAccountModel(): AccountModel {
   return {
@@ -15,5 +16,12 @@ export function mockInputAddAccountDto(): InputAddAccountDto {
     email: "any_email@mail.com",
     password: "any_password",
     name: "any_name",
+  };
+}
+
+export function mockInputAuthenticationDto(): InputAuthenticationDto {
+  return {
+    email: "any_email@mail.com",
+    password: "any_password",
   };
 }
