@@ -1,6 +1,6 @@
 import { RequestSignUpBody } from "@src/presentation/controllers/authentication/signup/signup-controller";
 import InvalidParamError from "@src/presentation/errors/invalid-param-error";
-import { mockRequestSignUpBody } from "@src/presentation/test/mock-requests";
+import { mockRequestSignUpBody } from "@src/presentation/test/mock-authentication";
 import EmailValidator from "@src/validation/protocols/email-validator";
 import { mockEmailValidator } from "@src/validation/test/mock-email-validator";
 import EmailValidation from "@src/validation/validators/email/email-validation";

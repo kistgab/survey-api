@@ -1,32 +1,9 @@
-import { SurveyModel } from "@src/data/models/survey-model";
+import { mockSurveyModelList } from "@src/domain/test/mock-survey";
 import { ListSurveys } from "@src/domain/usecases/survey/list-surveys";
 import ListSurveysController from "@src/presentation/controllers/survey/list-surveys/list-surveys-controller";
 import { internalServerError, noContent, ok } from "@src/presentation/helpers/http/http-helper";
+import { mockListSurveys } from "@src/presentation/test/mock-survey";
 import * as Mockdate from "mockdate";
-
-function createFakeSurveys(): SurveyModel[] {
-  return [
-    {
-      question: "any_question",
-      answers: [
-        {
-          image: "any_image",
-          answer: "any_answer",
-        },
-      ],
-      date: new Date(),
-      id: "any_id",
-    },
-  ];
-}
-function createListSurveysStub(): ListSurveys {
-  class ListSurveysStub implements ListSurveys {
-    async list(): Promise<SurveyModel[]> {
-      return Promise.resolve(createFakeSurveys());
-    }
-  }
-  return new ListSurveysStub();
-}
 
 type SutTypes = {
   sut: ListSurveysController;
@@ -34,7 +11,7 @@ type SutTypes = {
 };
 
 function createSut(): SutTypes {
-  const listSurveysStub = createListSurveysStub();
+  const listSurveysStub = mockListSurveys();
   const sut = new ListSurveysController(listSurveysStub);
   return {
     sut,
@@ -76,7 +53,7 @@ describe("ListSurveys Controller", () => {
 
     const result = await sut.handle({});
 
-    expect(result).toEqual(ok(createFakeSurveys()));
+    expect(result).toEqual(ok(mockSurveyModelList()));
   });
 
   it("should return 204 on success with no data", async () => {

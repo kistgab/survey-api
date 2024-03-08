@@ -1,6 +1,5 @@
-import { SurveyModel } from "@src/data/models/survey-model";
-import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
-import { mockOutputSurveyAnswerDto, mockSurveyModel } from "@src/domain/test/mock-survey";
+import { InputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
+import { mockOutputSurveyAnswerDto } from "@src/domain/test/mock-survey";
 import AnswerSurvey from "@src/domain/usecases/survey-answer/answer-survey";
 import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
 import {
@@ -15,25 +14,8 @@ import {
   unprocessableContent,
 } from "@src/presentation/helpers/http/http-helper";
 import { HttpRequest } from "@src/presentation/protocols/http";
+import { mockAnswerSurvey, mockListSurveyById } from "@src/presentation/test/mock-survey";
 import * as Mockdate from "mockdate";
-
-function createListSurveyByIdStub(): ListSurveyById {
-  class ListSurveyByIdStub implements ListSurveyById {
-    async list(): Promise<SurveyModel | null> {
-      return Promise.resolve(mockSurveyModel());
-    }
-  }
-  return new ListSurveyByIdStub();
-}
-
-function createAnswerSurveyStub(): AnswerSurvey {
-  class AnswerSurveyStub implements AnswerSurvey {
-    async answer(): Promise<OutputAnswerSurveyDto> {
-      return Promise.resolve(mockOutputSurveyAnswerDto());
-    }
-  }
-  return new AnswerSurveyStub();
-}
 
 function createFakeRequest(): HttpRequest<InputAnswerSurveyDto, AnswerSurveyParams> {
   return {
@@ -56,8 +38,8 @@ type SutTypes = {
 };
 
 function createSut(): SutTypes {
-  const answerSurveyStub = createAnswerSurveyStub();
-  const listSurveyByIdStub = createListSurveyByIdStub();
+  const answerSurveyStub = mockAnswerSurvey();
+  const listSurveyByIdStub = mockListSurveyById();
   const sut = new AnswerSurveyController(listSurveyByIdStub, answerSurveyStub);
   return {
     answerSurveyStub,
