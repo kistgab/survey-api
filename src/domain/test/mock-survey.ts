@@ -1,5 +1,5 @@
 import { SurveyAnswerModel } from "@src/data/models/save-survey-answer-model";
-import { SurveyModel } from "@src/data/models/survey-model";
+import { AddSurveyModel, SurveyModel } from "@src/data/models/survey-model";
 import { InputAddSurveyDto } from "@src/domain/dtos/add-survey-dto";
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 
@@ -82,5 +82,18 @@ export function mockOutputSurveyAnswerDto(): OutputAnswerSurveyDto {
     accountId: "any_account_id",
     date: new Date(),
     answer: "any_answer",
+  };
+}
+
+export function mockAddSurveyModel(): AddSurveyModel {
+  return {
+    question: "any_question",
+    answers: [
+      {
+        image: "any_image",
+        answer: "any_answer",
+      },
+    ],
+    date: new Date(),
   };
 }

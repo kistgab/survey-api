@@ -1,4 +1,4 @@
-import { AddAccountModel } from "@src/data/models/add-account-model";
+import { mockAddAccountModel } from "@src/domain/test/mock-account";
 import { AccountMongoRepository } from "@src/infra/db/mongodb/account/account-mongo-repository";
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { Collection } from "mongodb";
@@ -25,11 +25,7 @@ describe("Account Mongo Repository", () => {
   describe("add", () => {
     it("should return an account on add success", async () => {
       const sut = createSut();
-      const input: AddAccountModel = {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-      };
+      const input = mockAddAccountModel();
 
       const account = await sut.add(input);
 
@@ -42,11 +38,7 @@ describe("Account Mongo Repository", () => {
 
   describe("findByEmail", () => {
     it("should return an account on findByEmail success", async () => {
-      await accountCollection.insertOne({
-        email: "any_email@mail.com",
-        name: "any_name",
-        password: "any_password",
-      });
+      await accountCollection.insertOne(mockAddAccountModel());
       const sut = createSut();
 
       const account = await sut.findByEmail("any_email@mail.com");
@@ -69,11 +61,7 @@ describe("Account Mongo Repository", () => {
   describe("updateAccessToken", () => {
     it("should update the account accessToken on updateAccessToken success", async () => {
       const sut = createSut();
-      const res = await accountCollection.insertOne({
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-      });
+      const res = await accountCollection.insertOne(mockAddAccountModel());
       const fakeAccount = await accountCollection.findOne({ _id: res.insertedId });
       expect(fakeAccount?.accessToken).toBeUndefined();
 

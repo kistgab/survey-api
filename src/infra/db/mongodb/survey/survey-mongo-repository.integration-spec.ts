@@ -1,3 +1,4 @@
+import { mockAddSurveyModel } from "@src/domain/test/mock-survey";
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { SurveyMongoRepository } from "@src/infra/db/mongodb/survey/survey-mongo-repository";
 import * as Mockdate from "mockdate";
@@ -27,12 +28,10 @@ describe("Survey Mongo Repository", () => {
   describe("add", () => {
     it("should add a survey on success", async () => {
       const sut = createSut();
+      const surveyToAdd = mockAddSurveyModel();
+      surveyToAdd.answers.push({ answer: "any_answer" });
 
-      await sut.add({
-        answers: [{ answer: "any_answer", image: "any_image" }, { answer: "any_answer" }],
-        question: "any_question",
-        date: new Date(),
-      });
+      await sut.add(surveyToAdd);
 
       const survey = await surveyCollection.findOne({ question: "any_question" });
       expect(survey?._id).toBeDefined();
@@ -82,12 +81,8 @@ describe("Survey Mongo Repository", () => {
 
   describe("findById", () => {
     it("should load survey by id on success", async () => {
-      const survey1 = {
-        answers: [{ answer: "any_answer", image: "any_image" }],
-        question: "any_question",
-        date: new Date(),
-      };
-      const insertResult = await surveyCollection.insertOne({ ...survey1 });
+      const surveyToAdd = mockAddSurveyModel();
+      const insertResult = await surveyCollection.insertOne({ ...surveyToAdd });
       const sut = createSut();
 
       const survey = await sut.findById(insertResult.insertedId.toString());
@@ -95,7 +90,7 @@ describe("Survey Mongo Repository", () => {
       const { id, ...surveyWithoutId } = survey!;
 
       expect(id).toBeDefined();
-      expect(surveyWithoutId).toEqual(survey1);
+      expect(surveyWithoutId).toEqual(surveyToAdd);
     });
 
     it("should return null when there is no survey with the specified id", async () => {
