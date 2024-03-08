@@ -1,30 +1,12 @@
-import { AccountModel } from "@src/data/models/account-model";
 import FindAccountByToken from "@src/domain/usecases/account/find-account-by-token";
 import AccessDeniedError from "@src/presentation/errors/access-denied-error";
 import { forbidden, internalServerError, ok } from "@src/presentation/helpers/http/http-helper";
 import { AuthMiddleware } from "@src/presentation/middlewares/auth/auth-middleware";
 import { HttpRequest } from "@src/presentation/protocols/http";
+import { mockFindAccountByToken } from "@src/presentation/test/mock-authentication";
 
 function createFakeRequest(): HttpRequest<unknown> {
   return { headers: { "x-access-token": "any_token" } };
-}
-
-function createFakeAccount(): AccountModel {
-  return {
-    id: "any_id",
-    email: "any_email@mail.com",
-    password: "hashed_password",
-    name: "any_name",
-  };
-}
-
-function createFindAccountByTokenStub(): FindAccountByToken {
-  class FindAccountByTokenStub implements FindAccountByToken {
-    async findByToken(): Promise<AccountModel | null> {
-      return Promise.resolve(createFakeAccount());
-    }
-  }
-  return new FindAccountByTokenStub();
 }
 
 type SutTypes = {
@@ -33,7 +15,7 @@ type SutTypes = {
 };
 
 function createSut(role?: string): SutTypes {
-  const findAccountByTokenStub = createFindAccountByTokenStub();
+  const findAccountByTokenStub = mockFindAccountByToken();
   const sut = new AuthMiddleware(findAccountByTokenStub, role);
   return {
     sut,

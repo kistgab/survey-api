@@ -1,16 +1,8 @@
-import { AccountModel } from "@src/data/models/account-model";
 import Decrypter from "@src/data/protocols/cryptography/decrypter";
 import FindAccountByTokenRepository from "@src/data/protocols/db/account/find-account-by-token-repository";
+import { mockFindAccountByRepository } from "@src/data/test/mock-db-account";
 import DbFindAccountByToken from "@src/data/usecases/account/find-account-by-token/db-find-account-by-token";
-
-function createFakeAccount(): AccountModel {
-  return {
-    id: "any_id",
-    email: "any_email@mail.com",
-    password: "hashed_password",
-    name: "any_name",
-  };
-}
+import { mockAccountModel } from "@src/domain/test/mock-account";
 
 function createDecrypter(): Decrypter {
   class DecrypterStub implements Decrypter {
@@ -21,15 +13,6 @@ function createDecrypter(): Decrypter {
   return new DecrypterStub();
 }
 
-function createFindAccountByRepositoryStub(): FindAccountByTokenRepository {
-  class FindAccountByRepositoryStub implements FindAccountByTokenRepository {
-    async findByToken(): Promise<AccountModel | null> {
-      return Promise.resolve(createFakeAccount());
-    }
-  }
-  return new FindAccountByRepositoryStub();
-}
-
 type SutTypes = {
   sut: DbFindAccountByToken;
   decrypterStub: Decrypter;
@@ -38,7 +21,7 @@ type SutTypes = {
 
 function createSut(): SutTypes {
   const decrypterStub = createDecrypter();
-  const findAccountByRepositoryStub = createFindAccountByRepositoryStub();
+  const findAccountByRepositoryStub = mockFindAccountByRepository();
   const sut = new DbFindAccountByToken(decrypterStub, findAccountByRepositoryStub);
   return {
     sut,
@@ -112,6 +95,6 @@ describe("DbFindAccountByToken UseCase", () => {
 
     const account = await sut.findByToken("any_token");
 
-    expect(account).toEqual(createFakeAccount());
+    expect(account).toEqual(mockAccountModel());
   });
 });

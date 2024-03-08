@@ -11,6 +11,8 @@ import {
 } from "@src/presentation/helpers/http/http-helper";
 import { HttpRequest } from "@src/presentation/protocols/http";
 import Validation from "@src/presentation/protocols/validation";
+import { mockAddSurvey } from "@src/presentation/test/mock-survey";
+import { mockValidation } from "@src/validation/test/mock-validation";
 
 function createFakeRequest(): HttpRequest<RequestAddSurveyBody> {
   return {
@@ -26,24 +28,6 @@ function createFakeRequest(): HttpRequest<RequestAddSurveyBody> {
   };
 }
 
-function createValidationStub(): Validation {
-  class ValidationStub implements Validation {
-    validate(): Error | undefined {
-      return;
-    }
-  }
-  return new ValidationStub();
-}
-
-function createAddSurveyStub(): AddSurvey {
-  class AddSurveyStub implements AddSurvey {
-    async add(): Promise<void> {
-      return Promise.resolve();
-    }
-  }
-  return new AddSurveyStub();
-}
-
 type SutTypes = {
   sut: AddSurveyController;
   validationStub: Validation;
@@ -51,8 +35,8 @@ type SutTypes = {
 };
 
 function createSut(): SutTypes {
-  const addSurveyStub = createAddSurveyStub();
-  const validationStub = createValidationStub();
+  const addSurveyStub = mockAddSurvey();
+  const validationStub = mockValidation();
   const sut = new AddSurveyController(validationStub, addSurveyStub);
   return {
     sut,
