@@ -28,6 +28,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.6",
     "@types/supertest": "^6.0.2",
+    "@types/swagger-ui-express": "^4.1.6",
     "@types/validator": "^13.11.8",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "coveralls": "^3.1.1",
@@ -62,6 +63,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
     "nodemon": "^3.0.3",
+    "swagger-ui-express": "^5.0.0",
     "tscpaths": "^0.0.9",
     "validator": "^13.11.0"
   }
