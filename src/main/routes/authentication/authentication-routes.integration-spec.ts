@@ -1,10 +1,12 @@
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
-import app from "@src/main/config/app";
+import { setupApp } from "@src/main/config/app";
 import { hash } from "bcrypt";
+import { Express } from "express";
 import { Collection } from "mongodb";
 import request from "supertest";
 
 describe("Authentication routes", () => {
+  let app: Express;
   let accountCollection: Collection;
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);
@@ -15,6 +17,7 @@ describe("Authentication routes", () => {
   });
 
   beforeEach(async () => {
+    app = setupApp();
     accountCollection = MongoHelper.getCollection("accounts");
     await accountCollection.deleteMany({});
   });

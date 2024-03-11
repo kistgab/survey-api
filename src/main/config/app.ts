@@ -1,10 +1,13 @@
 import setupMiddlewares from "@src/main/config/middlewares";
 import setupRoutes from "@src/main/config/routes";
 import * as dotenv from "dotenv";
-import express from "express";
+import express, { Express } from "express";
 
-dotenv.config();
-const app = express();
-setupMiddlewares(app);
-setupRoutes(app);
-export default app;
+export function setupApp(): Express {
+  dotenv.config();
+  const app = express();
+  // setupSwagger(app);
+  setupMiddlewares(app);
+  setupRoutes(app);
+  return app;
+}

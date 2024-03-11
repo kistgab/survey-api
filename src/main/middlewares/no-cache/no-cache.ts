@@ -1,0 +1,8 @@
+import { NextFunction, Request, Response } from "express";
+
+export function noCache(req: Request, res: Response, next: NextFunction): void {
+  res.set("cache-control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.set("expires", "0");
+  res.set("surrogate-control", "no-store");
+  next();
+}

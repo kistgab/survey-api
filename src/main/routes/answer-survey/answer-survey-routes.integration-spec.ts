@@ -1,12 +1,14 @@
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
-import app from "@src/main/config/app";
+import { setupApp } from "@src/main/config/app";
 import { RequestAnswerSurvey } from "@src/presentation/controllers/survey-answer/answer-survey-controller";
+import { Express } from "express";
 import * as jwt from "jsonwebtoken";
 import { Collection } from "mongodb";
 import request from "supertest";
 
 let surveyCollection: Collection;
 let accountCollection: Collection;
+let app: Express;
 
 async function createAccessToken(): Promise<string> {
   const user = await accountCollection.insertOne({
@@ -30,6 +32,7 @@ describe("AnswerSurvey routes", () => {
   });
 
   beforeEach(async () => {
+    app = setupApp();
     surveyCollection = MongoHelper.getCollection("surveys");
     accountCollection = MongoHelper.getCollection("accounts");
     await surveyCollection.deleteMany({});

@@ -1,8 +1,9 @@
-import app from "@src/main/config/app";
+import { setupApp } from "@src/main/config/app";
 import request from "supertest";
 
 describe("BodyParser Middleware", () => {
   it("should parse body as json", async () => {
+    const app = setupApp();
     app.post("/test_body_parser", (req, res) => {
       res.send(req.body);
     });
