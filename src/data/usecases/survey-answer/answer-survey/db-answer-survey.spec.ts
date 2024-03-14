@@ -1,7 +1,7 @@
 import { SaveSurveyAnswerRepository } from "@src/data/protocols/db/survey/save-survey-answer-repository";
 import { mockSaveSurveyAnswerRepository } from "@src/data/test/mock-db-survey";
 import { DbAnswerSurvey } from "@src/data/usecases/survey-answer/answer-survey/db-answer-survey";
-import { mockInputAnswerSurveyDto, mockSurveyAnswerModel } from "@src/domain/test/mock-survey";
+import { mockInputAnswerSurveyDto, mockSurveyResultModel } from "@src/domain/test/mock-survey";
 import * as Mockdate from "mockdate";
 
 type SutTypes = {
@@ -53,6 +53,6 @@ describe("DbAnswerSurvey UseCase", () => {
 
     const result = await sut.answer(mockInputAnswerSurveyDto());
 
-    expect(result).toEqual(mockSurveyAnswerModel());
+    expect(result).toEqual(mockSurveyResultModel());
   });
 });

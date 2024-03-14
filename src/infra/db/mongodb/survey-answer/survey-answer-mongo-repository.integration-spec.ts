@@ -3,7 +3,7 @@ import { SurveyModel } from "@src/data/models/survey-model";
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { SurveyAnswerMongoRepository } from "@src/infra/db/mongodb/survey-answer/survey-answer-mongo-repository";
 import * as Mockdate from "mockdate";
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 
 describe("Survey Answer Mongo Repository", () => {
   let surveyCollection: Collection;
@@ -66,20 +66,21 @@ describe("Survey Answer Mongo Repository", () => {
       const survey = await createSurvey();
       const account = await createAccount();
 
-      const surveyAnswer = await sut.save({
+      const surveyResult = await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[0].answer,
         date: new Date(),
       });
 
-      const { id, ...surveyAnswerWithoutId } = surveyAnswer;
-      expect(id).toBeDefined();
-      expect(surveyAnswerWithoutId).toEqual({
-        surveyId: survey.id,
-        accountId: account.id,
+      expect(surveyResult.surveyId).toBe(survey.id);
+      expect(surveyResult.date).toEqual(new Date());
+      expect(surveyResult.question).toBe(survey.question);
+      expect(surveyResult.answers[0]).toEqual({
         answer: survey.answers[0].answer,
-        date: new Date(),
+        image: survey.answers[0].image,
+        count: 1,
+        percent: 100,
       });
     });
 
@@ -87,27 +88,26 @@ describe("Survey Answer Mongo Repository", () => {
       const sut = createSut();
       const survey = await createSurvey();
       const account = await createAccount();
-      const res = await surveyAnswerCollection.insertOne({
-        surveyId: survey.id,
-        accountId: account.id,
+      await surveyAnswerCollection.insertOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
         answer: survey.answers[0].answer,
         date: new Date(),
       });
 
-      const surveyAnswer = await sut.save({
+      const surveyResult = await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[1].answer,
         date: new Date(),
       });
 
-      const { id, ...surveyAnswerWithoutId } = surveyAnswer;
-      expect(res.insertedId.toString()).toEqual(id);
-      expect(surveyAnswerWithoutId).toEqual({
-        surveyId: survey.id,
-        accountId: account.id,
+      expect(surveyResult.surveyId).toBe(survey.id);
+      expect(surveyResult.answers[0]).toEqual({
         answer: survey.answers[1].answer,
-        date: new Date(),
+        image: survey.answers[1].image,
+        count: 1,
+        percent: 100,
       });
     });
   });
