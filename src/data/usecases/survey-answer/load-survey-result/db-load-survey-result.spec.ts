@@ -1,10 +1,10 @@
 import { LoadSurveyResultRepository } from "@src/data/protocols/db/survey-answer/load-survey-result-repository";
 import { mockLoadSurveyResultRepository } from "@src/data/test/mock-db-survey-result";
 import { DbLoadSurveyResult } from "@src/data/usecases/survey-answer/load-survey-result/db-load-survey-result";
-import { LoadSurveyResult } from "@src/domain/usecases/survey-answer/load-survey-result";
+import { mockSurveyResultModel } from "@src/domain/test/mock-survey";
 
 type SutTypes = {
-  sut: LoadSurveyResult;
+  sut: DbLoadSurveyResult;
   loadSurveyResultRepositoryStub: LoadSurveyResultRepository;
 };
 
@@ -34,5 +34,13 @@ describe("DbLoadSurveyResult UseCase", () => {
       .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
 
     await expect(sut.load("any_id")).rejects.toThrow(new Error("Repository error"));
+  });
+
+  it("should return a SurveyResultModel on success", async () => {
+    const { sut } = createSut();
+
+    const result = await sut.load("any_id");
+
+    expect(result).toEqual(mockSurveyResultModel());
   });
 });

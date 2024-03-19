@@ -6,8 +6,7 @@ export class DbLoadSurveyResult implements LoadSurveyResult {
   constructor(private readonly loadSurveyResultRepository: LoadSurveyResultRepository) {}
 
   async load(surveyId: string): Promise<SurveyResultModel> {
-    await this.loadSurveyResultRepository.loadBySurveyId(surveyId);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return await Promise.resolve(null!);
+    const surveyResult = await this.loadSurveyResultRepository.loadBySurveyId(surveyId);
+    return surveyResult;
   }
 }
