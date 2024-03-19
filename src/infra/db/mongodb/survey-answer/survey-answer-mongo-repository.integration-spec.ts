@@ -36,6 +36,7 @@ describe("Survey Answer Mongo Repository", () => {
       answers: [
         { answer: "any_answer", image: "any_image" },
         { answer: "any_other_answer", image: "any_other_image" },
+        { answer: "third_answer", image: "third_image" },
       ],
       question: "any_question",
       date: new Date(),
@@ -88,6 +89,12 @@ describe("Survey Answer Mongo Repository", () => {
         image: survey.answers[1].image,
         percent: 0,
       });
+      expect(surveyResult.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
+        answer: survey.answers[2].answer,
+        count: 0,
+        image: survey.answers[2].image,
+        percent: 0,
+      });
     });
 
     it("should update a survey answer if it's not new", async () => {
@@ -119,6 +126,71 @@ describe("Survey Answer Mongo Repository", () => {
         answer: survey.answers[0].answer,
         image: survey.answers[0].image,
         count: 0,
+        percent: 0,
+      });
+      expect(surveyResult.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
+        answer: survey.answers[2].answer,
+        count: 0,
+        image: survey.answers[2].image,
+        percent: 0,
+      });
+    });
+  });
+
+  describe("loadBySurveyId", () => {
+    it("should load survey result", async () => {
+      const sut = createSut();
+      const survey = await createSurvey();
+      const account = await createAccount();
+
+      await surveyAnswerCollection.insertMany([
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[0].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[0].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+      ]);
+
+      const surveyResult = await sut.loadBySurveyId(survey.id);
+
+      expect(surveyResult?.surveyId).toBe(survey.id);
+      expect(surveyResult?.date).toEqual(new Date());
+      expect(surveyResult?.question).toBe(survey.question);
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
+        answer: survey.answers[0].answer,
+        image: survey.answers[0].image,
+        count: 2,
+        percent: 50,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
+        answer: survey.answers[1].answer,
+        count: 2,
+        image: survey.answers[1].image,
+        percent: 50,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
+        answer: survey.answers[2].answer,
+        count: 0,
+        image: survey.answers[2].image,
         percent: 0,
       });
     });
