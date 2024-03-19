@@ -53,6 +53,27 @@ describe("DbAnswerSurvey UseCase", () => {
     );
   });
 
+  it("should call LoadSurveyResultRepository with correct values", async () => {
+    const { sut, loadSurveyResultRepositoryStub } = createSut();
+    const loadBySurveyIdSpy = jest.spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId");
+    const input = mockInputAnswerSurveyDto();
+
+    await sut.answer(input);
+
+    expect(loadBySurveyIdSpy).toHaveBeenCalledWith(input.surveyId);
+  });
+
+  it("should throw when LoadSurveyResultRepository throws", async () => {
+    const { sut, loadSurveyResultRepositoryStub } = createSut();
+    jest
+      .spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId")
+      .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
+
+    await expect(sut.answer(mockInputAnswerSurveyDto())).rejects.toThrow(
+      new Error("Repository error"),
+    );
+  });
+
   it("should return a survey answer on success", async () => {
     const { sut } = createSut();
 
