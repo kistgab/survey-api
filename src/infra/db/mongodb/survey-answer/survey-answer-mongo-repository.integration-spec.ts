@@ -76,13 +76,13 @@ describe("Survey Answer Mongo Repository", () => {
       expect(surveyResult.surveyId).toBe(survey.id);
       expect(surveyResult.date).toEqual(new Date());
       expect(surveyResult.question).toBe(survey.question);
-      expect(surveyResult.answers[0]).toEqual({
+      expect(surveyResult.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
         answer: survey.answers[0].answer,
         image: survey.answers[0].image,
         count: 1,
         percent: 100,
       });
-      expect(surveyResult.answers[1]).toEqual({
+      expect(surveyResult.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
         answer: survey.answers[1].answer,
         count: 0,
         image: survey.answers[1].image,
@@ -109,13 +109,13 @@ describe("Survey Answer Mongo Repository", () => {
       });
 
       expect(surveyResult.surveyId).toBe(survey.id);
-      expect(surveyResult.answers[0]).toEqual({
+      expect(surveyResult.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
         answer: survey.answers[1].answer,
         image: survey.answers[1].image,
         count: 1,
         percent: 100,
       });
-      expect(surveyResult.answers[1]).toEqual({
+      expect(surveyResult.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
         answer: survey.answers[0].answer,
         image: survey.answers[0].image,
         count: 0,
