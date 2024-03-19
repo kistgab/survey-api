@@ -5,7 +5,10 @@ import { SurveyAnswerMongoRepository } from "@src/infra/db/mongodb/survey-answer
 export default abstract class DbAnswerSurveyFactory {
   static create(): AnswerSurvey {
     const surveyAnswerMongoRepository = new SurveyAnswerMongoRepository();
-    const dbAnswerSurvey = new DbAnswerSurvey(surveyAnswerMongoRepository);
+    const dbAnswerSurvey = new DbAnswerSurvey(
+      surveyAnswerMongoRepository,
+      surveyAnswerMongoRepository,
+    );
     return dbAnswerSurvey;
   }
 }

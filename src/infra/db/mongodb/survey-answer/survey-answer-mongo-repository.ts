@@ -9,7 +9,7 @@ import { QueryBuilder } from "./../helpers/query-builder";
 export class SurveyAnswerMongoRepository
   implements SaveSurveyAnswerRepository, LoadSurveyResultRepository
 {
-  async save(data: SaveSurveyAnswerModel): Promise<SurveyResultModel> {
+  async save(data: SaveSurveyAnswerModel): Promise<void> {
     const surveyAnswerCollection = MongoHelper.getCollection("surveyAnswers");
     await surveyAnswerCollection.findOneAndUpdate(
       { surveyId: new ObjectId(data.surveyId), accountId: new ObjectId(data.accountId) },
@@ -21,15 +21,8 @@ export class SurveyAnswerMongoRepository
       },
       { upsert: true },
     );
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const surveyResult = (await this.loadBySurveyId(data.surveyId))!;
-    return {
-      answers: surveyResult.answers,
-      date: surveyResult.date,
-      question: surveyResult.question,
-      surveyId: surveyResult.surveyId.toString(),
-    };
   }
+
   async loadBySurveyId(surveyId: string): Promise<SurveyResultModel | null> {
     const surveyAnswerCollection = MongoHelper.getCollection("surveyAnswers");
     const query = new QueryBuilder()

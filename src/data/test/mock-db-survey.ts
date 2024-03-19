@@ -1,14 +1,9 @@
 import { SurveyModel } from "@src/data/models/survey-model";
-import { SurveyResultModel } from "@src/data/models/survey-result-model";
 import AddSurveyRepository from "@src/data/protocols/db/survey/add-survey-repository";
 import { FindAllSurveysRepository } from "@src/data/protocols/db/survey/find-all-surveys-repository";
 import { FindSurveyByIdRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
 import { SaveSurveyAnswerRepository } from "@src/data/protocols/db/survey/save-survey-answer-repository";
-import {
-  mockSurveyModel,
-  mockSurveyModelList,
-  mockSurveyResultModel,
-} from "@src/domain/test/mock-survey";
+import { mockSurveyModel, mockSurveyModelList } from "@src/domain/test/mock-survey";
 
 export function mockSurveyRepository(): AddSurveyRepository {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
@@ -39,8 +34,8 @@ export function mockFindSurveyByIdRepository(): FindSurveyByIdRepository {
 
 export function mockSaveSurveyAnswerRepository(): SaveSurveyAnswerRepository {
   class SaveSurveyRepositoryStub implements SaveSurveyAnswerRepository {
-    async save(): Promise<SurveyResultModel> {
-      return Promise.resolve(mockSurveyResultModel());
+    async save(): Promise<void> {
+      return Promise.resolve();
     }
   }
   return new SaveSurveyRepositoryStub();

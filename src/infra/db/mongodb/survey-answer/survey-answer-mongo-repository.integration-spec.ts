@@ -67,34 +67,18 @@ describe("Survey Answer Mongo Repository", () => {
       const survey = await createSurvey();
       const account = await createAccount();
 
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[0].answer,
         date: new Date(),
       });
 
-      expect(surveyResult.surveyId).toBe(survey.id);
-      expect(surveyResult.date).toEqual(new Date());
-      expect(surveyResult.question).toBe(survey.question);
-      expect(surveyResult.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
-        answer: survey.answers[0].answer,
-        image: survey.answers[0].image,
-        count: 1,
-        percent: 100,
+      const surveyResult = await surveyAnswerCollection.findOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
       });
-      expect(surveyResult.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
-        answer: survey.answers[1].answer,
-        count: 0,
-        image: survey.answers[1].image,
-        percent: 0,
-      });
-      expect(surveyResult.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
-        answer: survey.answers[2].answer,
-        count: 0,
-        image: survey.answers[2].image,
-        percent: 0,
-      });
+      expect(surveyResult).toBeTruthy();
     });
 
     it("should update a survey answer if it's not new", async () => {
@@ -108,32 +92,20 @@ describe("Survey Answer Mongo Repository", () => {
         date: new Date(),
       });
 
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[1].answer,
         date: new Date(),
       });
 
-      expect(surveyResult.surveyId).toBe(survey.id);
-      expect(surveyResult.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
-        answer: survey.answers[1].answer,
-        image: survey.answers[1].image,
-        count: 1,
-        percent: 100,
-      });
-      expect(surveyResult.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
-        answer: survey.answers[0].answer,
-        image: survey.answers[0].image,
-        count: 0,
-        percent: 0,
-      });
-      expect(surveyResult.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
-        answer: survey.answers[2].answer,
-        count: 0,
-        image: survey.answers[2].image,
-        percent: 0,
-      });
+      const surveyResult = await surveyAnswerCollection
+        .find({
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+        })
+        .toArray();
+      expect(surveyResult.length).toBe(1);
     });
   });
 
