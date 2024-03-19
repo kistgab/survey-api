@@ -82,6 +82,12 @@ describe("Survey Answer Mongo Repository", () => {
         count: 1,
         percent: 100,
       });
+      expect(surveyResult.answers[1]).toEqual({
+        answer: survey.answers[1].answer,
+        count: 0,
+        image: survey.answers[1].image,
+        percent: 0,
+      });
     });
 
     it("should update a survey answer if it's not new", async () => {
@@ -108,6 +114,12 @@ describe("Survey Answer Mongo Repository", () => {
         image: survey.answers[1].image,
         count: 1,
         percent: 100,
+      });
+      expect(surveyResult.answers[1]).toEqual({
+        answer: survey.answers[0].answer,
+        image: survey.answers[0].image,
+        count: 0,
+        percent: 0,
       });
     });
   });
