@@ -1,3 +1,4 @@
+import { SurveyResultModel } from "@src/data/models/survey-result-model";
 import { LoadSurveyResultRepository } from "@src/data/protocols/db/survey-answer/load-survey-result-repository";
 import { FindSurveyByIdRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
 import { mockFindSurveyByIdRepository } from "@src/data/test/mock-db-survey";
@@ -59,18 +60,29 @@ describe("DbLoadSurveyResult UseCase", () => {
   });
 
   it("should call FindSurveyByIdRepository if LoadSurveyResultRepository returns null", async () => {
-    const {
-      sut,
-      loadSurveyResultRepositoryStub,
-      findSurveyByIdRepositoryStub: loadSurveyByIdRepositoryStub,
-    } = createSut();
+    const { sut, loadSurveyResultRepositoryStub, findSurveyByIdRepositoryStub } = createSut();
     jest
       .spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId")
       .mockReturnValueOnce(Promise.resolve(null));
-    const findById = jest.spyOn(loadSurveyByIdRepositoryStub, "findById");
+    const findById = jest.spyOn(findSurveyByIdRepositoryStub, "findById");
 
     await sut.load("any_id");
 
     expect(findById).toHaveBeenCalledWith("any_id");
+  });
+
+  it("should return a SurveyResultModel that every answers have count and percent as 0", async () => {
+    const { sut, loadSurveyResultRepositoryStub } = createSut();
+    jest
+      .spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId")
+      .mockReturnValueOnce(Promise.resolve(null));
+
+    const result = await sut.load("any_id");
+
+    const expectedResult: SurveyResultModel = {
+      ...mockSurveyResultModel(),
+      answers: [{ ...mockSurveyResultModel().answers[0], count: 0, percent: 0 }],
+    };
+    expect(result).toEqual(expectedResult);
   });
 });
