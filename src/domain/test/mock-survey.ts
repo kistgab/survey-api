@@ -83,8 +83,8 @@ export function mockSurveyResultModel(): SurveyResultModel {
         image: "another_image",
       },
     ],
-    question: "valid_question",
-    surveyId: "valid_survey_id",
+    question: "any_question",
+    surveyId: "any_id",
     date: new Date(),
   };
 }

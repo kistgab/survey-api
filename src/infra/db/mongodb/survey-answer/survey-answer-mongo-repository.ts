@@ -182,11 +182,14 @@ export class SurveyAnswerMongoRepository
       })
       .build();
     const surveyResult = await surveyAnswerCollection.aggregate(query).toArray();
+    if (!surveyResult.length) {
+      return null;
+    }
     const { surveyId: resultId, ...surveyResultWithoutObjectId } = surveyResult[0];
     const surveyResultModel = {
       surveyId: (resultId as ObjectId).toString(),
       ...surveyResultWithoutObjectId,
     } as SurveyResultModel;
-    return surveyResultModel || null;
+    return surveyResultModel;
   }
 }
