@@ -1,6 +1,10 @@
 import { SurveyResultModel } from "@src/data/models/survey-result-model";
-import { ListSurveyById } from "@src/domain/usecases/survey/list-survey-by-id";
-import { unprocessableContent } from "@src/presentation/helpers/http/http-helper";
+import { LoadSurveyResult } from "@src/domain/usecases/survey-answer/load-survey-result";
+import {
+  internalServerError,
+  ok,
+  unprocessableContent,
+} from "@src/presentation/helpers/http/http-helper";
 import Controller from "@src/presentation/protocols/controller";
 import { HttpRequest, HttpResponse } from "@src/presentation/protocols/http";
 
@@ -9,17 +13,22 @@ type Params = {
 };
 
 export class LoadSurveyResultController implements Controller<void, SurveyResultModel> {
-  constructor(private readonly loadSurveyById: ListSurveyById) {}
+  constructor(private readonly loadSurveyResult: LoadSurveyResult) {}
 
   async handle(
     httpRequest: HttpRequest<void, Params>,
   ): Promise<HttpResponse<SurveyResultModel | Error>> {
-    await Promise.resolve(httpRequest);
-    if (!httpRequest.params?.surveyId) {
-      return unprocessableContent(new Error("surveyId is required"));
+    try {
+      if (!httpRequest.params?.surveyId) {
+        return unprocessableContent(new Error("surveyId is required"));
+      }
+      const result = await this.loadSurveyResult.load(httpRequest.params.surveyId);
+      if (!result) {
+        return unprocessableContent(new Error("surveyId is invalid"));
+      }
+      return ok(result);
+    } catch (error) {
+      return internalServerError(error as Error);
     }
-    await this.loadSurveyById.list(httpRequest.params.surveyId);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return null!;
   }
 }
