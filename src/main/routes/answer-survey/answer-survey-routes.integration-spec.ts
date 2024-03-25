@@ -68,4 +68,23 @@ describe("AnswerSurvey routes", () => {
         .expect(200);
     });
   });
+
+  describe("GET /surveys/:surveyId/results", () => {
+    it("should return 403 on loading survey without accessToken", async () => {
+      await request(app).get("/api/surveys/any_id/results").expect(403);
+    });
+
+    it("should return 200 on load survey results with success", async () => {
+      const res = await surveyCollection.insertOne({
+        question: "any_question",
+        answers: [{ image: "any_image", answer: "any_answer" }, { answer: "other_answer" }],
+        date: new Date(),
+      });
+      const accessToken = await createAccessToken();
+      await request(app)
+        .get(`/api/surveys/${res.insertedId.toString()}/results`)
+        .set("x-access-token", accessToken)
+        .expect(200);
+    });
+  });
 });

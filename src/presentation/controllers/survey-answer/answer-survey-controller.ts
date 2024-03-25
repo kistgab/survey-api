@@ -38,17 +38,19 @@ export class AnswerSurveyController
       if (!body) {
         return unprocessableContent(new MissingParamError("body"));
       }
-      const survey = await this.listSurveyById.list(params?.surveyId || "");
+      if (!params?.surveyId) {
+        return unprocessableContent(new MissingParamError("surveyId"));
+      }
+      const survey = await this.listSurveyById.list(params.surveyId);
       if (!survey) {
         return unprocessableContent(new Error("Survey not found"));
       }
       const surveyAnswers = survey.answers.map((answer) => answer.answer);
-      if (!surveyAnswers.includes(body?.answer || "")) {
+      if (!surveyAnswers.includes(body.answer)) {
         return unprocessableContent(new InvalidParamError("answer"));
       }
       const response = await this.answerSurvey.answer({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        surveyId: params!.surveyId,
+        surveyId: params.surveyId,
         answer: body.answer,
         date: new Date(),
         accountId: body.accountId,

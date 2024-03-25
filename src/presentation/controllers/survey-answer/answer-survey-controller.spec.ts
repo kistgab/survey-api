@@ -104,6 +104,23 @@ describe("AnswerSurvey Controller", () => {
     expect(response).toEqual(unprocessableContent(new InvalidParamError("answer")));
   });
 
+  it("should return 422 if no surveyId is provided", async () => {
+    const { sut } = createSut();
+
+    const response = await sut.handle({
+      // @ts-expect-error - ignoring for test
+      params: {},
+      body: {
+        answer: "invalid_answer",
+        date: new Date(),
+        accountId: "any_account_id",
+        surveyId: "any_survey_id",
+      },
+    });
+
+    expect(response).toEqual(unprocessableContent(new MissingParamError("surveyId")));
+  });
+
   it("should return 422 if no body was provided", async () => {
     const { sut } = createSut();
 

@@ -3,7 +3,7 @@ import { SurveyModel } from "@src/data/models/survey-model";
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
 import { SurveyAnswerMongoRepository } from "@src/infra/db/mongodb/survey-answer/survey-answer-mongo-repository";
 import * as Mockdate from "mockdate";
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 
 describe("Survey Answer Mongo Repository", () => {
   let surveyCollection: Collection;
@@ -36,6 +36,7 @@ describe("Survey Answer Mongo Repository", () => {
       answers: [
         { answer: "any_answer", image: "any_image" },
         { answer: "any_other_answer", image: "any_other_image" },
+        { answer: "third_answer", image: "third_image" },
       ],
       question: "any_question",
       date: new Date(),
@@ -66,48 +67,103 @@ describe("Survey Answer Mongo Repository", () => {
       const survey = await createSurvey();
       const account = await createAccount();
 
-      const surveyAnswer = await sut.save({
+      await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[0].answer,
         date: new Date(),
       });
 
-      const { id, ...surveyAnswerWithoutId } = surveyAnswer;
-      expect(id).toBeDefined();
-      expect(surveyAnswerWithoutId).toEqual({
-        surveyId: survey.id,
-        accountId: account.id,
-        answer: survey.answers[0].answer,
-        date: new Date(),
+      const surveyResult = await surveyAnswerCollection.findOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
       });
+      expect(surveyResult).toBeTruthy();
     });
 
     it("should update a survey answer if it's not new", async () => {
       const sut = createSut();
       const survey = await createSurvey();
       const account = await createAccount();
-      const res = await surveyAnswerCollection.insertOne({
-        surveyId: survey.id,
-        accountId: account.id,
+      await surveyAnswerCollection.insertOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
         answer: survey.answers[0].answer,
         date: new Date(),
       });
 
-      const surveyAnswer = await sut.save({
+      await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[1].answer,
         date: new Date(),
       });
 
-      const { id, ...surveyAnswerWithoutId } = surveyAnswer;
-      expect(res.insertedId.toString()).toEqual(id);
-      expect(surveyAnswerWithoutId).toEqual({
-        surveyId: survey.id,
-        accountId: account.id,
+      const surveyResult = await surveyAnswerCollection
+        .find({
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+        })
+        .toArray();
+      expect(surveyResult.length).toBe(1);
+    });
+  });
+
+  describe("loadBySurveyId", () => {
+    it("should load survey result", async () => {
+      const sut = createSut();
+      const survey = await createSurvey();
+      const account = await createAccount();
+
+      await surveyAnswerCollection.insertMany([
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[0].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[0].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+      ]);
+
+      const surveyResult = await sut.loadBySurveyId(survey.id);
+
+      expect(surveyResult?.surveyId).toBe(survey.id);
+      expect(surveyResult?.date).toEqual(new Date());
+      expect(surveyResult?.question).toBe(survey.question);
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
+        answer: survey.answers[0].answer,
+        image: survey.answers[0].image,
+        count: 2,
+        percent: 50,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
         answer: survey.answers[1].answer,
-        date: new Date(),
+        count: 2,
+        image: survey.answers[1].image,
+        percent: 50,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
+        answer: survey.answers[2].answer,
+        count: 0,
+        image: survey.answers[2].image,
+        percent: 0,
       });
     });
   });

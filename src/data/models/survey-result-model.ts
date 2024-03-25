@@ -1,11 +1,4 @@
-export type InputAnswerSurveyDto = {
-  surveyId: string;
-  accountId: string;
-  date: Date;
-  answer: string;
-};
-
-export type OutputAnswerSurveyDto = {
+export type SurveyResultModel = {
   surveyId: string;
   question: string;
   date: Date;

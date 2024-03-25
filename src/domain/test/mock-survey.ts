@@ -1,5 +1,5 @@
-import { SurveyAnswerModel } from "@src/data/models/save-survey-answer-model";
 import { AddSurveyModel, SurveyModel } from "@src/data/models/survey-model";
+import { SurveyResultModel } from "@src/data/models/survey-result-model";
 import { InputAddSurveyDto } from "@src/domain/dtos/add-survey-dto";
 import { InputAnswerSurveyDto, OutputAnswerSurveyDto } from "@src/domain/dtos/answer-survey-dto";
 
@@ -56,12 +56,24 @@ export function mockSurveyModelList(): SurveyModel[] {
   ];
 }
 
-export function mockSurveyAnswerModel(): SurveyAnswerModel {
+export function mockSurveyResultModel(): SurveyResultModel {
   return {
-    id: "valid_id",
-    accountId: "valid_account_id",
-    surveyId: "valid_survey_id",
-    answer: "valid_answer",
+    answers: [
+      {
+        answer: "any_answer",
+        count: 1,
+        percent: 100,
+        image: "any_image",
+      },
+      {
+        answer: "another_answer",
+        count: 0,
+        percent: 0,
+        image: "another_image",
+      },
+    ],
+    question: "any_question",
+    surveyId: "any_id",
     date: new Date(),
   };
 }
@@ -77,11 +89,23 @@ export function mockInputAnswerSurveyDto(): InputAnswerSurveyDto {
 
 export function mockOutputSurveyAnswerDto(): OutputAnswerSurveyDto {
   return {
-    id: "any_id",
-    surveyId: "any_survey_id",
-    accountId: "any_account_id",
+    answers: [
+      {
+        answer: "any_answer",
+        count: 1,
+        percent: 100,
+        image: "any_image",
+      },
+      {
+        answer: "another_answer",
+        count: 0,
+        percent: 0,
+        image: "another_image",
+      },
+    ],
+    question: "valid_question",
+    surveyId: "valid_survey_id",
     date: new Date(),
-    answer: "any_answer",
   };
 }
 
