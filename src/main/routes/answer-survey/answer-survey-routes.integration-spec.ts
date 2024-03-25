@@ -68,4 +68,13 @@ describe("AnswerSurvey routes", () => {
         .expect(200);
     });
   });
+
+  describe("GET /surveys/:surveyId/results", () => {
+    it("should return 403 on loading survey without accessToken", async () => {
+      const input = {
+        answer: "any_answer",
+      };
+      await request(app).get("/api/surveys/any_id/results").send(input).expect(403);
+    });
+  });
 });
