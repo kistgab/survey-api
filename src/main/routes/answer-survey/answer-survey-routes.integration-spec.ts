@@ -71,10 +71,20 @@ describe("AnswerSurvey routes", () => {
 
   describe("GET /surveys/:surveyId/results", () => {
     it("should return 403 on loading survey without accessToken", async () => {
-      const input = {
-        answer: "any_answer",
-      };
-      await request(app).get("/api/surveys/any_id/results").send(input).expect(403);
+      await request(app).get("/api/surveys/any_id/results").expect(403);
+    });
+
+    it("should return 200 on load survey results with success", async () => {
+      const res = await surveyCollection.insertOne({
+        question: "any_question",
+        answers: [{ image: "any_image", answer: "any_answer" }, { answer: "other_answer" }],
+        date: new Date(),
+      });
+      const accessToken = await createAccessToken();
+      await request(app)
+        .get(`/api/surveys/${res.insertedId.toString()}/results`)
+        .set("x-access-token", accessToken)
+        .expect(200);
     });
   });
 });
