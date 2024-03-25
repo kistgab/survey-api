@@ -7,6 +7,7 @@ import {
   unprocessableContent,
 } from "@src/presentation/helpers/http/http-helper";
 import { HttpRequest } from "@src/presentation/protocols/http";
+import * as Mockdate from "mockdate";
 
 function createRequest(): HttpRequest<void, { surveyId: string }> {
   return {
@@ -40,6 +41,14 @@ function createSut(): SutTypes {
 }
 
 describe("LoadSurveyResultController", () => {
+  beforeAll(() => {
+    Mockdate.set(new Date());
+  });
+
+  afterAll(() => {
+    Mockdate.reset();
+  });
+
   it("should return 422 when no surveyId was provided", async () => {
     const { sut } = createSut();
     const result = await sut.handle({});

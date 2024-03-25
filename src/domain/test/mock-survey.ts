@@ -1,4 +1,3 @@
-import { SurveyAnswerModel } from "@src/data/models/save-survey-answer-model";
 import { AddSurveyModel, SurveyModel } from "@src/data/models/survey-model";
 import { SurveyResultModel } from "@src/data/models/survey-result-model";
 import { InputAddSurveyDto } from "@src/domain/dtos/add-survey-dto";
@@ -55,16 +54,6 @@ export function mockSurveyModelList(): SurveyModel[] {
       id: "any_other_id",
     },
   ];
-}
-
-export function mockSurveyAnswerModel(): SurveyAnswerModel {
-  return {
-    id: "valid_id",
-    accountId: "valid_account_id",
-    surveyId: "valid_survey_id",
-    answer: "valid_answer",
-    date: new Date(),
-  };
 }
 
 export function mockSurveyResultModel(): SurveyResultModel {

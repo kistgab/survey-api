@@ -85,4 +85,16 @@ describe("DbLoadSurveyResult UseCase", () => {
     };
     expect(result).toEqual(expectedResult);
   });
+
+  it("should return null if there is no survey with the specified id", async () => {
+    const { sut, loadSurveyResultRepositoryStub, findSurveyByIdRepositoryStub } = createSut();
+    jest
+      .spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId")
+      .mockReturnValueOnce(Promise.resolve(null));
+    jest.spyOn(findSurveyByIdRepositoryStub, "findById").mockReturnValueOnce(Promise.resolve(null));
+
+    const result = await sut.load("any_non_existing_id");
+
+    expect(result).toBeNull();
+  });
 });
