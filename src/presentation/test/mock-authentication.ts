@@ -1,5 +1,6 @@
 import { AccountModel } from "@src/data/models/account-model";
 import { OutputAddAccountDto } from "@src/domain/dtos/add-account-dto";
+import { OutputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
 import { mockAccountModel } from "@src/domain/test/mock-account";
 import { AddAccount } from "@src/domain/usecases/account/add-account";
 import Authentication from "@src/domain/usecases/account/authentication";
@@ -28,8 +29,8 @@ export function mockRequestLoginBody(): HttpRequest<RequestLoginBody> {
 
 export function mockAuthentication(): Authentication {
   class AuthenticationStub implements Authentication {
-    async auth(): Promise<string | null> {
-      return Promise.resolve("any_token");
+    async auth(): Promise<OutputAuthenticationDto | null> {
+      return Promise.resolve({ accessToken: "any_token", name: "any_name" });
     }
   }
   return new AuthenticationStub();

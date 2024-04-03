@@ -1,5 +1,8 @@
-import { InputAuthenticationDto } from "@src/domain/dtos/authentication-dto";
+import {
+  InputAuthenticationDto,
+  OutputAuthenticationDto,
+} from "@src/domain/dtos/authentication-dto";
 
 export default interface Authentication {
-  auth(input: InputAuthenticationDto): Promise<string | null>;
+  auth(input: InputAuthenticationDto): Promise<OutputAuthenticationDto | null>;
 }

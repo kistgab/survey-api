@@ -21,6 +21,7 @@ export type RequestSignUpBody = {
 
 export type ResponseSignUpBody = {
   accessToken: string;
+  name: string;
 };
 
 export default class SignUpController
@@ -48,8 +49,9 @@ export default class SignUpController
       if (!account) {
         return conflict(new EmailAlreadyUsedError());
       }
-      const accessToken = await this.authentication.auth({ email, password });
-      return ok({ accessToken: String(accessToken) });
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const authResult = (await this.authentication.auth({ email, password }))!;
+      return ok({ accessToken: authResult.accessToken, name: authResult.name });
     } catch (error) {
       return internalServerError(error as Error);
     }

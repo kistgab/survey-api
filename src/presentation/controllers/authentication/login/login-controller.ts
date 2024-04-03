@@ -17,6 +17,7 @@ export type RequestLoginBody = {
 
 export type ResponseLoginBody = {
   accessToken: string;
+  name: string;
 };
 
 export default class LoginController
@@ -39,11 +40,11 @@ export default class LoginController
         return unprocessableContent(new MissingParamError("body"));
       }
       const { email, password } = httpRequest.body;
-      const accessToken = await this.authentication.auth({ email, password });
-      if (!accessToken) {
+      const authResult = await this.authentication.auth({ email, password });
+      if (!authResult) {
         return unauthorized();
       }
-      return ok({ accessToken });
+      return ok({ ...authResult });
     } catch (error) {
       return internalServerError(error as Error);
     }
