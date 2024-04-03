@@ -5,8 +5,8 @@ import { ListSurveys } from "@src/domain/usecases/survey/list-surveys";
 export class DbListSurveys implements ListSurveys {
   constructor(private readonly findAllSurveysRepository: FindAllSurveysRepository) {}
 
-  async list(): Promise<SurveyModel[]> {
-    const surveys = this.findAllSurveysRepository.findAll();
+  async list(accountId: string): Promise<SurveyModel[]> {
+    const surveys = this.findAllSurveysRepository.findAll(accountId);
     return surveys;
   }
 }
