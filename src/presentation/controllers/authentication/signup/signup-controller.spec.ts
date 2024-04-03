@@ -95,7 +95,7 @@ describe("SignUp Controller", () => {
 
     const httpResponse = await sut.handle(mockHttpRequestSignUpBody());
 
-    expect(httpResponse).toEqual(ok({ accessToken: "any_token" }));
+    expect(httpResponse).toEqual(ok({ accessToken: "any_token", name: "any_name" }));
   });
 
   it("Should call Validation with correct values", async () => {

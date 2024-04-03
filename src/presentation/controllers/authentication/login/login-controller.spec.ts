@@ -77,7 +77,7 @@ describe("Login Controller", () => {
 
     const result = await sut.handle(httpRequest);
 
-    expect(result).toEqual(ok({ accessToken: "any_token" }));
+    expect(result).toEqual(ok({ accessToken: "any_token", name: "any_name" }));
   });
 
   it("Should call Validation with correct values", async () => {

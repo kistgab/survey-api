@@ -122,9 +122,9 @@ describe("DbAuthentication UseCase", () => {
   it("should return null if HashComparer returns false", async () => {
     const { sut } = createSut();
 
-    const accessToken = await sut.auth(mockInputAuthenticationDto());
+    const result = await sut.auth(mockInputAuthenticationDto());
 
-    expect(accessToken).toBe("any_token");
+    expect(result).toEqual({ accessToken: "any_token", name: "any_name" });
   });
 
   it("should call UpdateAccessTokenRepository with correct values", async () => {
