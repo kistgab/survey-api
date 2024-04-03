@@ -25,6 +25,8 @@ describe("Survey Answer Mongo Repository", () => {
     surveyAnswerCollection = MongoHelper.getCollection("surveyAnswers");
     accountCollection = MongoHelper.getCollection("accounts");
     await surveyCollection.deleteMany({});
+    await surveyAnswerCollection.deleteMany({});
+    await accountCollection.deleteMany({});
   });
 
   function createSut(): SurveyAnswerMongoRepository {

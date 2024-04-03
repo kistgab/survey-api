@@ -3,6 +3,7 @@ import AddSurveyRepository from "@src/data/protocols/db/survey/add-survey-reposi
 import { FindAllSurveysRepository } from "@src/data/protocols/db/survey/find-all-surveys-repository";
 import { FindSurveyByIdRepository } from "@src/data/protocols/db/survey/find-by-id-surveys-repository";
 import { MongoHelper } from "@src/infra/db/mongodb/helpers/mongo-helper";
+import { QueryBuilder } from "@src/infra/db/mongodb/helpers/query-builder";
 import { ObjectId } from "mongodb";
 
 export class SurveyMongoRepository
@@ -13,11 +14,42 @@ export class SurveyMongoRepository
     await surveysCollection.insertOne(surveyData);
   }
 
-  async findAll(): Promise<SurveyModel[]> {
+  async findAll(accountId: string): Promise<SurveyModel[]> {
     const surveysCollection = MongoHelper.getCollection("surveys");
-    const surveys = await surveysCollection.find().toArray();
+    const query = new QueryBuilder()
+      .lookup({
+        from: "surveyAnswers",
+        foreignField: "surveyId",
+        localField: "_id",
+        as: "result",
+      })
+      .project({
+        _id: 1,
+        question: 1,
+        answers: 1,
+        date: 1,
+        didAnswer: {
+          $gte: [
+            {
+              $size: {
+                $filter: {
+                  input: "$result",
+                  as: "item",
+                  cond: {
+                    $eq: ["$$item.accountId", new ObjectId(accountId)],
+                  },
+                },
+              },
+            },
+            1,
+          ],
+        },
+      })
+      .build();
+    const surveys = await surveysCollection.aggregate(query).toArray();
     return surveys.map((survey) => {
       const { _id, ...surveyWithoutId } = survey;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       return { ...surveyWithoutId, id: _id.toString() } as SurveyModel;
     });
   }

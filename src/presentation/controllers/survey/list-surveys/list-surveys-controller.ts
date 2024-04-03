@@ -9,8 +9,8 @@ export default class ListSurveysController implements Controller<unknown, Survey
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse<SurveyModel[] | Error | null>> {
     try {
-      httpRequest;
-      const surveys = await this.listSurveys.list();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const surveys = await this.listSurveys.list(httpRequest.accountId!);
       if (surveys.length) {
         return ok(surveys);
       }
