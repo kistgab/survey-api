@@ -32,7 +32,7 @@ describe("DbListSurveys UseCase", () => {
     const { sut, findAllSurveysRepositoryStub } = createSut();
     const findAllSpy = jest.spyOn(findAllSurveysRepositoryStub, "findAll");
 
-    await sut.list();
+    await sut.list("any_account_id");
 
     expect(findAllSpy).toHaveBeenCalledTimes(1);
   });
@@ -43,13 +43,13 @@ describe("DbListSurveys UseCase", () => {
       .spyOn(findAllSurveysRepositoryStub, "findAll")
       .mockReturnValueOnce(Promise.reject(new Error("Repository error")));
 
-    await expect(sut.list()).rejects.toThrow("Repository error");
+    await expect(sut.list("any_account_id")).rejects.toThrow("Repository error");
   });
 
   it("should return a list of surveys on success", async () => {
     const { sut } = createSut();
 
-    const result = await sut.list();
+    const result = await sut.list("any_account_id");
 
     expect(result).toEqual(mockSurveyModelList());
   });
