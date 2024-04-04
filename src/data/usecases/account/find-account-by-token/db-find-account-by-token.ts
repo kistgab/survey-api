@@ -10,8 +10,13 @@ export default class DbFindAccountByToken implements FindAccountByToken {
   ) {}
 
   async findByToken(token: string, role?: string | undefined): Promise<AccountModel | null> {
-    const accessToken = await this.decrypter.decrypt(token);
-    if (!accessToken) {
+    let decryptedToken: string | null;
+    try {
+      decryptedToken = await this.decrypter.decrypt(token);
+    } catch (error) {
+      return null;
+    }
+    if (!decryptedToken) {
       return null;
     }
     const account = await this.findAccountByRepository.findByToken(token, role);

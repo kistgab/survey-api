@@ -49,13 +49,14 @@ describe("DbFindAccountByToken UseCase", () => {
     expect(account).toBeNull();
   });
 
-  it("should throw if Decrypter throws", async () => {
+  it("should return null if Decrypter throws", async () => {
     const { sut, decrypterStub } = createSut();
     jest
       .spyOn(decrypterStub, "decrypt")
       .mockReturnValueOnce(Promise.reject(new Error("Decrypt error")));
 
-    await expect(sut.findByToken("any_token")).rejects.toThrow(new Error("Decrypt error"));
+    const result = await sut.findByToken("any_token");
+    expect(result).toBeNull();
   });
 
   it("should call FindAccountByTokenRepository with correct values", async () => {
