@@ -13,7 +13,10 @@ export class DbAnswerSurvey implements AnswerSurvey {
   async answer(data: InputAnswerSurveyDto): Promise<SurveyResultModel> {
     await this.saveSurveyAnswerRepository.save(data);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const surveyResult = (await this.loadSurveyResultRepository.loadBySurveyId(data.surveyId))!;
+    const surveyResult = (await this.loadSurveyResultRepository.loadBySurveyId(
+      data.surveyId,
+      data.accountId,
+    ))!;
     return surveyResult;
   }
 }

@@ -19,10 +19,13 @@ export class LoadSurveyResultController implements Controller<void, SurveyResult
     httpRequest: HttpRequest<void, Params>,
   ): Promise<HttpResponse<SurveyResultModel | Error>> {
     try {
-      if (!httpRequest.params?.surveyId) {
+      const surveyId = httpRequest.params?.surveyId;
+      if (!surveyId) {
         return unprocessableContent(new Error("surveyId is required"));
       }
-      const result = await this.loadSurveyResult.load(httpRequest.params.surveyId);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const accountId = httpRequest.accountId!;
+      const result = await this.loadSurveyResult.load(surveyId, accountId);
       if (!result) {
         return unprocessableContent(new Error("surveyId is invalid"));
       }

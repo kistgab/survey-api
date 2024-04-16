@@ -60,7 +60,7 @@ describe("DbAnswerSurvey UseCase", () => {
 
     await sut.answer(input);
 
-    expect(loadBySurveyIdSpy).toHaveBeenCalledWith(input.surveyId);
+    expect(loadBySurveyIdSpy).toHaveBeenCalledWith(input.surveyId, input.accountId);
   });
 
   it("should throw when LoadSurveyResultRepository throws", async () => {

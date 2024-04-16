@@ -23,7 +23,7 @@ export class SurveyAnswerMongoRepository
     );
   }
 
-  async loadBySurveyId(surveyId: string): Promise<SurveyResultModel | null> {
+  async loadBySurveyId(surveyId: string, accountId: string): Promise<SurveyResultModel | null> {
     const surveyAnswerCollection = MongoHelper.getCollection("surveyAnswers");
     const query = new QueryBuilder()
       .match({ surveyId: new ObjectId(surveyId) })
@@ -59,6 +59,11 @@ export class SurveyAnswerMongoRepository
         },
         count: {
           $sum: 1,
+        },
+        currentAccountAnswer: {
+          $push: {
+            $cond: [{ $eq: ["$data.accountId", new ObjectId(accountId)] }, "$data.answer", null],
+          },
         },
       })
       .project({
@@ -98,6 +103,9 @@ export class SurveyAnswerMongoRepository
                       },
                       else: 0,
                     },
+                  },
+                  isCurrentAccountAnswer: {
+                    $eq: ["$$item.answer", { $arrayElemAt: ["$currentAccountAnswer", 0] }],
                   },
                 },
               ],
@@ -143,6 +151,7 @@ export class SurveyAnswerMongoRepository
           date: "$date",
           answer: "$answers.answer",
           image: "$answers.image",
+          isCurrentAccountAnswer: "$answers.isCurrentAccountAnswer",
         },
         count: {
           $sum: "$answers.count",
@@ -160,7 +169,8 @@ export class SurveyAnswerMongoRepository
           answer: "$_id.answer",
           image: "$_id.image",
           count: "$count",
-          percent: "$percent",
+          percent: { $round: ["$percent"] },
+          isCurrentAccountAnswer: "$_id.isCurrentAccountAnswer",
         },
       })
       .group({

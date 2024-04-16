@@ -11,6 +11,7 @@ import * as Mockdate from "mockdate";
 
 function createRequest(): HttpRequest<void, { surveyId: string }> {
   return {
+    accountId: "any_account_id",
     params: {
       surveyId: "any_id",
     },
@@ -56,13 +57,13 @@ describe("LoadSurveyResultController", () => {
     expect(result).toEqual(unprocessableContent(new Error("surveyId is required")));
   });
 
-  it("Should call LoadSurveyResult with correct value", async () => {
+  it("Should call LoadSurveyResult with correct values", async () => {
     const { sut, loadSurveyResultStub } = createSut();
     const loadSpy = jest.spyOn(loadSurveyResultStub, "load");
 
     await sut.handle(createRequest());
 
-    expect(loadSpy).toHaveBeenCalledWith("any_id");
+    expect(loadSpy).toHaveBeenCalledWith("any_id", "any_account_id");
   });
 
   it("Should return 500 if LoadSurveyResult throws", async () => {

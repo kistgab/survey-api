@@ -1,5 +1,5 @@
 import { SurveyResultModel } from "@src/data/models/survey-result-model";
 
 export interface LoadSurveyResultRepository {
-  loadBySurveyId(id: string): Promise<SurveyResultModel | null>;
+  loadBySurveyId(id: string, accountId: string): Promise<SurveyResultModel | null>;
 }

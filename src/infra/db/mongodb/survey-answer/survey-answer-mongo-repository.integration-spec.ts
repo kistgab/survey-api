@@ -116,6 +116,8 @@ describe("Survey Answer Mongo Repository", () => {
       const sut = createSut();
       const survey = await createSurvey();
       const account = await createAccount();
+      const account2 = await createAccount();
+      const account3 = await createAccount();
 
       await surveyAnswerCollection.insertMany([
         {
@@ -126,25 +128,19 @@ describe("Survey Answer Mongo Repository", () => {
         },
         {
           surveyId: new ObjectId(survey.id),
-          accountId: new ObjectId(account.id),
-          answer: survey.answers[0].answer,
-          date: new Date(),
-        },
-        {
-          surveyId: new ObjectId(survey.id),
-          accountId: new ObjectId(account.id),
+          accountId: new ObjectId(account2.id),
           answer: survey.answers[1].answer,
           date: new Date(),
         },
         {
           surveyId: new ObjectId(survey.id),
-          accountId: new ObjectId(account.id),
-          answer: survey.answers[1].answer,
+          accountId: new ObjectId(account3.id),
+          answer: survey.answers[2].answer,
           date: new Date(),
         },
       ]);
 
-      const surveyResult = await sut.loadBySurveyId(survey.id);
+      const surveyResult = await sut.loadBySurveyId(survey.id, account.id);
 
       expect(surveyResult?.surveyId).toBe(survey.id);
       expect(surveyResult?.date).toEqual(new Date());
@@ -152,20 +148,129 @@ describe("Survey Answer Mongo Repository", () => {
       expect(surveyResult?.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
         answer: survey.answers[0].answer,
         image: survey.answers[0].image,
-        count: 2,
-        percent: 50,
+        count: 1,
+        percent: 33,
+        isCurrentAccountAnswer: true,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
+        answer: survey.answers[1].answer,
+        count: 1,
+        image: survey.answers[1].image,
+        percent: 33,
+        isCurrentAccountAnswer: false,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
+        answer: survey.answers[2].answer,
+        count: 1,
+        image: survey.answers[2].image,
+        percent: 33,
+        isCurrentAccountAnswer: false,
+      });
+    });
+
+    it("should load survey result 2", async () => {
+      const sut = createSut();
+      const survey = await createSurvey();
+      const account = await createAccount();
+      const account2 = await createAccount();
+      const account3 = await createAccount();
+
+      await surveyAnswerCollection.insertMany([
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[0].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account2.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account3.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+      ]);
+
+      const surveyResult = await sut.loadBySurveyId(survey.id, account2.id);
+
+      expect(surveyResult?.surveyId).toBe(survey.id);
+      expect(surveyResult?.date).toEqual(new Date());
+      expect(surveyResult?.question).toBe(survey.question);
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
+        answer: survey.answers[0].answer,
+        image: survey.answers[0].image,
+        count: 1,
+        percent: 33,
+        isCurrentAccountAnswer: false,
       });
       expect(surveyResult?.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
         answer: survey.answers[1].answer,
         count: 2,
         image: survey.answers[1].image,
-        percent: 50,
+        percent: 67,
+        isCurrentAccountAnswer: true,
       });
       expect(surveyResult?.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
         answer: survey.answers[2].answer,
         count: 0,
         image: survey.answers[2].image,
         percent: 0,
+        isCurrentAccountAnswer: false,
+      });
+    });
+
+    it("should load survey result 3", async () => {
+      const sut = createSut();
+      const survey = await createSurvey();
+      const account = await createAccount();
+      const account2 = await createAccount();
+      const account3 = await createAccount();
+
+      await surveyAnswerCollection.insertMany([
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account.id),
+          answer: survey.answers[0].answer,
+          date: new Date(),
+        },
+        {
+          surveyId: new ObjectId(survey.id),
+          accountId: new ObjectId(account2.id),
+          answer: survey.answers[1].answer,
+          date: new Date(),
+        },
+      ]);
+
+      const surveyResult = await sut.loadBySurveyId(survey.id, account3.id);
+
+      expect(surveyResult?.surveyId).toBe(survey.id);
+      expect(surveyResult?.date).toEqual(new Date());
+      expect(surveyResult?.question).toBe(survey.question);
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[0].answer)).toEqual({
+        answer: survey.answers[0].answer,
+        image: survey.answers[0].image,
+        count: 1,
+        percent: 50,
+        isCurrentAccountAnswer: false,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[1].answer)).toEqual({
+        answer: survey.answers[1].answer,
+        count: 1,
+        image: survey.answers[1].image,
+        percent: 50,
+        isCurrentAccountAnswer: false,
+      });
+      expect(surveyResult?.answers.find((a) => a.answer === survey.answers[2].answer)).toEqual({
+        answer: survey.answers[2].answer,
+        count: 0,
+        image: survey.answers[2].image,
+        percent: 0,
+        isCurrentAccountAnswer: false,
       });
     });
   });
